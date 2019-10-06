@@ -11,7 +11,11 @@ public class Peer extends Observable{
 		this.setPuerto("");
 		
 	}
-
+	public Peer(String IP,String Puerto) {
+		this.setIP(IP);
+		this.setPuerto(Puerto);
+		
+	}
 
 	public String getPuerto() {
 		return Puerto;

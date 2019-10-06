@@ -12,6 +12,12 @@ public class Tracker extends Observable{
 		this.setPuerto("");
 		this.setMaster(false);
 	}
+	
+	public Tracker(String IP,String Puerto,boolean Master){
+		this.setIP(IP);
+		this.setPuerto(Puerto);
+		this.setMaster(Master);
+	}
 
 
 	public boolean isMaster() {
