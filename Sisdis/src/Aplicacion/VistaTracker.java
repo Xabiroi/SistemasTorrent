@@ -1,12 +1,17 @@
+package Aplicacion;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
-public class VentanaPrincipal {
+import Paneles.PanelConfiguracion;
+import Paneles.PanelPeer;
+import Paneles.PanelTracker;
+
+public class VistaTracker {
 
 	private JFrame frame;
 	private PanelPeer PanelPeer;
-private PanelTracker PanelTracker;
+	private PanelTracker PanelTracker;
 	private PanelConfiguracion PanelConfiguracion;
 
 	/**
@@ -16,7 +21,7 @@ private PanelTracker PanelTracker;
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					VentanaPrincipal window = new VentanaPrincipal();
+					VistaTracker window = new VistaTracker();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -28,7 +33,7 @@ private PanelTracker PanelTracker;
 	/**
 	 * Create the application.
 	 */
-	public VentanaPrincipal() {
+	public VistaTracker() {
 		initialize();
 	}
 

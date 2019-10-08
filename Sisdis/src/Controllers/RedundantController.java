@@ -1,10 +1,13 @@
+package Controllers;
 import java.util.ArrayList;
+
+import Objetos.Tracker;
 
 public class RedundantController {
 	
 	private ArrayList<Tracker> TrackersRedundantes;
 	
-	//Lo de master-slave?
+	//master-slave
 	public RedundantController() {
 		this.setTrackersRedundantes(new ArrayList<Tracker>());
 		
@@ -18,7 +21,11 @@ public class RedundantController {
 		TrackersRedundantes = trackersRedundantes;
 	}
 	
-	//TODO Funciones de eleccion amster slave
-	//COmunicaciones entre los trackers(?)
+	public void expulsar() {}
+	public void unirseARed() {}
+	public void conectarJMS() {}
+	public void desconexion() {}
+	
+
 	
 }

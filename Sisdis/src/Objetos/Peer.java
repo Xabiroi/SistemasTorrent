@@ -1,3 +1,4 @@
+package Objetos;
 import java.util.Observable;
 
 public class Peer extends Observable{

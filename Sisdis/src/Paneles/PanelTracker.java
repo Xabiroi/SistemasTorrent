@@ -1,9 +1,12 @@
+package Paneles;
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import Objetos.Tracker;
 
 public class PanelTracker extends JPanel {
 

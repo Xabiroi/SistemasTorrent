@@ -1,9 +1,12 @@
+package Paneles;
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import Objetos.Peer;
 
 public class PanelPeer extends JPanel {
 
