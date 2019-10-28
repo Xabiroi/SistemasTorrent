@@ -1,4 +1,4 @@
-package es.deusto.ingenieria.ssdd.jms.topic;
+package Listeners;
 
 import java.util.Date;
 
@@ -14,7 +14,12 @@ import javax.naming.InitialContext;
 
 import Mensajes.Keepalive;
 
-public class TopicPublisherTest {
+public class KeepaliveTopicPublisher {
+	
+	
+	
+	
+	
 	
 	public static void main(String[] args) {	
 		String connectionFactoryName = "TopicConnectionFactory";
@@ -47,19 +52,43 @@ public class TopicPublisherTest {
 			topicPublisher = topicSession.createPublisher(myTopic);
 			System.out.println("- TopicPublisher created!");
 			
-			//Object Message
-			ObjectMessage objectMessage = topicSession.createObjectMessage();
+//			//Object Message
+//			ObjectMessage objectMessage = topicSession.createObjectMessage();
+//			
+//			objectMessage.setObject(new Keepalive(1, new Date(), new Date(), true));
+//			
+//			objectMessage.setJMSType("ObjectMessage");
+//			objectMessage.setJMSMessageID("ID-1");
+//			objectMessage.setJMSPriority(1);		
+//			
+//			topicPublisher.publish(objectMessage);
+//			//Publish the Message
+//			System.out.println("- Object published in the Topic!");
 			
-			objectMessage.setObject(new Keepalive(1, new Date(), new Date(), true));
-			
-			objectMessage.setJMSType("ObjectMessage");
-			objectMessage.setJMSMessageID("ID-1");
-			objectMessage.setJMSPriority(1);		
-			
-			topicPublisher.publish(objectMessage);
-			//Publish the Message
-			System.out.println("- Object published in the Topic!");
-			
+			//Bucle infinito
+			boolean loop=true;
+			while(loop) {
+				System.out.println("Espera de 1 segundo antes de enviar el keepalive");
+				//Object Message
+				ObjectMessage objectMessage = topicSession.createObjectMessage();
+				
+				//La creacion de keepalives con asignacion de id, no 1 (getid del tracker)
+				objectMessage.setObject(new Keepalive(1, new Date(), new Date(), true));
+				
+				objectMessage.setJMSType("ObjectMessage");
+				objectMessage.setJMSMessageID("ID-1");
+				objectMessage.setJMSPriority(1);		
+				
+				topicPublisher.publish(objectMessage);
+				//Publish the Message
+				System.out.println("- Object published in the Topic!");
+					try {
+						Thread.sleep(1000);
+					} catch (Exception e) {
+						loop=false;
+						e.printStackTrace();
+					}	
+			}
 
 		} catch (Exception e) {
 			System.err.println("# TopicPublisherTest Error: " + e.getMessage());

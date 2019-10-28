@@ -2,7 +2,8 @@ package Objetos;
 import java.util.Observable;
 
 public class Tracker extends Observable{
-
+	
+	private int Id;
 	private String IP;
 	private String Puerto;
 	private boolean Master;
@@ -14,7 +15,8 @@ public class Tracker extends Observable{
 		this.setMaster(false);
 	}
 	
-	public Tracker(String IP,String Puerto,boolean Master){
+	public Tracker(int Id,String IP,String Puerto,boolean Master){
+		this.Id=Id;
 		this.setIP(IP);
 		this.setPuerto(Puerto);
 		this.setMaster(Master);
@@ -48,6 +50,14 @@ public class Tracker extends Observable{
 
 	public void setIP(String iP) {
 		IP = iP;
+	}
+
+	public int getId() {
+		return Id;
+	}
+
+	public void setId(int id) {
+		Id = id;
 	}
 	
 	

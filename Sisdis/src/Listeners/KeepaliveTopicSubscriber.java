@@ -1,4 +1,4 @@
-package es.deusto.ingenieria.ssdd.jms.topic;
+package Listeners;
 
 import javax.jms.Session;
 import javax.jms.Topic;
@@ -9,18 +9,15 @@ import javax.jms.TopicSubscriber;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
-public class TopicSubscriberTest {	
+public class KeepaliveTopicSubscriber extends Thread{	
 	
-	public static void main(String[] args) {
+
+	public void run() {
 		String connectionFactoryName = "TopicConnectionFactory";
 		//This name is defined in jndi.properties file
-		String topicJNDIName = "jndi.ssdd.topic";
-		//ID for a durable connection (optional)
-		//String subscriberID = "SubscriberID";
-		
+		String topicJNDIName = "jndi.ssdd.topic";		
 		TopicConnection topicConnection = null;
 		TopicSession topicSession = null;
-		//TopicSubscriber topicDurableSubscriber = null;
 		TopicSubscriber topicNONDurableSubscriber = null;
 				
 		try {
@@ -42,34 +39,40 @@ public class TopicSubscriberTest {
 			//Sessions
 			topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
 			System.out.println("- Topic Session created!");
-			
-			//Define a durable subscriber using a filter (the filter is optional)
-			//topicDurableSubscriber = topicSession.createDurableSubscriber(myTopic, subscriberID, "Filter = '1'", false);
+
 			//Define a non-durable connection using a filter (the filter is optional)
 			topicNONDurableSubscriber = topicSession.createSubscriber(myTopic);
-			//Topic Listener
-			TopicListener topicListener = new TopicListener();
 			
-			//Set the message listener for the durable subscriber
-			//topicDurableSubscriber.setMessageListener(topicListener);
+			//Topic Listener
+			KeepaliveListener topicListener = new KeepaliveListener();
+			
 			//Set the same message listener for the non-durable subscriber
 			topicNONDurableSubscriber.setMessageListener(topicListener);
 			
 			//Begin message delivery
 			topicConnection.start();
 			
-			//Wait 10 seconds for messages. After that period the program stops.
-			System.out.println("- Waiting 10 seconds for messages...");
-			Thread.sleep(10000);			
+			//Bucle infinito
+			boolean loop=true;
+			while(loop) {
+				//Comprobacion de que funciona, habria que habilitar handlers de excepciones para detenerlo como cambio de master y otros
+					System.out.println("- Waiting 0.5 seconds for messages...");
+					try {
+						Thread.sleep(500);
+					} catch (Exception e) {
+						loop=false;
+						e.printStackTrace();
+					}	
+			}
+			
+		
 		} catch (Exception e) {
 			System.err.println("# TopicSubscriberTest Error: " + e.getMessage());			
 		} finally {
+
 			try {
 				//Close resources
-				//topicDurableSubscriber.close();
 				topicNONDurableSubscriber.close();
-				//Unsubscribe the durable subscriber to release resources
-				//topicSession.unsubscribe(subscriberID);
 				topicSession.close();
 				topicConnection.close();
 				System.out.println("- Topic resources closed!");				
@@ -77,5 +80,31 @@ public class TopicSubscriberTest {
 				System.err.println("# TopicSubscriberTest Error: " + ex.getMessage());
 			}
 		}
+
+	
+		
+		
+	}
+	
+	
+	public static void main(String[] args) {
+	//Wait 10 seconds for messages. After that period the program stops.
+		KeepaliveTopicSubscriber topicSubscriberTest=new KeepaliveTopicSubscriber();
+		try {	
+			topicSubscriberTest.start();
+		}finally {
+			try {
+				topicSubscriberTest.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			topicSubscriberTest.stop();
+
+		}
+		
+
+		
 	}
 }
+

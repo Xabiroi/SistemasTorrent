@@ -21,39 +21,18 @@
 		<javac srcdir="${source.dir}" destdir="${build.dir}" classpathref="classpath" fork="true" includeAntRuntime="no"/>
     </target>
 	
-	<target name="TopicPublisher" depends="build" description="Runs Topic Publisher">
-		<java classname="es.deusto.ingenieria.ssdd.jms.topic.TopicPublisherTest" classpathref="classpath" fork="true">
+	<target name="KeepalivePublisher" depends="build" description="Runs Topic Publisher">
+		<java classname="Listeners.KeepaliveTopicPublisher" classpathref="classpath" fork="true">
 			<jvmarg value="-Dlog4j.configuration=log4j.properties"/>
+			<jvmarg value="-Dorg.apache.activemq.SERIALIZABLE_PACKAGES=*"/>
         </java>
     </target>
 	
-	<target name="TopicSubscriber" depends="build" description="Runs topic Subscriber">
-		<java classname="es.deusto.ingenieria.ssdd.jms.topic.TopicSubscriberTest" classpathref="classpath" fork="true">
+	<target name="KeepaliveSubscriber" depends="build" description="Runs topic Subscriber">
+		<java classname="Listeners.KeepaliveTopicSubscriber" classpathref="classpath" fork="true">
 			<jvmarg value="-Dlog4j.configuration=log4j.properties"/>
+			<jvmarg value="-Dorg.apache.activemq.SERIALIZABLE_PACKAGES=*"/>
         </java>
     </target>
-	
-	<target name="QueueSender" depends="build" description="Runs QueueSender">
-		<java classname="es.deusto.ingenieria.ssdd.jms.queue.QueueSenderTest" classpathref="classpath" fork="true">
-			<jvmarg value="-Dlog4j.configuration=log4j.properties"/>
-        </java>
-    </target>
-	
-	<target name="QueueReceiver" depends="build" description="Runs QueueReceiver">
-		<java classname="es.deusto.ingenieria.ssdd.jms.queue.QueueReceiverTest" classpathref="classpath" fork="true">
-			<jvmarg value="-Dlog4j.configuration=log4j.properties"/>
-        </java>
-    </target>
-	
-	<target name="FileMessageQueueSender" depends="build" description="Runs FileMessageQueueSender">
-		<java classname="es.ingenieria.ssdd.jms.fileMessage.QueueFileSenderTest" classpathref="classpath" fork="true">
-			<jvmarg value="-Dlog4j.configuration=log4j.properties"/>
-        </java>
-    </target>
-	
-	<target name="FileMessageQueueReceiver" depends="build" description="Runs FileMessageQueueReceiver">
-		<java classname="es.ingenieria.ssdd.jms.fileMessage.QueueFileReceiverTest" classpathref="classpath" fork="true">
-			<jvmarg value="-Dlog4j.configuration=log4j.properties"/>
-        </java>
-    </target>
+
 </project>
