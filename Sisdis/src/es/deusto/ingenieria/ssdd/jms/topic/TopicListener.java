@@ -1,14 +1,10 @@
 package es.deusto.ingenieria.ssdd.jms.topic;
 
-import java.util.Enumeration;
-
-import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.MessageListener;
-import javax.jms.TextMessage;
+import javax.jms.ObjectMessage;
 
-import org.apache.activemq.command.ActiveMQMapMessage;
-import org.apache.activemq.command.ActiveMQTextMessage;
+import Mensajes.Keepalive;
 
 public class TopicListener implements MessageListener {
 
@@ -19,23 +15,19 @@ public class TopicListener implements MessageListener {
 			try {
 				System.out.println("   - TopicListener: " + message.getClass().getSimpleName() + " received!");
 				
+//				ObjectMessage objectMessage = (ObjectMessage) message;
+//				System.out.println("ABCD"+objectMessage.getObject().getClass());
 				//Depending on the type of the message the process is different
-				if (message.getClass().getCanonicalName().equals(ActiveMQTextMessage.class.getCanonicalName())) {
-					System.out.println("     - TopicListener: TextMessage '" + ((TextMessage)message).getText());
-				} else if (message.getClass().getCanonicalName().equals(ActiveMQMapMessage.class.getCanonicalName())) {
-					System.out.println("     - TopicListener: MapMessage");				
-					MapMessage mapMsg = ((MapMessage) message);
+				if (message != null) {
+					System.out.println("     - TopicListener: ObjectMessage id = '" + message.getClass().getCanonicalName());
 					
-					@SuppressWarnings("unchecked")
-					Enumeration<String> mapKeys = (Enumeration<String>)mapMsg.getMapNames();
-					String key = null;
+					ObjectMessage objectMessage = (ObjectMessage) message;					
+					Keepalive keepAlive = (Keepalive) objectMessage.getObject();
 					
-					while (mapKeys.hasMoreElements()) {
-						key = mapKeys.nextElement();
-						System.out.println("       + " + key + ": " + mapMsg.getObject(key));
-					}								
+					System.out.println("     - Keep Alive ID: " + keepAlive.getI());
+					
+					//System.out.println("     - TopicListener: ObjectMessage id = '" + ((Keepalive) ((ObjectMessage) message).getObject()).getIdOrigen());
 				}
-			
 			} catch (Exception ex) {
 				System.err.println("# TopicListener error: " + ex.getMessage());
 			}

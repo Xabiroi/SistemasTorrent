@@ -16,11 +16,11 @@ public class TopicSubscriberTest {
 		//This name is defined in jndi.properties file
 		String topicJNDIName = "jndi.ssdd.topic";
 		//ID for a durable connection (optional)
-		String subscriberID = "SubscriberID";
+		//String subscriberID = "SubscriberID";
 		
 		TopicConnection topicConnection = null;
 		TopicSession topicSession = null;
-		TopicSubscriber topicDurableSubscriber = null;
+		//TopicSubscriber topicDurableSubscriber = null;
 		TopicSubscriber topicNONDurableSubscriber = null;
 				
 		try {
@@ -30,10 +30,11 @@ public class TopicSubscriberTest {
 			TopicConnectionFactory topicConnectionFactory = (TopicConnectionFactory) ctx.lookup(connectionFactoryName);
 			
 			//Message Destinations
-			Topic myTopic = (Topic) ctx.lookup(topicJNDIName);			
-	
+			Topic myTopic = (Topic) ctx.lookup(topicJNDIName);		
+			
 			//Connections			
 			topicConnection = topicConnectionFactory.createTopicConnection();
+			
 			//Set an ID to create a durable connection (optional)
 			topicConnection.setClientID("SSDD_TopicSubscriber");
 			System.out.println("- Topic Connection created!");
@@ -41,17 +42,16 @@ public class TopicSubscriberTest {
 			//Sessions
 			topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
 			System.out.println("- Topic Session created!");
-
-			//Define a durable subscriber using a filter (the filter is optional)
-			topicDurableSubscriber = topicSession.createDurableSubscriber(myTopic, subscriberID, "Filter = '1'", false);
-			//Define a non-durable connection using a filter (the filter is optional)
-			topicNONDurableSubscriber = topicSession.createSubscriber(myTopic, "Filter = '2'", false);
 			
+			//Define a durable subscriber using a filter (the filter is optional)
+			//topicDurableSubscriber = topicSession.createDurableSubscriber(myTopic, subscriberID, "Filter = '1'", false);
+			//Define a non-durable connection using a filter (the filter is optional)
+			topicNONDurableSubscriber = topicSession.createSubscriber(myTopic);
 			//Topic Listener
 			TopicListener topicListener = new TopicListener();
 			
 			//Set the message listener for the durable subscriber
-			topicDurableSubscriber.setMessageListener(topicListener);
+			//topicDurableSubscriber.setMessageListener(topicListener);
 			//Set the same message listener for the non-durable subscriber
 			topicNONDurableSubscriber.setMessageListener(topicListener);
 			
@@ -66,10 +66,10 @@ public class TopicSubscriberTest {
 		} finally {
 			try {
 				//Close resources
-				topicDurableSubscriber.close();
+				//topicDurableSubscriber.close();
 				topicNONDurableSubscriber.close();
 				//Unsubscribe the durable subscriber to release resources
-				topicSession.unsubscribe(subscriberID);
+				//topicSession.unsubscribe(subscriberID);
 				topicSession.close();
 				topicConnection.close();
 				System.out.println("- Topic resources closed!");				

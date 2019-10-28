@@ -1,44 +1,57 @@
 package Mensajes;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Keepalive {
-	private int idOrigen;
-	private Date horaEnvio;
-	private Date horaRecibido;
-	private boolean master;
+public class Keepalive implements Serializable {
 	
-	public Keepalive() {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	public Date getDate() {
+		return date;
+	}
 
+	public void setDate(Date date) {
+		this.date = date;
 	}
-	public Keepalive(int idOrigen,Date horaEnvio,Date horaRecibido,boolean master) {
-		this.setIdOrigen(idOrigen);
-		this.setHoraEnvio(horaEnvio);
-		this.setHoraRecibido(horaRecibido);
-		this.setMaster(master);
+
+	public Date getDate2() {
+		return date2;
 	}
-	public Date getHoraEnvio() {
-		return horaEnvio;
+
+	public void setDate2(Date date2) {
+		this.date2 = date2;
 	}
-	public void setHoraEnvio(Date horaEnvio) {
-		this.horaEnvio = horaEnvio;
+
+	public int getI() {
+		return i;
 	}
-	public int getIdOrigen() {
-		return idOrigen;
+
+	public void setI(int i) {
+		this.i = i;
 	}
-	public void setIdOrigen(int idOrigen) {
-		this.idOrigen = idOrigen;
+
+	public boolean isB() {
+		return b;
 	}
-	public Date getHoraRecibido() {
-		return horaRecibido;
+
+	public void setB(boolean b) {
+		this.b = b;
 	}
-	public void setHoraRecibido(Date horaRecibido) {
-		this.horaRecibido = horaRecibido;
-	}
-	public boolean isMaster() {
-		return master;
-	}
-	public void setMaster(boolean master) {
-		this.master = master;
+
+	private Date date;
+	private Date date2;
+	private int i;
+	private boolean b;
+	
+	public Keepalive(int i, Date date, Date date2, boolean b) {
+		this.i = i;
+		this.date = date;
+		this.date2 = date2;
+		this.b = b;
+
 	}
 }
