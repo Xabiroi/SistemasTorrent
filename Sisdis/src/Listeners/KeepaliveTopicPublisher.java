@@ -16,11 +16,6 @@ import Mensajes.Keepalive;
 
 public class KeepaliveTopicPublisher {
 	
-	
-	
-	
-	
-	
 	public static void main(String[] args) {	
 		String connectionFactoryName = "TopicConnectionFactory";
 		//This name is defined in jndi.properties file
@@ -67,7 +62,9 @@ public class KeepaliveTopicPublisher {
 			
 			//Bucle infinito
 			boolean loop=true;
-			while(loop) {
+			int loop1=1;
+			//cambio a un numero limitado para comprobar que desconecta al usuario
+			while(loop1<10) {
 				System.out.println("Espera de 1 segundo antes de enviar el keepalive");
 				//Object Message
 				ObjectMessage objectMessage = topicSession.createObjectMessage();
@@ -88,6 +85,8 @@ public class KeepaliveTopicPublisher {
 						loop=false;
 						e.printStackTrace();
 					}	
+					
+				loop1++;
 			}
 
 		} catch (Exception e) {

@@ -54,7 +54,9 @@ public class KeepaliveTopicSubscriber extends Thread{
 			
 			//Bucle infinito
 			boolean loop=true;
-			while(loop) {
+			//FIXME Comprobacion evitando el bucle infinito
+			int loop1=1;
+			while(loop1<60) {
 				//Comprobacion de que funciona, habria que habilitar handlers de excepciones para detenerlo como cambio de master y otros
 					System.out.println("- Waiting 0.5 seconds for messages...");
 					try {
@@ -63,6 +65,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 						loop=false;
 						e.printStackTrace();
 					}	
+					loop1++;//FIXME
 			}
 			
 		
@@ -88,6 +91,9 @@ public class KeepaliveTopicSubscriber extends Thread{
 	
 	
 	public static void main(String[] args) {
+		//Los try catch no funcionan bien hasta implementar gestion de excepciones con las funciones
+		
+		
 	//Wait 10 seconds for messages. After that period the program stops.
 		KeepaliveTopicSubscriber topicSubscriberTest=new KeepaliveTopicSubscriber();
 		try {	
