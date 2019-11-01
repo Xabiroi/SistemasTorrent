@@ -41,5 +41,17 @@
 			<jvmarg value="-Dorg.apache.activemq.SERIALIZABLE_PACKAGES=*"/>
         </java>
     </target>
+	
+	<target name="FileMessageQueueSender" depends="build" description="Runs FileMessageQueueSender">
+		<java classname="BDFileListener.QueueFileSender" classpathref="classpath" fork="true">
+			<jvmarg value="-Dlog4j.configuration=log4j.properties"/>
+        </java>
+    </target>
+	
+	<target name="FileMessageQueueReceiver" depends="build" description="Runs FileMessageQueueReceiver">
+		<java classname="BDFileListener.QueueFileReceiver" classpathref="classpath" fork="true">
+			<jvmarg value="-Dlog4j.configuration=log4j.properties"/>
+        </java>
+    </target>
 
 </project>

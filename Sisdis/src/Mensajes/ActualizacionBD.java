@@ -1,6 +1,12 @@
 package Mensajes;
 
-public class ActualizacionBD {
+import java.io.Serializable;
+
+public class ActualizacionBD implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int identificador;
 	
 	public ActualizacionBD() {

@@ -17,7 +17,7 @@ import Mensajes.Keepalive;
 public class KeepaliveTopicPublisher extends Thread{
 	String connectionFactoryName = "TopicConnectionFactory";
 	//This name is defined in jndi.properties file
-	String topicJNDIName = "jndi.ssdd.topic";		
+	String topicJNDIName = "jndi.ssdd.Keepalive";		
 	
 	TopicConnection topicConnection = null;
 	TopicSession topicSession = null;

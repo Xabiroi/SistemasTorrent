@@ -7,8 +7,10 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="conf"/>
+	<classpathentry kind="src" path="bd"/>
 	<classpathentry kind="lib" path="lib/activemq-all-5.15.10.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-api-2.12.1.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-core-2.12.1.jar"/>
+	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.27.2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

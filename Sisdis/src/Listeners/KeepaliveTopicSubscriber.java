@@ -27,7 +27,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 	public void run() {
 		String connectionFactoryName = "TopicConnectionFactory";
 		//This name is defined in jndi.properties file
-		String topicJNDIName = "jndi.ssdd.topic";		
+		String topicJNDIName = "jndi.ssdd.Keepalive";		
 		TopicConnection topicConnection = null;
 		TopicSession topicSession = null;
 		TopicSubscriber topicNONDurableSubscriber = null;
@@ -45,7 +45,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 			topicConnection = topicConnectionFactory.createTopicConnection();
 			
 			//Set an ID to create a durable connection (optional)
-			topicConnection.setClientID("SSDD_TopicSubscriber");
+			topicConnection.setClientID("SSDDTopic.Keepalive");
 			System.out.println("- Topic Connection created!");
 			
 			//Sessions

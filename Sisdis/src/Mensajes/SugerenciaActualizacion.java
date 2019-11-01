@@ -1,16 +1,23 @@
 package Mensajes;
 
-public class SugerenciaActualizacion {
-	private int idPeer;
+import java.io.Serializable;
+
+//FIXME id peer o ip de peer (?)
+public class SugerenciaActualizacion implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String ipPeer;
 	
 	public SugerenciaActualizacion() {}
-	public SugerenciaActualizacion(int idPeer) {
-		this.setIdPeer(idPeer);
+	public SugerenciaActualizacion(String ipPeer) {
+		this.setIpPeer(ipPeer);
 	}
-	public int getIdPeer() {
-		return idPeer;
+	public String getIdPeer() {
+		return ipPeer;
 	}
-	public void setIdPeer(int idPeer) {
-		this.idPeer = idPeer;
+	public void setIpPeer(String idPeer) {
+		this.ipPeer = idPeer;
 	}
 }
