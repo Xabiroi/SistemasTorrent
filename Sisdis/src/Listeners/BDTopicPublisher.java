@@ -14,16 +14,16 @@ import javax.naming.InitialContext;
 
 import Mensajes.Keepalive;
 
-public class KeepaliveTopicPublisher extends Thread{
-	String connectionFactoryName = "TopicConnectionFactory";
-	//This name is defined in jndi.properties file
-	String topicJNDIName = "jndi.ssdd.topic";		
+public class BDTopicPublisher {
 	
-	TopicConnection topicConnection = null;
-	TopicSession topicSession = null;
-	TopicPublisher topicPublisher = null;		
-	
-	public void run() {	
+	public static void main(String[] args) {	
+		String connectionFactoryName = "TopicConnectionFactory";
+		//This name is defined in jndi.properties file
+		String topicJNDIName = "jndi.ssdd.topic";		
+		
+		TopicConnection topicConnection = null;
+		TopicSession topicSession = null;
+		TopicPublisher topicPublisher = null;		
 		
 		try {
 			//JNDI Initial Context
@@ -47,7 +47,22 @@ public class KeepaliveTopicPublisher extends Thread{
 			topicPublisher = topicSession.createPublisher(myTopic);
 			System.out.println("- TopicPublisher created!");
 			
+//			//Object Message
+//			ObjectMessage objectMessage = topicSession.createObjectMessage();
+//			
+//			objectMessage.setObject(new Keepalive(1, new Date(), new Date(), true));
+//			
+//			objectMessage.setJMSType("ObjectMessage");
+//			objectMessage.setJMSMessageID("ID-1");
+//			objectMessage.setJMSPriority(1);		
+//			
+//			topicPublisher.publish(objectMessage);
+//			//Publish the Message
+//			System.out.println("- Object published in the Topic!");
 			
+			
+			
+			//FIXME cambiar 
 			//Bucle infinito
 			boolean loop=true;
 			int loop1=1;
@@ -58,7 +73,6 @@ public class KeepaliveTopicPublisher extends Thread{
 				ObjectMessage objectMessage = topicSession.createObjectMessage();
 				
 				//La creacion de keepalives con asignacion de id, no 1 (getid del tracker)
-				objectMessage.setObject(new Keepalive(1, System.currentTimeMillis(), true));
 				
 				objectMessage.setJMSType("ObjectMessage");
 				objectMessage.setJMSMessageID("ID-1");
@@ -76,21 +90,6 @@ public class KeepaliveTopicPublisher extends Thread{
 					
 				loop1++;
 			}
-			
-//			//FIXME Prueba de keepalive fuera de tiempo
-//			////////////////////////////////////////////////////
-//			Thread.sleep(1600);
-//			ObjectMessage objectMessage = topicSession.createObjectMessage();
-//			
-//			//La creacion de keepalives con asignacion de id, no 1 (getid del tracker)
-//			objectMessage.setObject(new Keepalive(1, System.currentTimeMillis(), true));
-//			
-//			objectMessage.setJMSType("ObjectMessage");
-//			objectMessage.setJMSMessageID("ID-1");
-//			objectMessage.setJMSPriority(1);		
-//			
-//			topicPublisher.publish(objectMessage);
-//			////////////////////////////////////////////////////
 
 		} catch (Exception e) {
 			System.err.println("# TopicPublisherTest Error: " + e.getMessage());
@@ -105,11 +104,5 @@ public class KeepaliveTopicPublisher extends Thread{
 				System.err.println("# TopicPublisherTest Error: " + ex.getMessage());
 			}			
 		}
-	}
-	
-	
-	
-	public static void main(String[] args) {
-		System.out.println("Main de topic publisher");
 	}
 }

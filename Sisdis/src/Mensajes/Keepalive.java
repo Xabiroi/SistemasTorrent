@@ -11,15 +11,13 @@ public class Keepalive implements Serializable {
 	//
     
     
-	private Date date;
-	private Date date2;
+	private long date;
 	private int i;
 	private boolean b;
 	
-	public Keepalive(int i, Date date, Date date2, boolean b) {
+	public Keepalive(int i, long date, boolean b) {
 		this.i = i;
 		this.date = date;
-		this.date2 = date2;
 		this.b = b;
 		try {
 			this.setIp((InetAddress.getLocalHost()).toString());
@@ -35,20 +33,12 @@ public class Keepalive implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public Date getDate() {
+	public long getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(long date) {
 		this.date = date;
-	}
-
-	public Date getDate2() {
-		return date2;
-	}
-
-	public void setDate2(Date date2) {
-		this.date2 = date2;
 	}
 
 	public int getI() {

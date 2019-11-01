@@ -34,5 +34,12 @@
 			<jvmarg value="-Dorg.apache.activemq.SERIALIZABLE_PACKAGES=*"/>
         </java>
     </target>
+	
+	<target name="RedundantController" depends="build" description="Runs redundant controller">
+		<java classname="Controllers.RedundantController" classpathref="classpath" fork="true">
+			<jvmarg value="-Dlog4j.configuration=log4j.properties"/>
+			<jvmarg value="-Dorg.apache.activemq.SERIALIZABLE_PACKAGES=*"/>
+        </java>
+    </target>
 
 </project>

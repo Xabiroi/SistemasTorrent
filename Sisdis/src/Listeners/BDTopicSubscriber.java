@@ -1,7 +1,5 @@
 package Listeners;
 
-import java.util.ArrayList;
-
 import javax.jms.Session;
 import javax.jms.Topic;
 import javax.jms.TopicConnection;
@@ -11,23 +9,13 @@ import javax.jms.TopicSubscriber;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
-import Objetos.Tracker;
-
-public class KeepaliveTopicSubscriber extends Thread{	
-	private ArrayList<Tracker> trackers=new ArrayList<Tracker>();
+public class BDTopicSubscriber extends Thread{	
 	
-	
-
-	public KeepaliveTopicSubscriber(ArrayList<Tracker> trackers) {
-		super();
-		this.trackers = trackers;
-	}
-
 
 	public void run() {
 		String connectionFactoryName = "TopicConnectionFactory";
 		//This name is defined in jndi.properties file
-		String topicJNDIName = "jndi.ssdd.topic";		
+		String topicJNDIName = "jndi.ssdd.topic";//FIXME cambiar topics
 		TopicConnection topicConnection = null;
 		TopicSession topicSession = null;
 		TopicSubscriber topicNONDurableSubscriber = null;
@@ -50,13 +38,13 @@ public class KeepaliveTopicSubscriber extends Thread{
 			
 			//Sessions
 			topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-			System.out.println("- Topic Session created!");
+			System.out.println("-BD Topic Session created!");
 
 			//Define a non-durable connection using a filter (the filter is optional)
 			topicNONDurableSubscriber = topicSession.createSubscriber(myTopic);
 			
 			//Topic Listener
-			KeepaliveListener topicListener = new KeepaliveListener(trackers);
+			BDTopicListener topicListener = new BDTopicListener();
 			
 			//Set the same message listener for the non-durable subscriber
 			topicNONDurableSubscriber.setMessageListener(topicListener);
@@ -70,7 +58,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 			int loop1=1;
 			while(loop1<60) {
 				//Comprobacion de que funciona, habria que habilitar handlers de excepciones para detenerlo como cambio de master y otros
-					System.out.println("- Waiting 0.5 seconds for messages...");
+					System.out.println("- Waiting 0.5 seconds for updates...");
 					try {
 						Thread.sleep(500);
 					} catch (Exception e) {
@@ -82,7 +70,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 			
 		
 		} catch (Exception e) {
-			System.err.println("# TopicSubscriberTest Error: " + e.getMessage());			
+			System.err.println("# BD TopicSubscriberTest Error: " + e.getMessage());			
 		} finally {
 
 			try {
@@ -90,9 +78,9 @@ public class KeepaliveTopicSubscriber extends Thread{
 				topicNONDurableSubscriber.close();
 				topicSession.close();
 				topicConnection.close();
-				System.out.println("- Topic resources closed!");				
+				System.out.println("- BD Topic resources closed!");				
 			} catch (Exception ex) {
-				System.err.println("# TopicSubscriberTest Error: " + ex.getMessage());
+				System.err.println("# BD TopicSubscriberTest Error: " + ex.getMessage());
 			}
 		}
 
@@ -105,22 +93,22 @@ public class KeepaliveTopicSubscriber extends Thread{
 	public static void main(String[] args) {
 		//Los try catch no funcionan bien hasta implementar gestion de excepciones con las funciones
 		
-		System.out.println("EL MAIN DE KEEPALIVE_TOPIC_SUBSCRIBER");
-//	//Wait 10 seconds for messages. After that period the program stops.
-//		KeepaliveTopicSubscriber topicSubscriberTest=new KeepaliveTopicSubscriber();
-//		try {	
-//			topicSubscriberTest.start();
-//		}finally {
-//			try {
-//				topicSubscriberTest.join();
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			topicSubscriberTest.stop();
-//
-//		}
-//		
+		
+	//Wait 10 seconds for messages. After that period the program stops.
+		BDTopicSubscriber topicSubscriberTest=new BDTopicSubscriber();
+		try {	
+			topicSubscriberTest.start();
+		}finally {
+			try {
+				topicSubscriberTest.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			topicSubscriberTest.stop();
+
+		}
+		
 
 		
 	}

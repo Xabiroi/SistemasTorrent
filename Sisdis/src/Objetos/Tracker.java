@@ -6,6 +6,7 @@ public class Tracker extends Observable{
 	private int Id;
 	private String IP;
 	private String Puerto;
+	private long Tiempo;
 	private boolean Master;
 	
 	
@@ -15,11 +16,12 @@ public class Tracker extends Observable{
 		this.setMaster(false);
 	}
 	
-	public Tracker(int Id,String IP,String Puerto,boolean Master){
+	public Tracker(int Id,String IP,String Puerto,boolean Master,long tiempo){
 		this.Id=Id;
 		this.setIP(IP);
 		this.setPuerto(Puerto);
 		this.setMaster(Master);
+		this.setTiempo(tiempo);
 	}
 
 
@@ -59,6 +61,15 @@ public class Tracker extends Observable{
 	public void setId(int id) {
 		Id = id;
 	}
+
+	public long getTiempo() {
+		return Tiempo;
+	}
+
+	public void setTiempo(long tiempo) {
+		Tiempo = tiempo;
+	}
+
 	
 	
 	//En alguna funcion (detector de evento de que se desconecta o se cierra la app) -> notifyObservers()

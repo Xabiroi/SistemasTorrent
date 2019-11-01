@@ -34,10 +34,10 @@ public class PanelTracker extends JPanel {
 		model.addColumn("Master");
 		
 		
-		Tracker a = new Tracker(1,"192.168.1.2","65",true);
-		Tracker b = new Tracker(2,"192.168.1.3","64",false);
-		Tracker c = new Tracker(3,"192.168.1.4","63",false);
-		Tracker d = new Tracker(4,"192.168.1.5","89",false);
+		Tracker a = new Tracker(1,"192.168.1.2","65",true, System.currentTimeMillis());
+		Tracker b = new Tracker(2,"192.168.1.3","64",false,System.currentTimeMillis());
+		Tracker c = new Tracker(3,"192.168.1.4","63",false,System.currentTimeMillis());
+		Tracker d = new Tracker(4,"192.168.1.5","89",false,System.currentTimeMillis());
 		
 		model.addRow(new Object[] {a.getIP(),a.getPuerto(),a.isMaster()});
 		model.addRow(new Object[] {b.getIP(),b.getPuerto(),b.isMaster()});
