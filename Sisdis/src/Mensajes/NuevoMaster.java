@@ -2,6 +2,7 @@ package Mensajes;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class NuevoMaster implements Serializable {
 	private int idMaster;
 	
