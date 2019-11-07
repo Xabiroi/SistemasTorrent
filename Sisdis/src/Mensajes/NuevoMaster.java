@@ -1,6 +1,8 @@
 package Mensajes;
 
-public class NuevoMaster {
+import java.io.Serializable;
+
+public class NuevoMaster implements Serializable {
 	private int idMaster;
 	
 	public NuevoMaster() {}
