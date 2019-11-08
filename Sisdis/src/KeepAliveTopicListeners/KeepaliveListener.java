@@ -12,12 +12,12 @@ import Objetos.Tracker;
 
 public class KeepaliveListener implements MessageListener {
 	private ArrayList<Tracker> trackers;
-	
-	
+	private Tracker miTracker;	
 		
-	public KeepaliveListener(ArrayList<Tracker> trackers) {
+	public KeepaliveListener(ArrayList<Tracker> trackers, Tracker miTracker) {
 		super();
 		this.trackers = trackers;
+		this.miTracker = miTracker;
 	}
 
 	@Override

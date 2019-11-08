@@ -68,7 +68,7 @@ public class RedundantController extends Thread{
 	
 	public static void main(String args[]) {
 		
-		KeepaliveTopicSubscriber keepaliveTopicSubscriber=new KeepaliveTopicSubscriber(getTrackersRedundantes());
+		KeepaliveTopicSubscriber keepaliveTopicSubscriber=new KeepaliveTopicSubscriber(getTrackersRedundantes(), miTracker);
 		keepaliveTopicSubscriber.start();
 		
 		KeepaliveTopicPublisher keepaliveTopicPublisher=new KeepaliveTopicPublisher(TrackersRedundantes, miTracker);

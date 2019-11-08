@@ -1,6 +1,8 @@
 package Mensajes;
 
-public class Confirmacion {
+import java.io.Serializable;
+
+public class Confirmacion implements Serializable {
 	private int idOrigen;
 	
 	public Confirmacion(int idOrigen) {

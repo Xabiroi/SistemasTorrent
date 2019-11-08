@@ -1,4 +1,4 @@
-package KeepAliveTopicListeners;
+package ConfirmacionTopicListener;
 
 import java.util.ArrayList;
 
@@ -13,13 +13,13 @@ import javax.naming.InitialContext;
 
 import Objetos.Tracker;
 
-public class KeepaliveTopicSubscriber extends Thread{	
+public class ConfirmacionTopicSubscriber extends Thread{	
 	private ArrayList<Tracker> trackers=new ArrayList<Tracker>();
 	private Tracker miTracker;
 	
 	
 
-	public KeepaliveTopicSubscriber(ArrayList<Tracker> trackers, Tracker miTracker) {
+	public ConfirmacionTopicSubscriber(ArrayList<Tracker> trackers, Tracker miTracker) {
 		super();
 		this.trackers = trackers;
 		this.miTracker = miTracker;
@@ -29,7 +29,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 	public void run() {
 		String connectionFactoryName = "TopicConnectionFactory";
 		//This name is defined in jndi.properties file
-		String topicJNDIName = "jndi.ssdd.Keepalive";		
+		String topicJNDIName = "jndi.ssdd.NuevoMaster";		
 		TopicConnection topicConnection = null;
 		TopicSession topicSession = null;
 		TopicSubscriber topicNONDurableSubscriber = null;
@@ -47,7 +47,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 			topicConnection = topicConnectionFactory.createTopicConnection();
 			
 			//Set an ID to create a durable connection (optional)
-			topicConnection.setClientID("SSDDTopic.Keepalive");
+			topicConnection.setClientID("SSDDTopic.NuevoMaster");
 			System.out.println("- Topic Connection created!");
 			
 			//Sessions
@@ -58,7 +58,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 			topicNONDurableSubscriber = topicSession.createSubscriber(myTopic);
 			
 			//Topic Listener
-			KeepaliveListener topicListener = new KeepaliveListener(trackers, miTracker);
+			ConfirmacionListener topicListener = new ConfirmacionListener(trackers, miTracker);
 			
 			//Set the same message listener for the non-durable subscriber
 			topicNONDurableSubscriber.setMessageListener(topicListener);
@@ -66,21 +66,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 			//Begin message delivery
 			topicConnection.start();
 			
-			//Bucle infinito
-			boolean loop=true;
-			//FIXME Comprobacion evitando el bucle infinito
-			int loop1=1;
-			while(loop1<60) {
-				//Comprobacion de que funciona, habria que habilitar handlers de excepciones para detenerlo como cambio de master y otros
-					System.out.println("- Waiting 0.5 seconds for messages...");
-					try {
-						Thread.sleep(500);
-					} catch (Exception e) {
-						loop=false;
-						e.printStackTrace();
-					}	
-					loop1++;//FIXME
-			}
+			//TODO Lógica cuando reciba un mensaje de confirmación
 			
 		
 		} catch (Exception e) {
@@ -107,7 +93,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 	public static void main(String[] args) {
 		//Los try catch no funcionan bien hasta implementar gestion de excepciones con las funciones
 		
-		System.out.println("EL MAIN DE KEEPALIVE_TOPIC_SUBSCRIBER");
+		System.out.println("EL MAIN DE NUEVO_MASTER_TOPIC_SUBSCRIBER");
 //	//Wait 10 seconds for messages. After that period the program stops.
 //		KeepaliveTopicSubscriber topicSubscriberTest=new KeepaliveTopicSubscriber();
 //		try {	
