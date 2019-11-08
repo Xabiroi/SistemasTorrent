@@ -1,6 +1,6 @@
 package KeepAliveTopicListeners;
 
-import java.util.Date;
+import java.util.ArrayList;
 
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
@@ -13,15 +13,24 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 
 import Mensajes.Keepalive;
+import Objetos.Tracker;
 
 public class KeepaliveTopicPublisher extends Thread{
+	ArrayList<Tracker> trackers;
+	Tracker miTracker;
+	
 	String connectionFactoryName = "TopicConnectionFactory";
-	//This name is defined in jndi.properties file
-	String topicJNDIName = "jndi.ssdd.Keepalive";		
+	String topicJNDIName = "jndi.ssdd.Keepalive";		//This name is defined in jndi.properties file
 	
 	TopicConnection topicConnection = null;
 	TopicSession topicSession = null;
-	TopicPublisher topicPublisher = null;		
+	TopicPublisher topicPublisher = null;	
+	
+	public KeepaliveTopicPublisher(ArrayList<Tracker> trackers, Tracker miTracker) {
+		super();
+		this.trackers = trackers;
+		this.miTracker = miTracker;
+	}
 	
 	public void run() {	
 		

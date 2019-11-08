@@ -8,6 +8,7 @@ import Objetos.Tracker;
 
 public class RedundantController extends Thread{
 	
+	public static Tracker miTracker;
 	private static ArrayList<Tracker> TrackersRedundantes=new ArrayList<Tracker>();
 	private static KeepaliveTopicPublisher KeepaliveTopicPublisher;
 	private static KeepaliveTopicSubscriber KeepaliveTopicSubscriber;
@@ -15,9 +16,10 @@ public class RedundantController extends Thread{
 	
 	//master-slave
 	public RedundantController(ArrayList<Tracker> trackersRedundantes, KeepaliveTopicPublisher keepaliveTopicPublisher,
-			KeepaliveTopicSubscriber keepaliveTopicSubscriber) {
+			KeepaliveTopicSubscriber keepaliveTopicSubscriber, Tracker myTracker) {
 		super();
 		TrackersRedundantes = trackersRedundantes;
+		miTracker = myTracker;
 		setKeepaliveTopicPublisher(keepaliveTopicPublisher);
 		setKeepaliveTopicSubscriber(keepaliveTopicSubscriber);
 	}
@@ -69,10 +71,10 @@ public class RedundantController extends Thread{
 		KeepaliveTopicSubscriber keepaliveTopicSubscriber=new KeepaliveTopicSubscriber(getTrackersRedundantes());
 		keepaliveTopicSubscriber.start();
 		
-		KeepaliveTopicPublisher keepaliveTopicPublisher=new KeepaliveTopicPublisher();
+		KeepaliveTopicPublisher keepaliveTopicPublisher=new KeepaliveTopicPublisher(TrackersRedundantes, miTracker);
 		keepaliveTopicPublisher.start();
 
-		RedundantController redundantController = new RedundantController(TrackersRedundantes, keepaliveTopicPublisher, keepaliveTopicSubscriber);
+		RedundantController redundantController = new RedundantController(TrackersRedundantes, keepaliveTopicPublisher, keepaliveTopicSubscriber, miTracker);
 
 		redundantController.start();
 		

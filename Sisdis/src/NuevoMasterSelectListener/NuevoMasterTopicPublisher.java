@@ -1,9 +1,6 @@
 package NuevoMasterSelectListener;
 
 import java.util.ArrayList;
-import java.util.Date;
-
-import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.jms.Topic;
@@ -14,7 +11,6 @@ import javax.jms.TopicSession;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
-import Mensajes.Keepalive;
 import Mensajes.NuevoMaster;
 import Objetos.Tracker;
 
@@ -28,9 +24,15 @@ public class NuevoMasterTopicPublisher extends Thread{
 	
 	TopicConnection topicConnection = null;
 	TopicSession topicSession = null;
-	TopicPublisher topicPublisher = null;		
+	TopicPublisher topicPublisher = null;	
 	
-	public void run(ArrayList<Tracker> trackers, Tracker miTracker) {	
+	public NuevoMasterTopicPublisher(ArrayList<Tracker> trackers, Tracker miTracker) {
+		super();
+		this.trackers = trackers;
+		this.miTracker = miTracker;
+	}
+	
+	public void run() {	
 		
 		try {
 			//JNDI Initial Context
