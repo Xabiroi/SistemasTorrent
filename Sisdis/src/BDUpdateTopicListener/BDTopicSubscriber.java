@@ -1,4 +1,4 @@
-package BDUpdateListener;
+package BDUpdateTopicListener;
 
 import javax.jms.Session;
 import javax.jms.Topic;

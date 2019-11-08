@@ -1,4 +1,4 @@
-package BDFileListener;
+package BDFileQueueListener;
 
 import javax.jms.Queue;
 import javax.jms.QueueConnection;

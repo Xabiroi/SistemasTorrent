@@ -2,8 +2,8 @@ package Controllers;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import Listeners.KeepaliveTopicPublisher;
-import Listeners.KeepaliveTopicSubscriber;
+import KeepAliveTopicListeners.KeepaliveTopicPublisher;
+import KeepAliveTopicListeners.KeepaliveTopicSubscriber;
 import Objetos.Tracker;
 
 public class RedundantController extends Thread{
