@@ -14,7 +14,7 @@ public class SugerenciaActualizacion implements Serializable {
 	public SugerenciaActualizacion(String ipPeer) {
 		this.setIpPeer(ipPeer);
 	}
-	public String getIdPeer() {
+	public String getIpPeer() {
 		return ipPeer;
 	}
 	public void setIpPeer(String idPeer) {

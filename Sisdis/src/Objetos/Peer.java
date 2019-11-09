@@ -5,19 +5,20 @@ public class Peer extends Observable{
 	
 	private String IP;
 	private String Puerto;
-
+	private String identificadorSwarm;
 
 	public Peer() {
 		this.setIP("");
 		this.setPuerto("");
 		
 	}
-	public Peer(String IP,String Puerto) {
-		this.setIP(IP);
-		this.setPuerto(Puerto);
-		
-	}
 
+	public Peer(String iP, String puerto, String identificadorSwarm) {
+		super();
+		IP = iP;
+		Puerto = puerto;
+		this.identificadorSwarm = identificadorSwarm;
+	}
 	public String getPuerto() {
 		return Puerto;
 	}
@@ -35,6 +36,12 @@ public class Peer extends Observable{
 
 	public void setIP(String iP) {
 		IP = iP;
+	}
+	public String getIdentificadorSwarm() {
+		return identificadorSwarm;
+	}
+	public void setIdentificadorSwarm(String identificadorSwarm) {
+		this.identificadorSwarm = identificadorSwarm;
 	}
 
 }

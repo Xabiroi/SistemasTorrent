@@ -24,16 +24,7 @@ public class RedundantController extends Thread{
 		setKeepaliveTopicSubscriber(keepaliveTopicSubscriber);
 	}
 	
-	
-//	for(Tracker tracker:TrackersRedundantes) {
-//		System.out.println("System.currentTimeMillis()"+System.currentTimeMillis());
-//		System.out.println("tracker.getTiempo()"+tracker.getTiempo());
-//		System.out.println("Resta="+(System.currentTimeMillis()-tracker.getTiempo()));
-//		if(System.currentTimeMillis()-tracker.getTiempo()>1500) {
-//			TrackersRedundantes.remove(TrackersRedundantes.indexOf(tracker));
-//		}
-//		
-//	}
+
 
 	public void comprobar() {
 		if(TrackersRedundantes.size()!=0) {

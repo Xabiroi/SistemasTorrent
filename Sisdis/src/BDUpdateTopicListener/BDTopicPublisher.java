@@ -1,5 +1,7 @@
 package BDUpdateTopicListener;
 
+import java.util.ArrayList;
+
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.jms.Topic;
@@ -10,9 +12,11 @@ import javax.jms.TopicSession;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
+import Controllers.DataController.EstadosBaseDeDatos;
 import Mensajes.ActualizacionBD;
 import Mensajes.PreparacionActualizacion;
 import Mensajes.SugerenciaActualizacion;
+import Objetos.Swarm;
 
 public class BDTopicPublisher extends Thread{	
 	String connectionFactoryName = "TopicConnectionFactory";
@@ -23,22 +27,23 @@ public class BDTopicPublisher extends Thread{
 	TopicSession topicSession = null;
 	TopicPublisher topicPublisher = null;	
 	
-	private String estadoActual;
+	private int ContadorVersionBD;
+	private EstadosBaseDeDatos estadoActual;
+	private ArrayList<Swarm> swarms;
+	private static boolean cambio;
 	
-	public BDTopicPublisher(String estadoActual) {
+
+	public BDTopicPublisher(int contadorVersionBD, EstadosBaseDeDatos estadoActual, ArrayList<Swarm> swarms, boolean cambio) {
 		super();
+		ContadorVersionBD = contadorVersionBD;
 		this.estadoActual = estadoActual;
-	}
-
-
-	public enum estado{
-		Sugerencia,
-		Preparacion,
-		Actualizacion
+		this.swarms = swarms;
+		BDTopicPublisher.cambio = cambio;
 	}
 	
 	public void run() {
 		try {
+
 			//JNDI Initial Context
 			Context ctx = new InitialContext();
 		
@@ -62,10 +67,22 @@ public class BDTopicPublisher extends Thread{
 			
 			
 			switch(estadoActual) {
-			  case "Sugerencia":
+			  case Esperando:
+				  while(!cambio) {
+					  System.err.println("Bucle cambio="+cambio);
+						try {
+							Thread.sleep(1000);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}	
+				  }
+					  setEstadoActual(EstadosBaseDeDatos.Sugerencia);
+				break;
+			  case Sugerencia:
+				  
 					ObjectMessage objectMessage = topicSession.createObjectMessage();
 					
-					//La creacion de keepalives con asignacion de id, no 1 (getid del tracker)
+					//FIXME no hardcodear la ip, obtener de la cola donde se procesan los peers
 					objectMessage.setObject(new SugerenciaActualizacion("192.168.1.56"));
 					
 					objectMessage.setJMSType("ObjectMessage");
@@ -74,16 +91,20 @@ public class BDTopicPublisher extends Thread{
 					
 					topicPublisher.publish(objectMessage);
 					//Publish the Message
-					System.out.println("- Object published in the Topic!");
+					System.out.println("- Sugerencia published in the Topic!");
+					
+					try {
+						Thread.sleep(2000);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}	
 				  
 			    // code block
 			    break;
-			  case "Preparacion":
+			  case Preparacion:
 				  // code block
 				  
 					ObjectMessage objectMessage2 = topicSession.createObjectMessage();
-					
-
 					objectMessage2.setObject(new PreparacionActualizacion());
 					
 					objectMessage2.setJMSType("ObjectMessage");
@@ -93,15 +114,20 @@ public class BDTopicPublisher extends Thread{
 					topicPublisher.publish(objectMessage2);
 					//Publish the Message
 					System.out.println("- Object published in the Topic!");
+					try {
+						Thread.sleep(2000);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}	
 				  
 			    break;
-			  case "Actualizacion":
+			  case Actualizacion:
 				// code block
 				  
 					ObjectMessage objectMessage3 = topicSession.createObjectMessage();
 					
 					//obtener id de la version de bd
-					objectMessage3.setObject(new ActualizacionBD());
+					objectMessage3.setObject(new ActualizacionBD(ContadorVersionBD));
 					
 					objectMessage3.setJMSType("ObjectMessage");
 					objectMessage3.setJMSMessageID("ID-1");
@@ -110,6 +136,11 @@ public class BDTopicPublisher extends Thread{
 					topicPublisher.publish(objectMessage3);
 					//Publish the Message
 					System.out.println("- Object published in the Topic!");
+					try {
+						Thread.sleep(2000);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}	
 				  
 
 				  break;
@@ -117,34 +148,9 @@ public class BDTopicPublisher extends Thread{
 			    // code block
 			}
 			
-			//FIXME Cambiar esto
-			//Bucle infinito
-			boolean loop=true;
-			int loop1=1;
-			//cambio a un numero limitado para comprobar que desconecta al usuario
-			while(loop1<10) {
-				System.out.println("Espera de 1 segundo antes de enviar el keepalive");
-				//Object Message
-				ObjectMessage objectMessage = topicSession.createObjectMessage();
-				
-				//La creacion de keepalives con asignacion de id, no 1 (getid del tracker)
-				
-				objectMessage.setJMSType("ObjectMessage");
-				objectMessage.setJMSMessageID("ID-1");
-				objectMessage.setJMSPriority(1);		
-				
-				topicPublisher.publish(objectMessage);
-				//Publish the Message
-				System.out.println("- Object published in the Topic!");
-					try {
-						Thread.sleep(1000);
-					} catch (Exception e) {
-						loop=false;
-						e.printStackTrace();
-					}	
-					
-				loop1++;
-			}
+
+
+			
 
 		} catch (Exception e) {
 			System.err.println("# TopicPublisherTest Error: " + e.getMessage());
@@ -164,33 +170,44 @@ public class BDTopicPublisher extends Thread{
 	}
 	
 	
-	
-	
 
-	
-	
 	public static void main(String[] args) {
 	}
 
 
 
-
-
-
-
-	public String getEstadoActual() {
+	public EstadosBaseDeDatos getEstadoActual() {
 		return estadoActual;
 	}
 
-
-
-
-
-
-
-	public void setEstadoActual(String estadoActual) {
+	public void setEstadoActual(EstadosBaseDeDatos estadoActual) {
 		this.estadoActual = estadoActual;
 	}
+
+
+
+	public int getContadorVersionBD() {
+		return ContadorVersionBD;
+	}
+
+
+
+	public void setContadorVersionBD(int contadorVersionBD) {
+		ContadorVersionBD = contadorVersionBD;
+	}
+
+
+
+	public ArrayList<Swarm> getSwarms() {
+		return swarms;
+	}
+
+
+
+	public void setSwarms(ArrayList<Swarm> swarms) {
+		this.swarms = swarms;
+	}
+
 
 
 }

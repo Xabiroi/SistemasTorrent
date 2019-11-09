@@ -7,13 +7,13 @@ public class Swarm extends Observable{
 	
 	private ArrayList<Peer> ListaPeers;
 //  FIXME
-//	private String identificadorSwarm;
+	private String identificadorSwarm;
 //	private File HashArchivo;
 //	o juntar los dos con un separador # entre los dos valores y luego substring
 	
 	
-	public Swarm() {
-		this.setListaPeers(new ArrayList<Peer>());
+	public Swarm(ArrayList<Peer> ListaPeers) {
+		this.setListaPeers(ListaPeers);
 
 		
 	}
@@ -26,14 +26,14 @@ public class Swarm extends Observable{
 		ListaPeers = listaPeers;
 	}
 
-//	public String getIdentificadorSwarm() {
-//		return identificadorSwarm;
-//	}
-//
-//	public void setIdentificadorSwarm(String identificadorSwarm) {
-//		this.identificadorSwarm = identificadorSwarm;
-//	}
-//
+	public String getIdentificadorSwarm() {
+		return identificadorSwarm;
+	}
+
+	public void setIdentificadorSwarm(String identificadorSwarm) {
+		this.identificadorSwarm = identificadorSwarm;
+	}
+
 //	public File getHashArchivo() {
 //		return HashArchivo;
 //	}

@@ -30,12 +30,12 @@ public class PanelPeer extends JPanel {
 		DefaultMutableTreeNode subtitulo2 = new DefaultMutableTreeNode("Swarm#EFGH1234");
 		DefaultMutableTreeNode subtitulo3 = new DefaultMutableTreeNode("Swarm#IJKL1234");
 		
-		Peer p1=new Peer("192.168.10.2","42");
-		Peer p2=new Peer("192.168.10.3","41");
-		Peer p3=new Peer("192.168.10.4","42");
-		Peer p4=new Peer("192.168.10.5","46");
-		Peer p5=new Peer("192.168.10.6","42");
-		Peer p6=new Peer("192.168.10.7","67");
+		Peer p1=new Peer("192.168.10.2","42","1");
+		Peer p2=new Peer("192.168.10.3","41","1");
+		Peer p3=new Peer("192.168.10.4","42","1");
+		Peer p4=new Peer("192.168.10.5","46","1");
+		Peer p5=new Peer("192.168.10.6","42","2");
+		Peer p6=new Peer("192.168.10.7","67","2");
 				
 		titulo.add(subtitulo1);
 		titulo.add(subtitulo2);

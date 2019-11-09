@@ -1,44 +1,38 @@
 package BDUpdateTopicListener;
 
+import java.util.ArrayList;
+
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import javax.jms.ObjectMessage;
+
+import Controllers.DataController.EstadosBaseDeDatos;
+import Mensajes.ActualizacionBD;
+import Mensajes.PreparacionActualizacion;
+import Mensajes.SugerenciaActualizacion;
+import Objetos.Tracker;
+
+
+
 
 public class BDTopicListener implements MessageListener {
 
 	private int ContadorVersionBD;
-	private String estadoActual;
-	
+	private EstadosBaseDeDatos estadoActual;
+	private ArrayList<Tracker> TrackersRedundantes;
+	private ArrayList<String> ips;
 
-	public BDTopicListener(int contadorVersionBD, String estadoActual) {
+
+
+	public BDTopicListener(int contadorVersionBD, EstadosBaseDeDatos estadoActual,
+			ArrayList<Tracker> trackersRedundantes) {
 		super();
 		ContadorVersionBD = contadorVersionBD;
 		this.estadoActual = estadoActual;
+		TrackersRedundantes = trackersRedundantes;
+		this.ips = new ArrayList<String>();
+
 	}
-
-
-	//FUNCIONALIDAD DE MASTER (meter comprobaciones mas adelante)
-//	public void comprobar() {
-//		int i;
-//		//evitar que sume numeros muy altos
-//		if(Collections.min(SeguimientoKeepalive)==1000) {
-//			for(i=0;i<SeguimientoKeepalive.size();i++) {
-//				SeguimientoKeepalive.set(i, SeguimientoKeepalive.get(i)-1000);
-//			}
-//			setContadorKeepAlives(getContadorVersionBD()-1000);
-//		}
-//		//comprobar que no hay fallos de conexion 
-//		for(i=0;i<SeguimientoKeepalive.size();i++) {
-//			if(ContadorKeepAlives-SeguimientoKeepalive.get(i)>=3) {
-//				//Si los keepalive se retrasan, se expulsa
-//				SeguimientoKeepalive.remove(i);
-//				trackers.remove(i);
-//				System.out.println("Expulsado");
-//			}
-//			
-//		}
-//	}
-
-	
 
 
 
@@ -47,7 +41,44 @@ public class BDTopicListener implements MessageListener {
 	public void onMessage(Message message) {		
 		if (message != null) {
 			try {
-				//TODO cambiar de estado normal a sugerencia cuando llegue un mensaje de sugerencia
+				switch(estadoActual) {
+				  case Esperando:
+					break;
+				
+				  case Sugerencia:
+					  	ObjectMessage objectMessage = (ObjectMessage) message;					
+						SugerenciaActualizacion sugerenciaActualizacion = (SugerenciaActualizacion) objectMessage.getObject();
+						
+						System.out.println("     - Detectado nuevo peer con IP: " + sugerenciaActualizacion.getIpPeer());
+						ips.add(sugerenciaActualizacion.getIpPeer());
+						
+						if(ips.size()==TrackersRedundantes.size()){
+							setEstadoActual(EstadosBaseDeDatos.Preparacion);
+							ips=new ArrayList<String>();
+						}
+				    break;
+				  case Preparacion:
+					  	ObjectMessage objectMessage1 = (ObjectMessage) message;					
+						PreparacionActualizacion preparacionActualizacion = (PreparacionActualizacion) objectMessage1.getObject();
+						
+						System.out.println("     - Preparandose para actualizar");
+						setEstadoActual(EstadosBaseDeDatos.Actualizacion);
+				    break;
+				  case Actualizacion:
+					  	ObjectMessage objectMessage3 = (ObjectMessage) message;					
+						ActualizacionBD actualizacionBD = (ActualizacionBD) objectMessage3.getObject();
+						
+						System.out.println("     -Version de la base de datos: " + actualizacionBD.getIdentificador());
+						setContadorVersionBD(ContadorVersionBD+1);
+						setEstadoActual(EstadosBaseDeDatos.Sugerencia);
+						
+					  break;
+				  default:
+					  break;
+				}
+				
+				
+
 			} catch (Exception ex) {
 				System.err.println("# TopicListener error: " + ex.getMessage());
 				ex.printStackTrace();
@@ -65,11 +96,23 @@ public class BDTopicListener implements MessageListener {
 		ContadorVersionBD = contadorVersionBD;
 	}
 
-	public String getEstadoActual() {
+
+	public EstadosBaseDeDatos getEstadoActual() {
 		return estadoActual;
 	}
 
-	public void setEstadoActual(String estadoActual) {
+
+	public void setEstadoActual(EstadosBaseDeDatos estadoActual) {
 		this.estadoActual = estadoActual;
 	}
+	public ArrayList<Tracker> getTrackersRedundantes() {
+		return TrackersRedundantes;
+	}
+
+
+	public void setTrackersRedundantes(ArrayList<Tracker> trackersRedundantes) {
+		TrackersRedundantes = trackersRedundantes;
+	}
+
+
 }
