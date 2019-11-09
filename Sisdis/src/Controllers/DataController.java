@@ -1,8 +1,6 @@
 package Controllers;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
-
 import BDFileQueueListener.QueueFileReceiver;
 import BDFileQueueListener.QueueFileSender;
 import BDUpdateTopicListener.BDTopicPublisher;
@@ -27,14 +25,16 @@ public class DataController extends Thread{
 	private static QueueFileReceiver recibidorBD;
 	private static BDTopicPublisher topicActualizarPublisher;
 	private static BDTopicSubscriber topicActualizarSubscriber;
-	private static EstadosBaseDeDatos estadoActual;
-	private static boolean cambio;
-	private static int ContadorVersionBD;
+	private static ArrayList<EstadosBaseDeDatos> estadoActual = new ArrayList<EstadosBaseDeDatos>();
+	private ArrayList<Boolean> cambio=new ArrayList<Boolean>();//CAMBIAR EL TIPO PRIMITIVO POR UNO COMPLEJO, ASI FUNCIONA
+
+
+	private static int ContadorVersionBD=0;
 	private static LinkedList<Peer> PeersEnCola = new LinkedList<Peer>();
 
 	public DataController(ArrayList<Tracker> trackersRedundantes, ArrayList<Swarm> enjambres,
 			QueueFileSender enviadorBD, QueueFileReceiver recibidorBD, BDTopicPublisher topicActualizarPublisher,
-			BDTopicSubscriber topicActualizarSubscriber, EstadosBaseDeDatos estadoActual, boolean cambio) {
+			BDTopicSubscriber topicActualizarSubscriber, ArrayList<EstadosBaseDeDatos> estadoActual, ArrayList<Boolean> cambio) {
 		super();
 		TrackersRedundantes = trackersRedundantes;
 		Enjambres = enjambres;
@@ -43,23 +43,21 @@ public class DataController extends Thread{
 		DataController.topicActualizarPublisher = topicActualizarPublisher;
 		DataController.topicActualizarSubscriber = topicActualizarSubscriber;
 		DataController.estadoActual = estadoActual;
-		DataController.cambio = cambio;
+		this.cambio = cambio;
 	}
 
 	//Esperar un rato y comprobar si ha habido cambios en ese instante
 	public void comprobar() {
-		System.out.println("Cambio="+cambio);
-		System.out.println("!PeersEnCola.isEmpty()="+!PeersEnCola.isEmpty());
-		
+		System.out.println("Enjambres=="+Enjambres);
 		if(!PeersEnCola.isEmpty()) {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$");
-			System.out.println("estadoActual="+estadoActual);
-			cambio=true;
-			if(estadoActual==EstadosBaseDeDatos.Actualizacion) {
-				System.out.println("Entra");
+			System.out.println("estadoActual="+estadoActual.get(0));
+			cambio.set(0, true);//TODO
+
+			if(estadoActual.get(0)==EstadosBaseDeDatos.Actualizacion) {
 				Peer aux = PeersEnCola.poll();
 				boolean swarmDisponible=false;
 				for(Swarm swarm:Enjambres) {
+					//FIXME que los peers con mismo id se agrupen en el mismo enjambre
 					if(aux.getIdentificadorSwarm().equals(swarm.getIdentificadorSwarm())) {
 						swarm.getListaPeers().add(aux);
 						swarmDisponible=true;
@@ -74,9 +72,10 @@ public class DataController extends Thread{
 				}
 			}
 		}
-		else {cambio=false;}
+		else {System.out.println("HA LLEGADO AQUI Y HA CAMBIADO A FALSO");
+			cambio.set(0, false);}
 	}
-	//FIXME
+	
 	public void run() {
 		int loop=0;
 		while(loop<6000) {
@@ -96,23 +95,35 @@ public class DataController extends Thread{
 	public static void main(String args[]) {
 	
 		ArrayList<Peer> a =new ArrayList<Peer>();
-		cambio=false;
+		ArrayList<Boolean> cambio = new ArrayList<Boolean>();
+		cambio.add(new Boolean(false));
 		a.add(new Peer("192.168.1.56","30","1"));
 		a.add(new Peer("192.168.1.57","31","1"));
 		a.add(new Peer("192.168.1.58","34","2"));
 		Swarm s1=new Swarm(a);
 		Enjambres.add(s1);
 		ContadorVersionBD=1;
-		enviadorBD=new QueueFileSender();
-		recibidorBD= new QueueFileReceiver();
-		estadoActual=EstadosBaseDeDatos.Esperando;
-		topicActualizarPublisher = new BDTopicPublisher(ContadorVersionBD,estadoActual,Enjambres,cambio);
-		topicActualizarSubscriber = new BDTopicSubscriber(ContadorVersionBD, estadoActual,TrackersRedundantes);
+		
+		Tracker t1=new Tracker(1,"192.168.2.1","49",true,System.currentTimeMillis());
+		Tracker t2=new Tracker(2,"192.168.2.2","44",true,System.currentTimeMillis());
+		Tracker t3=new Tracker(3,"192.168.2.3","42",true,System.currentTimeMillis());
+		TrackersRedundantes.add(t1);
+		TrackersRedundantes.add(t2);
+		TrackersRedundantes.add(t3);
+		
+		QueueFileSender enviadorBD=new QueueFileSender();
+		QueueFileReceiver recibidorBD= new QueueFileReceiver();
+		
+		ArrayList<EstadosBaseDeDatos> estadosBaseDeDatos= new ArrayList<EstadosBaseDeDatos>();
+		estadosBaseDeDatos.add(0, EstadosBaseDeDatos.Esperando);
+		
+		BDTopicPublisher bDTopicPublisher = new BDTopicPublisher(ContadorVersionBD,estadosBaseDeDatos,Enjambres,cambio);
+		BDTopicSubscriber bDTopicSubscriber = new BDTopicSubscriber(ContadorVersionBD, estadosBaseDeDatos,TrackersRedundantes);
 
 		
 		
-		DataController datacontroller = new DataController(TrackersRedundantes, Enjambres, enviadorBD, recibidorBD, topicActualizarPublisher, topicActualizarSubscriber, estadoActual,cambio);
-		
+		DataController datacontroller = new DataController(TrackersRedundantes, Enjambres, enviadorBD, recibidorBD, bDTopicPublisher, bDTopicSubscriber, estadosBaseDeDatos,cambio);
+
 		topicActualizarSubscriber.start();
 		topicActualizarPublisher.start();
 		datacontroller.start();
@@ -124,7 +135,7 @@ public class DataController extends Thread{
 
 			e.printStackTrace();
 		}
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$");
+		System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 		PeersEnCola.offer(new Peer("192.168.1.59","34","2"));
 		
 		//Esperar 2 segundos y meter un nuevo peer
@@ -134,8 +145,8 @@ public class DataController extends Thread{
 
 			e.printStackTrace();
 		}
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$");
-		PeersEnCola.offer(new Peer("192.168.1.60","14","3"));
+		System.out.println("OOOOOOOOOOOOOOOOOOOOOOOO");
+		PeersEnCola.offer(new Peer("192.168.1.60","14","2"));
 		
 		try {
 			Thread.sleep(3000);
@@ -143,8 +154,8 @@ public class DataController extends Thread{
 
 			e.printStackTrace();
 		}
-		cambio=true;
-		//TODO ejecutar los hilos para probar el funcionamiento con unos mensajes hardcodeados
+		cambio.set(0, true);
+
 		
 	}
 	
@@ -224,53 +235,22 @@ public class DataController extends Thread{
 
 
 
-
-
-	public EstadosBaseDeDatos getEstadoActual() {
-		return estadoActual;
-	}
-
-
-
-
-
-	public void setEstadoActual(EstadosBaseDeDatos estadoActual) {
-		DataController.estadoActual = estadoActual;
-	}
-
-
-
-
-
 	public ArrayList<Tracker> getTrackersRedundantes() {
 		return TrackersRedundantes;
 	}
 
 
+	public static ArrayList<EstadosBaseDeDatos> getEstadoActual() {
+		return estadoActual;
+	}
 
-
+	public static void setEstadoActual(ArrayList<EstadosBaseDeDatos> estadoActual) {
+		DataController.estadoActual = estadoActual;
+	}
 
 	public void setTrackersRedundantes(ArrayList<Tracker> trackersRedundantes) {
 		TrackersRedundantes = trackersRedundantes;
 	}
-
-
-
-
-
-	public boolean isCambio() {
-		return cambio;
-	}
-
-
-
-
-
-	public void setCambio(boolean cambio) {
-		DataController.cambio = cambio;
-	}
-
-
 
 
 
@@ -296,8 +276,13 @@ public class DataController extends Thread{
 	}
 
 
+	public ArrayList<Boolean> getCambio() {
+		return cambio;
+	}
 
-	
+	public void setCambio(ArrayList<Boolean> cambio) {
+		this.cambio = cambio;
+	}
 	
 
 

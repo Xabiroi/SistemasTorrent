@@ -29,7 +29,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 	public void run() {
 		String connectionFactoryName = "TopicConnectionFactory";
 		//This name is defined in jndi.properties file
-		String topicJNDIName = "jndi.ssdd.Keepalive";		
+		String topicJNDIName = "jndi.ssdd.keepalive";		
 		TopicConnection topicConnection = null;
 		TopicSession topicSession = null;
 		TopicSubscriber topicNONDurableSubscriber = null;

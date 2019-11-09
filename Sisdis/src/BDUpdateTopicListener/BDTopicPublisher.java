@@ -28,17 +28,19 @@ public class BDTopicPublisher extends Thread{
 	TopicPublisher topicPublisher = null;	
 	
 	private int ContadorVersionBD;
-	private EstadosBaseDeDatos estadoActual;
+	private ArrayList<EstadosBaseDeDatos> estadoActual;
 	private ArrayList<Swarm> swarms;
-	private static boolean cambio;
+	private ArrayList<Boolean> cambio;
 	
+	//FIXME añadir la referencia al linkedlist para poder crear los mensajes bien
 
-	public BDTopicPublisher(int contadorVersionBD, EstadosBaseDeDatos estadoActual, ArrayList<Swarm> swarms, boolean cambio) {
+
+	public BDTopicPublisher(int contadorVersionBD, ArrayList<EstadosBaseDeDatos> estadoActual, ArrayList<Swarm> swarms, ArrayList<Boolean> cambio) {
 		super();
 		ContadorVersionBD = contadorVersionBD;
 		this.estadoActual = estadoActual;
 		this.swarms = swarms;
-		BDTopicPublisher.cambio = cambio;
+		this.cambio = cambio;
 	}
 	
 	public void run() {
@@ -66,20 +68,24 @@ public class BDTopicPublisher extends Thread{
 			System.out.println("- TopicPublisher created!");
 			
 			
-			switch(estadoActual) {
+			int loop=1;
+			//cambio a un numero limitado para comprobar que desconecta al usuario
+			while(loop<100) {
+		
+			switch(estadoActual.get(0)) {
 			  case Esperando:
-				  while(!cambio) {
-					  System.err.println("Bucle cambio="+cambio);
+//				  System.out.println("Bucle cambio esperando=="+cambio.get(0).booleanValue());
+				  while(!cambio.get(0).booleanValue()) {					  
 						try {
 							Thread.sleep(1000);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}	
 				  }
-					  setEstadoActual(EstadosBaseDeDatos.Sugerencia);
+				  estadoActual.set(0,EstadosBaseDeDatos.Sugerencia);
 				break;
 			  case Sugerencia:
-				  
+//				  	System.out.println("Bucle cambio Sugerencia=="+cambio.get(0).booleanValue());
 					ObjectMessage objectMessage = topicSession.createObjectMessage();
 					
 					//FIXME no hardcodear la ip, obtener de la cola donde se procesan los peers
@@ -98,12 +104,10 @@ public class BDTopicPublisher extends Thread{
 					} catch (Exception e) {
 						e.printStackTrace();
 					}	
-				  
-			    // code block
+
 			    break;
 			  case Preparacion:
-				  // code block
-				  
+
 					ObjectMessage objectMessage2 = topicSession.createObjectMessage();
 					objectMessage2.setObject(new PreparacionActualizacion());
 					
@@ -112,8 +116,8 @@ public class BDTopicPublisher extends Thread{
 					objectMessage2.setJMSPriority(1);		
 					
 					topicPublisher.publish(objectMessage2);
-					//Publish the Message
-					System.out.println("- Object published in the Topic!");
+
+					System.out.println("- Preparacion published in the Topic!");
 					try {
 						Thread.sleep(2000);
 					} catch (Exception e) {
@@ -122,8 +126,6 @@ public class BDTopicPublisher extends Thread{
 				  
 			    break;
 			  case Actualizacion:
-				// code block
-				  
 					ObjectMessage objectMessage3 = topicSession.createObjectMessage();
 					
 					//obtener id de la version de bd
@@ -135,7 +137,7 @@ public class BDTopicPublisher extends Thread{
 					
 					topicPublisher.publish(objectMessage3);
 					//Publish the Message
-					System.out.println("- Object published in the Topic!");
+					System.out.println("- Actualizacion published in the Topic!");
 					try {
 						Thread.sleep(2000);
 					} catch (Exception e) {
@@ -148,8 +150,8 @@ public class BDTopicPublisher extends Thread{
 			    // code block
 			}
 			
-
-
+			loop++;
+			}
 			
 
 		} catch (Exception e) {
@@ -176,15 +178,22 @@ public class BDTopicPublisher extends Thread{
 
 
 
-	public EstadosBaseDeDatos getEstadoActual() {
+
+	public ArrayList<EstadosBaseDeDatos> getEstadoActual() {
 		return estadoActual;
 	}
 
-	public void setEstadoActual(EstadosBaseDeDatos estadoActual) {
+	public void setEstadoActual(ArrayList<EstadosBaseDeDatos> estadoActual) {
 		this.estadoActual = estadoActual;
 	}
 
+	public ArrayList<Boolean> getCambio() {
+		return cambio;
+	}
 
+	public void setCambio(ArrayList<Boolean> cambio) {
+		this.cambio = cambio;
+	}
 
 	public int getContadorVersionBD() {
 		return ContadorVersionBD;

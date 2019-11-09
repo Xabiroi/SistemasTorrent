@@ -20,7 +20,7 @@ public class KeepaliveTopicPublisher extends Thread{
 	Tracker miTracker;
 	
 	String connectionFactoryName = "TopicConnectionFactory";
-	String topicJNDIName = "jndi.ssdd.Keepalive";		//This name is defined in jndi.properties file
+	String topicJNDIName = "jndi.ssdd.keepalive";		//This name is defined in jndi.properties file
 	
 	TopicConnection topicConnection = null;
 	TopicSession topicSession = null;

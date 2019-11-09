@@ -17,14 +17,14 @@ import Objetos.Tracker;
 public class BDTopicSubscriber extends Thread{	
 	
 	private int ContadorVersionBD;
-	private EstadosBaseDeDatos estadoActual;
+	private ArrayList<EstadosBaseDeDatos> estadoActual;
 	private ArrayList<Tracker> TrackersRedundantes;
 
 
 	
 
 
-	public BDTopicSubscriber(int contadorVersionBD, EstadosBaseDeDatos estadoActual,
+	public BDTopicSubscriber(int contadorVersionBD, ArrayList<EstadosBaseDeDatos> estadoActual,
 			ArrayList<Tracker> trackersRedundantes) {
 		super();
 		ContadorVersionBD = contadorVersionBD;

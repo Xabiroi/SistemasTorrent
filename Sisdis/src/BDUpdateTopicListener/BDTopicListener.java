@@ -18,13 +18,13 @@ import Objetos.Tracker;
 public class BDTopicListener implements MessageListener {
 
 	private int ContadorVersionBD;
-	private EstadosBaseDeDatos estadoActual;
+	private ArrayList<EstadosBaseDeDatos> estadoActual;
 	private ArrayList<Tracker> TrackersRedundantes;
 	private ArrayList<String> ips;
 
 
 
-	public BDTopicListener(int contadorVersionBD, EstadosBaseDeDatos estadoActual,
+	public BDTopicListener(int contadorVersionBD, ArrayList<EstadosBaseDeDatos> estadoActual,
 			ArrayList<Tracker> trackersRedundantes) {
 		super();
 		ContadorVersionBD = contadorVersionBD;
@@ -41,11 +41,14 @@ public class BDTopicListener implements MessageListener {
 	public void onMessage(Message message) {		
 		if (message != null) {
 			try {
-				switch(estadoActual) {
+				System.out.println("Estado actual del Listener="+estadoActual);
+				switch(estadoActual.get(0)) {
 				  case Esperando:
+					  System.out.println("De aqui no sale");
 					break;
 				
 				  case Sugerencia:
+					  System.out.println("Ha recibido la sugerencia!¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
 					  	ObjectMessage objectMessage = (ObjectMessage) message;					
 						SugerenciaActualizacion sugerenciaActualizacion = (SugerenciaActualizacion) objectMessage.getObject();
 						
@@ -53,7 +56,7 @@ public class BDTopicListener implements MessageListener {
 						ips.add(sugerenciaActualizacion.getIpPeer());
 						
 						if(ips.size()==TrackersRedundantes.size()){
-							setEstadoActual(EstadosBaseDeDatos.Preparacion);
+							estadoActual.set(0,EstadosBaseDeDatos.Preparacion);
 							ips=new ArrayList<String>();
 						}
 				    break;
@@ -62,7 +65,7 @@ public class BDTopicListener implements MessageListener {
 						PreparacionActualizacion preparacionActualizacion = (PreparacionActualizacion) objectMessage1.getObject();
 						
 						System.out.println("     - Preparandose para actualizar");
-						setEstadoActual(EstadosBaseDeDatos.Actualizacion);
+						estadoActual.set(0,EstadosBaseDeDatos.Actualizacion);
 				    break;
 				  case Actualizacion:
 					  	ObjectMessage objectMessage3 = (ObjectMessage) message;					
@@ -70,7 +73,7 @@ public class BDTopicListener implements MessageListener {
 						
 						System.out.println("     -Version de la base de datos: " + actualizacionBD.getIdentificador());
 						setContadorVersionBD(ContadorVersionBD+1);
-						setEstadoActual(EstadosBaseDeDatos.Sugerencia);
+						estadoActual.set(0,EstadosBaseDeDatos.Esperando);
 						
 					  break;
 				  default:
@@ -96,15 +99,30 @@ public class BDTopicListener implements MessageListener {
 		ContadorVersionBD = contadorVersionBD;
 	}
 
-
-	public EstadosBaseDeDatos getEstadoActual() {
+	public ArrayList<EstadosBaseDeDatos> getEstadoActual() {
 		return estadoActual;
 	}
 
 
-	public void setEstadoActual(EstadosBaseDeDatos estadoActual) {
+
+	public void setEstadoActual(ArrayList<EstadosBaseDeDatos> estadoActual) {
 		this.estadoActual = estadoActual;
 	}
+
+
+
+	public ArrayList<String> getIps() {
+		return ips;
+	}
+
+
+
+	public void setIps(ArrayList<String> ips) {
+		this.ips = ips;
+	}
+
+
+
 	public ArrayList<Tracker> getTrackersRedundantes() {
 		return TrackersRedundantes;
 	}
