@@ -1,7 +1,6 @@
 package KeepAliveTopicListeners;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -12,7 +11,7 @@ import Objetos.Tracker;
 
 public class KeepaliveListener implements MessageListener {
 	private ArrayList<Tracker> trackers;
-	private Tracker miTracker;	
+	private Tracker miTracker;
 		
 	public KeepaliveListener(ArrayList<Tracker> trackers, Tracker miTracker) {
 		super();
@@ -36,7 +35,6 @@ public class KeepaliveListener implements MessageListener {
 					trackers.add(new Tracker(keepAlive.getI(),keepAlive.getIp(),"20",true,System.currentTimeMillis()));
 				}
 
-				
 				boolean encontrado=false;
 				for(Tracker tracker:trackers) {
 					if(tracker.getId()==keepAlive.getI()) {

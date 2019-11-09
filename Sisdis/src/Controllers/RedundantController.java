@@ -2,6 +2,8 @@ package Controllers;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+//import DesconexionTopicListeners.DesconexionTopicPublisher;
+//import DesconexionTopicListeners.DesconexionTopicSubscriber;
 import KeepAliveTopicListeners.KeepaliveTopicPublisher;
 import KeepAliveTopicListeners.KeepaliveTopicSubscriber;
 import Objetos.Tracker;
@@ -12,6 +14,8 @@ public class RedundantController extends Thread{
 	private static ArrayList<Tracker> TrackersRedundantes=new ArrayList<Tracker>();
 	private static KeepaliveTopicPublisher KeepaliveTopicPublisher;
 	private static KeepaliveTopicSubscriber KeepaliveTopicSubscriber;
+//	private static DesconexionTopicSubscriber DesconexionTopicSubscriber;
+//	private static DesconexionTopicPublisher DesconexionTopicPublisher
 	
 	
 	//master-slave
@@ -66,7 +70,6 @@ public class RedundantController extends Thread{
 		keepaliveTopicPublisher.start();
 
 		RedundantController redundantController = new RedundantController(TrackersRedundantes, keepaliveTopicPublisher, keepaliveTopicSubscriber, miTracker);
-
 		redundantController.start();
 		
 	}

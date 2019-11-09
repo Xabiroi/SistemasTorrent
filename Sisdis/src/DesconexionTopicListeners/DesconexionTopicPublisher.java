@@ -1,6 +1,5 @@
-package NuevoMasterSelectListener;
+package DesconexionTopicListeners;
 
-import java.util.ArrayList; 
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.jms.Topic;
@@ -12,31 +11,31 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 
 import Controllers.DataController.EstadosEleccionMaster;
-import Mensajes.NuevoMaster;
+import Mensajes.Desconexion;
 import Objetos.Tracker;
 
-public class NuevoMasterTopicPublisher extends Thread{
-	private ArrayList<Tracker> trackers;
-	private Tracker miTracker;
-	private EstadosEleccionMaster estadoActual;
-	
+public class DesconexionTopicPublisher extends Thread{	
 	String connectionFactoryName = "TopicConnectionFactory";
-	String topicJNDIName = "jndi.ssdd.NuevoMaster"; 			//This name is defined in jndi.properties file		
+	//This name is defined in jndi.properties file
+	String topicJNDIName = "jndi.ssdd.desconexion";		
 	
 	TopicConnection topicConnection = null;
 	TopicSession topicSession = null;
 	TopicPublisher topicPublisher = null;	
 	
-	public NuevoMasterTopicPublisher(ArrayList<Tracker> trackers, Tracker miTracker, EstadosEleccionMaster estadoActual) {
+	private EstadosEleccionMaster estadoActual;
+	private Tracker miTracker;
+	
+
+	public DesconexionTopicPublisher(EstadosEleccionMaster estadoActual, Tracker miTracker) {
 		super();
-		this.trackers = trackers;
-		this.miTracker = miTracker;
 		this.estadoActual = estadoActual;
+		this.miTracker = miTracker;
 	}
 	
-	public void run() {	
-		
+	public void run() {
 		try {
+
 			//JNDI Initial Context
 			Context ctx = new InitialContext();
 		
@@ -58,24 +57,14 @@ public class NuevoMasterTopicPublisher extends Thread{
 			topicPublisher = topicSession.createPublisher(myTopic);
 			System.out.println("- TopicPublisher created!");
 			
-			
-			//TODO Comprobar ID más bajo en la lista "trackers" y enviarlo en un mensaje
-			int idMasBajo = miTracker.getId();
-			for(Tracker tracker : trackers) {
-				if(tracker.getId() < idMasBajo)
-					idMasBajo = tracker.getId();
-			}
-			
 			ObjectMessage objectMessage = topicSession.createObjectMessage();
-			
-			objectMessage.setObject(new NuevoMaster(idMasBajo));
-			
+		
+			objectMessage.setObject(new Desconexion(miTracker.getId()));
 			objectMessage.setJMSType("ObjectMessage");
 			objectMessage.setJMSMessageID("ID-1");
 			objectMessage.setJMSPriority(1);		
 			
 			topicPublisher.publish(objectMessage);
-			
 
 		} catch (Exception e) {
 			System.err.println("# TopicPublisherTest Error: " + e.getMessage());
@@ -89,19 +78,24 @@ public class NuevoMasterTopicPublisher extends Thread{
 			} catch (Exception ex) {
 				System.err.println("# TopicPublisherTest Error: " + ex.getMessage());
 			}			
-		}
+		}	
 	}
 	
+	
+	public static void main(String[] args) {
+	}
+
 	public EstadosEleccionMaster getEstadoActual() {
 		return estadoActual;
 	}
 
-	public void setEstadoActual(EstadosEleccionMaster decidiendo) {
-		this.estadoActual = decidiendo;
+	public void setEstadoActual(EstadosEleccionMaster estadoActual) {
+		this.estadoActual = estadoActual;
 	}
 
-	
-	public static void main(String[] args) {
-		System.out.println("Main de topic publisher");
-	}
+
+
+
+
+
 }

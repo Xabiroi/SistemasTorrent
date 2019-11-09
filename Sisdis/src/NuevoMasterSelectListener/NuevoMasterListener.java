@@ -58,6 +58,7 @@ public class NuevoMasterListener implements MessageListener {
 						break;
 					default:
 						System.out.println("Error: Estado de Nuevo Master no contemplado");
+						break;
 				} 
 				
 			} catch (Exception ex) {

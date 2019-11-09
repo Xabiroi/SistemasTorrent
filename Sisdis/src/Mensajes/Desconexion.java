@@ -1,10 +1,10 @@
 package Mensajes;
 
-public class Desconexion {
+import java.io.Serializable;
+
+public class Desconexion implements Serializable {
 	private int idOrigen;
-	public Desconexion() {
-		
-	}
+	
 	public Desconexion(int idOrigen) {
 		this.idOrigen=idOrigen;
 	}

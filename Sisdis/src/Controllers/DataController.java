@@ -18,6 +18,10 @@ public class DataController extends Thread{
 		Preparacion,
 		Actualizacion
 	}
+	public enum EstadosEleccionMaster{
+		Esperando,
+		Decidiendo
+	}
 	
 	private static ArrayList<Tracker> TrackersRedundantes=new ArrayList<Tracker>();
 	private static ArrayList<Swarm> Enjambres=new ArrayList<Swarm>();
