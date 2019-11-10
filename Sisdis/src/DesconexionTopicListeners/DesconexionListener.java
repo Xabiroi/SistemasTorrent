@@ -40,9 +40,7 @@ public class DesconexionListener implements MessageListener {
 							nuevoMasterTopicPublisher.setEstadoActual(EstadosEleccionMaster.Decidiendo); 
 						}
 				}
-				
-				//TODO iniciar proceso de elección de nuevo master
-				
+								
 			} catch (Exception ex) {
 				System.err.println("# TopicListener error: " + ex.getMessage());
 				ex.printStackTrace();

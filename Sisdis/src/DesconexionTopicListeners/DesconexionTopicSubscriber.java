@@ -12,17 +12,18 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 
 import Controllers.DataController.EstadosBaseDeDatos;
+import Controllers.DataController.EstadosEleccionMaster;
 import NuevoMasterSelectListener.NuevoMasterTopicPublisher;
 import Objetos.Tracker;
 
 public class DesconexionTopicSubscriber extends Thread{	
 	
-	private EstadosBaseDeDatos estadoActual;
+	private EstadosEleccionMaster estadoActual;
 	private ArrayList<Tracker> TrackersRedundantes;
 	private NuevoMasterTopicPublisher nuevoMasterTopicPublisher;
 
 
-	public DesconexionTopicSubscriber(ArrayList<Tracker> trackersRedundantes, EstadosBaseDeDatos estadoActual, NuevoMasterTopicPublisher nuevoMasterTopicPublisher) {
+	public DesconexionTopicSubscriber(ArrayList<Tracker> trackersRedundantes, EstadosEleccionMaster estadoActual, NuevoMasterTopicPublisher nuevoMasterTopicPublisher) {
 		super();
 		this.estadoActual = estadoActual;
 		TrackersRedundantes = trackersRedundantes;
@@ -93,7 +94,6 @@ public class DesconexionTopicSubscriber extends Thread{
 		} catch (Exception e) {
 			System.err.println("# DesconexionTopicSubscbier Error: " + e.getMessage());			
 		} finally {
-
 			try {
 				//Close resources
 				topicNONDurableSubscriber.close();

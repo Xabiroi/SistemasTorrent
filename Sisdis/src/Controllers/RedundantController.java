@@ -2,10 +2,11 @@ package Controllers;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-//import DesconexionTopicListeners.DesconexionTopicPublisher;
-//import DesconexionTopicListeners.DesconexionTopicSubscriber;
+import DesconexionTopicListeners.DesconexionTopicPublisher;
+import DesconexionTopicListeners.DesconexionTopicSubscriber;
 import KeepAliveTopicListeners.KeepaliveTopicPublisher;
 import KeepAliveTopicListeners.KeepaliveTopicSubscriber;
+import NuevoMasterSelectListener.NuevoMasterTopicPublisher;
 import Objetos.Tracker;
 
 public class RedundantController extends Thread{
@@ -14,18 +15,21 @@ public class RedundantController extends Thread{
 	private static ArrayList<Tracker> TrackersRedundantes=new ArrayList<Tracker>();
 	private static KeepaliveTopicPublisher KeepaliveTopicPublisher;
 	private static KeepaliveTopicSubscriber KeepaliveTopicSubscriber;
-//	private static DesconexionTopicSubscriber DesconexionTopicSubscriber;
-//	private static DesconexionTopicPublisher DesconexionTopicPublisher
+	private static DesconexionTopicSubscriber DesconexionTopicSubscriber;
+	private static DesconexionTopicPublisher DesconexionTopicPublisher;
 	
 	
 	//master-slave
 	public RedundantController(ArrayList<Tracker> trackersRedundantes, KeepaliveTopicPublisher keepaliveTopicPublisher,
-			KeepaliveTopicSubscriber keepaliveTopicSubscriber, Tracker myTracker) {
+			KeepaliveTopicSubscriber keepaliveTopicSubscriber, DesconexionTopicPublisher desconexionTopicPublisher,
+			DesconexionTopicSubscriber desconexionTopicSubscriber,Tracker myTracker) {
 		super();
 		TrackersRedundantes = trackersRedundantes;
 		miTracker = myTracker;
 		setKeepaliveTopicPublisher(keepaliveTopicPublisher);
 		setKeepaliveTopicSubscriber(keepaliveTopicSubscriber);
+		setDesconexionTopicPublisher(desconexionTopicPublisher);
+		setDesconexionTopicSubscriber(desconexionTopicSubscriber);
 	}
 	
 
@@ -66,22 +70,36 @@ public class RedundantController extends Thread{
 		Tracker miTracker = new Tracker(0,"192.168.5.46","30",false,System.currentTimeMillis());
 		
 		KeepaliveTopicSubscriber keepaliveTopicSubscriber=new KeepaliveTopicSubscriber(getTrackersRedundantes(), miTracker);
-		keepaliveTopicSubscriber.start();
-		
 		KeepaliveTopicPublisher keepaliveTopicPublisher=new KeepaliveTopicPublisher(TrackersRedundantes, miTracker);
-		keepaliveTopicPublisher.start();
+	
+		DesconexionTopicPublisher desconexionTopicPublisher = new DesconexionTopicPublisher(DataController.EstadosEleccionMaster.Esperando, miTracker);
+		DesconexionTopicSubscriber desconexionTopicSubscriber = new DesconexionTopicSubscriber(TrackersRedundantes, DataController.EstadosEleccionMaster.Esperando, new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, DataController.EstadosEleccionMaster.Esperando));
 
-		RedundantController redundantController = new RedundantController(TrackersRedundantes, keepaliveTopicPublisher, keepaliveTopicSubscriber, miTracker);
-		redundantController.start();
-		
+		RedundantController redundantController = new RedundantController(TrackersRedundantes, keepaliveTopicPublisher, keepaliveTopicSubscriber,  desconexionTopicPublisher, desconexionTopicSubscriber, miTracker);
+				
+		conectarJMS(keepaliveTopicPublisher, keepaliveTopicSubscriber, desconexionTopicPublisher, desconexionTopicSubscriber, redundantController);
 	}
 	
 	
 	
 	public void expulsar() {}
 	public void unirseARed() {}
-	public void conectarJMS() {}
-	public void desconexion() {}
+	public static void conectarJMS(KeepaliveTopicPublisher keepaliveTopicPublisher, KeepaliveTopicSubscriber keepaliveTopicSubscriber,
+			DesconexionTopicPublisher desconexionTopicPublisher, DesconexionTopicSubscriber desconexionTopicSubscriber, RedundantController redundantController) {
+		keepaliveTopicSubscriber.start();
+		keepaliveTopicPublisher.start();
+		desconexionTopicPublisher.start();
+		desconexionTopicSubscriber.start();
+		redundantController.start();
+	}
+	public static void desconexion(KeepaliveTopicPublisher keepaliveTopicPublisher, KeepaliveTopicSubscriber keepaliveTopicSubscriber,
+			DesconexionTopicPublisher desconexionTopicPublisher, DesconexionTopicSubscriber desconexionTopicSubscriber, RedundantController redundantController) {
+		desconexionTopicPublisher.interrupt();
+		desconexionTopicSubscriber.interrupt();
+		keepaliveTopicPublisher.interrupt();
+		keepaliveTopicSubscriber.interrupt();
+		redundantController.interrupt();
+	}
 	
 	public static ArrayList<Tracker> getTrackersRedundantes() {
 		return TrackersRedundantes;
@@ -107,7 +125,21 @@ public class RedundantController extends Thread{
 		KeepaliveTopicPublisher = keepaliveTopicPublisher;
 	}
 	
+	public static DesconexionTopicSubscriber getDesconexionTopicSubscriber() {
+		return DesconexionTopicSubscriber;
+	}
 
+	public static void setDesconexionTopicSubscriber(DesconexionTopicSubscriber desconexionTopicSubscriber) {
+		DesconexionTopicSubscriber = desconexionTopicSubscriber;
+	}
+
+	public static DesconexionTopicPublisher getDesconexionTopicPublisher() {
+		return DesconexionTopicPublisher;
+	}
+
+	public static void setDesconexionTopicPublisher(DesconexionTopicPublisher desconexionTopicPublisher) {
+		DesconexionTopicPublisher = desconexionTopicPublisher;
+	}
 
 	
 }
