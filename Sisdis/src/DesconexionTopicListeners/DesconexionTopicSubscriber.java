@@ -67,7 +67,7 @@ public class DesconexionTopicSubscriber extends Thread{
 			//Topic Listener
 			
 			DesconexionListener topicListener = new DesconexionListener(TrackersRedundantes, nuevoMasterTopicPublisher);
-			
+			//asdf
 			//Set the same message listener for the non-durable subscriber
 			topicNONDurableSubscriber.setMessageListener(topicListener);
 			
