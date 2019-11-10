@@ -10,7 +10,9 @@ import javax.jms.TopicSession;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
+import Controllers.DataController;
 import Controllers.DataController.EstadosEleccionMaster;
+import Controllers.RedundantController;
 import Mensajes.Desconexion;
 import Objetos.Tracker;
 
@@ -47,15 +49,15 @@ public class DesconexionTopicPublisher extends Thread{
 			
 			//Connection			
 			topicConnection = topicConnectionFactory.createTopicConnection();
-			System.out.println("- Topic Connection created!");
+			System.out.println("- Desconexion Topic Connection created!");
 			
 			//Session
 			topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-			System.out.println("- Topic Session created!");
+			System.out.println("- Desconexion Topic Session created!");
 
 			//Message Publisher
 			topicPublisher = topicSession.createPublisher(myTopic);
-			System.out.println("- TopicPublisher created!");
+			System.out.println("- Desconexion TopicPublisher created!");
 			
 			ObjectMessage objectMessage = topicSession.createObjectMessage();
 		
@@ -65,18 +67,19 @@ public class DesconexionTopicPublisher extends Thread{
 			objectMessage.setJMSPriority(1);		
 			
 			topicPublisher.publish(objectMessage);
+			RedundantController.desconexion();
 
 		} catch (Exception e) {
-			System.err.println("# TopicPublisherTest Error: " + e.getMessage());
+			System.err.println("# Desconexion TopicPublisherTest Error: " + e.getMessage());
 		} finally {
 			try {
 				//Close resources
 				topicPublisher.close();
 				topicSession.close();
 				topicConnection.close();
-				System.out.println("- Topic resources closed!");				
+				System.out.println("- Desconexion Topic resources closed!");				
 			} catch (Exception ex) {
-				System.err.println("# TopicPublisherTest Error: " + ex.getMessage());
+				System.err.println("# Desconexion TopicPublisherTest Error: " + ex.getMessage());
 			}			
 		}	
 	}

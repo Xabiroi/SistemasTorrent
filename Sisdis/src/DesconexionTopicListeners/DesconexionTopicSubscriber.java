@@ -55,11 +55,11 @@ public class DesconexionTopicSubscriber extends Thread{
 			//Set an ID to create a durable connection (optional)
 			topicConnection.setClientID("SSDDTopic.Desconexion");
 			
-			System.out.println("- Topic Connection created!");
+			System.out.println("- Desconexion Topic Connection created!");
 			
 			//Sessions
 			topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-			System.out.println("-Desconexion Topic Session created!");
+			System.out.println("- Desconexion Topic Session created!");
 
 			//Define a non-durable connection using a filter (the filter is optional)
 			topicNONDurableSubscriber = topicSession.createSubscriber(myTopic);
@@ -92,7 +92,7 @@ public class DesconexionTopicSubscriber extends Thread{
 			
 		
 		} catch (Exception e) {
-			System.err.println("# DesconexionTopicSubscbier Error: " + e.getMessage());			
+			System.err.println("# Desconexion TopicSubscbier Error: " + e.getMessage());			
 		} finally {
 			try {
 				//Close resources
@@ -101,7 +101,7 @@ public class DesconexionTopicSubscriber extends Thread{
 				topicConnection.close();
 				System.out.println("- Desconexion Topic resources closed!");				
 			} catch (Exception ex) {
-				System.err.println("# DesconexionTopicSubscriber Error: " + ex.getMessage());
+				System.err.println("# Desconexion TopicSubscriber Error: " + ex.getMessage());
 			}
 		}
 

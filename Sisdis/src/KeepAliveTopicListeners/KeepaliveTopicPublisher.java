@@ -46,15 +46,15 @@ public class KeepaliveTopicPublisher extends Thread{
 			
 			//Connection			
 			topicConnection = topicConnectionFactory.createTopicConnection();
-			System.out.println("- Topic Connection created!");
+			System.out.println("- KeepAlive Topic Connection created!");
 			
 			//Session
 			topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-			System.out.println("- Topic Session created!");
+			System.out.println("- KeepAlive Topic Session created!");
 
 			//Message Publisher
 			topicPublisher = topicSession.createPublisher(myTopic);
-			System.out.println("- TopicPublisher created!");
+			System.out.println("- KeepAlive TopicPublisher created!");
 			
 			
 			//Bucle infinito
@@ -75,7 +75,7 @@ public class KeepaliveTopicPublisher extends Thread{
 				
 				topicPublisher.publish(objectMessage);
 				//Publish the Message
-				System.out.println("- Object published in the Topic!");
+				System.out.println("- KeepAlive Object published in the Topic!");
 					try {
 						Thread.sleep(1000);
 					} catch (Exception e) {
@@ -102,16 +102,16 @@ public class KeepaliveTopicPublisher extends Thread{
 //			////////////////////////////////////////////////////
 
 		} catch (Exception e) {
-			System.err.println("# TopicPublisherTest Error: " + e.getMessage());
+			System.err.println("# KeepAlive TopicPublisherTest Error: " + e.getMessage());
 		} finally {
 			try {
 				//Close resources
 				topicPublisher.close();
 				topicSession.close();
 				topicConnection.close();
-				System.out.println("- Topic resources closed!");				
+				System.out.println("- KeepAlive Topic resources closed!");				
 			} catch (Exception ex) {
-				System.err.println("# TopicPublisherTest Error: " + ex.getMessage());
+				System.err.println("# KeepAlive TopicPublisherTest Error: " + ex.getMessage());
 			}			
 		}
 	}
