@@ -67,7 +67,7 @@ public class KeepaliveTopicPublisher extends Thread{
 				ObjectMessage objectMessage = topicSession.createObjectMessage();
 				
 				//La creacion de keepalives con asignacion de id, no 1 (getid del tracker)
-				objectMessage.setObject(new Keepalive(1, System.currentTimeMillis(), true));
+				objectMessage.setObject(new Keepalive(miTracker.getId(), System.currentTimeMillis(), true));
 				
 				objectMessage.setJMSType("ObjectMessage");
 				objectMessage.setJMSMessageID("ID-1");

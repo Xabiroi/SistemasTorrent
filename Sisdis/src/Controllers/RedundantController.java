@@ -62,6 +62,8 @@ public class RedundantController extends Thread{
 	}
 	
 	public static void main(String args[]) {
+		//al tracker asignarle la ip de cada uno en la realidad
+		Tracker miTracker = new Tracker(0,"192.168.5.46","30",false,System.currentTimeMillis());
 		
 		KeepaliveTopicSubscriber keepaliveTopicSubscriber=new KeepaliveTopicSubscriber(getTrackersRedundantes(), miTracker);
 		keepaliveTopicSubscriber.start();

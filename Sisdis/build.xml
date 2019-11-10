@@ -22,14 +22,14 @@
     </target>
 	
 	<target name="KeepalivePublisher" depends="build" description="Runs Topic Publisher">
-		<java classname="Listeners.KeepaliveTopicPublisher" classpathref="classpath" fork="true">
+		<java classname="KeepAliveTopicListeners.KeepaliveTopicPublisher" classpathref="classpath" fork="true">
 			<jvmarg value="-Dlog4j.configuration=log4j.properties"/>
 			<jvmarg value="-Dorg.apache.activemq.SERIALIZABLE_PACKAGES=*"/>
         </java>
     </target>
 	
 	<target name="KeepaliveSubscriber" depends="build" description="Runs topic Subscriber">
-		<java classname="Listeners.KeepaliveTopicSubscriber" classpathref="classpath" fork="true">
+		<java classname="KeepAliveTopicListeners.KeepaliveTopicSubscriber" classpathref="classpath" fork="true">
 			<jvmarg value="-Dlog4j.configuration=log4j.properties"/>
 			<jvmarg value="-Dorg.apache.activemq.SERIALIZABLE_PACKAGES=*"/>
         </java>
