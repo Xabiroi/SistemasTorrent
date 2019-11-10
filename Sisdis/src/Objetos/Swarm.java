@@ -11,12 +11,11 @@ public class Swarm extends Observable{
 //	private File HashArchivo;
 //	o juntar los dos con un separador # entre los dos valores y luego substring
 	
-	
-	public Swarm(ArrayList<Peer> ListaPeers) {
-		this.setListaPeers(ListaPeers);
-
-		
-	}
+	public Swarm(ArrayList<Peer> listaPeers, String identificadorSwarm) {
+	super();
+	ListaPeers = listaPeers;
+	this.identificadorSwarm = identificadorSwarm;
+}
 
 	public ArrayList<Peer> getListaPeers() {
 		return ListaPeers;

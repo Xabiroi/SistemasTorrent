@@ -8,6 +8,7 @@ import BDUpdateTopicListener.BDTopicSubscriber;
 import Objetos.Peer;
 import Objetos.Swarm;
 import Objetos.Tracker;
+import Sqlite.SQLiteDBManager;
 
 public class DataController extends Thread{
 	
@@ -29,12 +30,11 @@ public class DataController extends Thread{
 	private static QueueFileReceiver recibidorBD;
 	private static BDTopicPublisher topicActualizarPublisher;
 	private static BDTopicSubscriber topicActualizarSubscriber;
-	private static ArrayList<EstadosBaseDeDatos> estadoActual = new ArrayList<EstadosBaseDeDatos>();
-	private ArrayList<Boolean> cambio=new ArrayList<Boolean>();//CAMBIAR EL TIPO PRIMITIVO POR UNO COMPLEJO, ASI FUNCIONA
-
-
-	private static int ContadorVersionBD=0;
+	private static ArrayList<EstadosBaseDeDatos> estadoActual = new ArrayList<EstadosBaseDeDatos>(1);
+	private ArrayList<Boolean> cambio=new ArrayList<Boolean>(1);
+	private static ArrayList<Integer> ContadorVersionBD=new ArrayList<Integer>(1);
 	private static LinkedList<Peer> PeersEnCola = new LinkedList<Peer>();
+	private SQLiteDBManager manager = new SQLiteDBManager("bd/test.db");
 
 	public DataController(ArrayList<Tracker> trackersRedundantes, ArrayList<Swarm> enjambres,
 			QueueFileSender enviadorBD, QueueFileReceiver recibidorBD, BDTopicPublisher topicActualizarPublisher,
@@ -64,15 +64,24 @@ public class DataController extends Thread{
 					//FIXME que los peers con mismo id se agrupen en el mismo enjambre
 					if(aux.getIdentificadorSwarm().equals(swarm.getIdentificadorSwarm())) {
 						swarm.getListaPeers().add(aux);
+						manager.insertPeer(aux.getIP(), aux.getPuerto(),aux.getIdentificadorSwarm());
+						//TODO habria que meter los hashes de archivosaqui en vez de las ids
+						manager.insertSwarmPeer(swarm.getIdentificadorSwarm(),aux.getIdentificadorSwarm(),0);
 						swarmDisponible=true;
 					}
 
 				}
 				//Enjambres.add(PeersEnCola.poll());
 				if(!swarmDisponible) {
+					System.out.println("Entras en nuevo swarm");
 					ArrayList<Peer> ListaPeers= new ArrayList<Peer>();
 					ListaPeers.add(aux);
-					Enjambres.add(new Swarm(ListaPeers));			
+					Enjambres.add(new Swarm(ListaPeers,aux.getIdentificadorSwarm()));	
+					
+					manager.insertPeer(aux.getIP(), aux.getPuerto(),aux.getIdentificadorSwarm());
+					//TODO habria que meter los hashes de archivosaqui en vez de las ids
+					manager.insertSwarm(aux.getIdentificadorSwarm());
+					manager.insertSwarmPeer(aux.getIdentificadorSwarm(),aux.getIdentificadorSwarm(),0);
 				}
 			}
 		}
@@ -104,9 +113,9 @@ public class DataController extends Thread{
 		a.add(new Peer("192.168.1.56","30","1"));
 		a.add(new Peer("192.168.1.57","31","1"));
 		a.add(new Peer("192.168.1.58","34","2"));
-		Swarm s1=new Swarm(a);
+		Swarm s1=new Swarm(a,"2");
 		Enjambres.add(s1);
-		ContadorVersionBD=1;
+		ContadorVersionBD.add(1);
 		
 		Tracker t1=new Tracker(1,"192.168.2.1","49",true,System.currentTimeMillis());
 		Tracker t2=new Tracker(2,"192.168.2.2","44",true,System.currentTimeMillis());
@@ -121,7 +130,7 @@ public class DataController extends Thread{
 		ArrayList<EstadosBaseDeDatos> estadosBaseDeDatos= new ArrayList<EstadosBaseDeDatos>();
 		estadosBaseDeDatos.add(0, EstadosBaseDeDatos.Esperando);
 		
-		BDTopicPublisher bDTopicPublisher = new BDTopicPublisher(ContadorVersionBD,estadosBaseDeDatos,Enjambres,cambio);
+		BDTopicPublisher bDTopicPublisher = new BDTopicPublisher(ContadorVersionBD,estadosBaseDeDatos,Enjambres,cambio,PeersEnCola);
 		BDTopicSubscriber bDTopicSubscriber = new BDTopicSubscriber(ContadorVersionBD, estadosBaseDeDatos,TrackersRedundantes);
 
 		
@@ -144,22 +153,13 @@ public class DataController extends Thread{
 		
 		//Esperar 2 segundos y meter un nuevo peer
 		try {
-			Thread.sleep(4000);
+			Thread.sleep(9000);
 		} catch (InterruptedException e) {
 
 			e.printStackTrace();
 		}
 		System.out.println("OOOOOOOOOOOOOOOOOOOOOOOO");
-		PeersEnCola.offer(new Peer("192.168.1.60","14","2"));
-		
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-
-			e.printStackTrace();
-		}
-		cambio.set(0, true);
-
+		PeersEnCola.offer(new Peer("192.168.5.121","19","3"));
 		
 	}
 	
@@ -257,19 +257,13 @@ public class DataController extends Thread{
 	}
 
 
-
-	public static int getContadorVersionBD() {
+	public static ArrayList<Integer> getContadorVersionBD() {
 		return ContadorVersionBD;
 	}
 
-
-
-
-
-	public static void setContadorVersionBD(int contadorVersionBD) {
+	public static void setContadorVersionBD(ArrayList<Integer> contadorVersionBD) {
 		ContadorVersionBD = contadorVersionBD;
 	}
-
 
 	public static LinkedList<Peer> getPeersEnCola() {
 		return PeersEnCola;
@@ -286,6 +280,14 @@ public class DataController extends Thread{
 
 	public void setCambio(ArrayList<Boolean> cambio) {
 		this.cambio = cambio;
+	}
+
+	public SQLiteDBManager getManager() {
+		return manager;
+	}
+
+	public void setManager(SQLiteDBManager manager) {
+		this.manager = manager;
 	}
 	
 

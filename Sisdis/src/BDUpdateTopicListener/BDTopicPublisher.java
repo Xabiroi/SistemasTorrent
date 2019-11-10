@@ -1,6 +1,7 @@
 package BDUpdateTopicListener;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
@@ -16,6 +17,7 @@ import Controllers.DataController.EstadosBaseDeDatos;
 import Mensajes.ActualizacionBD;
 import Mensajes.PreparacionActualizacion;
 import Mensajes.SugerenciaActualizacion;
+import Objetos.Peer;
 import Objetos.Swarm;
 
 public class BDTopicPublisher extends Thread{	
@@ -27,20 +29,23 @@ public class BDTopicPublisher extends Thread{
 	TopicSession topicSession = null;
 	TopicPublisher topicPublisher = null;	
 	
-	private int ContadorVersionBD;
+	private ArrayList<Integer> ContadorVersionBD;
 	private ArrayList<EstadosBaseDeDatos> estadoActual;
 	private ArrayList<Swarm> swarms;
 	private ArrayList<Boolean> cambio;
+	private LinkedList<Peer> PeersEnCola;
 	
 	//FIXME añadir la referencia al linkedlist para poder crear los mensajes bien
 
 
-	public BDTopicPublisher(int contadorVersionBD, ArrayList<EstadosBaseDeDatos> estadoActual, ArrayList<Swarm> swarms, ArrayList<Boolean> cambio) {
+	public BDTopicPublisher(ArrayList<Integer> contadorVersionBD, ArrayList<EstadosBaseDeDatos> estadoActual, ArrayList<Swarm> swarms,
+			ArrayList<Boolean> cambio, LinkedList<Peer> peersEnCola) {
 		super();
 		ContadorVersionBD = contadorVersionBD;
 		this.estadoActual = estadoActual;
 		this.swarms = swarms;
 		this.cambio = cambio;
+		PeersEnCola = peersEnCola;
 	}
 	
 	public void run() {
@@ -77,7 +82,7 @@ public class BDTopicPublisher extends Thread{
 //				  System.out.println("Bucle cambio esperando=="+cambio.get(0).booleanValue());
 				  while(!cambio.get(0).booleanValue()) {					  
 						try {
-							Thread.sleep(1000);
+							Thread.sleep(100);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}	
@@ -89,7 +94,8 @@ public class BDTopicPublisher extends Thread{
 					ObjectMessage objectMessage = topicSession.createObjectMessage();
 					
 					//FIXME no hardcodear la ip, obtener de la cola donde se procesan los peers
-					objectMessage.setObject(new SugerenciaActualizacion("192.168.1.56"));
+					Peer peer = PeersEnCola.getFirst();
+					objectMessage.setObject(new SugerenciaActualizacion(peer.getIP()));
 					
 					objectMessage.setJMSType("ObjectMessage");
 					objectMessage.setJMSMessageID("ID-1");
@@ -100,7 +106,7 @@ public class BDTopicPublisher extends Thread{
 					System.out.println("- Sugerencia published in the Topic!");
 					
 					try {
-						Thread.sleep(2000);
+						Thread.sleep(1000);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}	
@@ -119,7 +125,7 @@ public class BDTopicPublisher extends Thread{
 
 					System.out.println("- Preparacion published in the Topic!");
 					try {
-						Thread.sleep(2000);
+						Thread.sleep(1000);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}	
@@ -129,7 +135,7 @@ public class BDTopicPublisher extends Thread{
 					ObjectMessage objectMessage3 = topicSession.createObjectMessage();
 					
 					//obtener id de la version de bd
-					objectMessage3.setObject(new ActualizacionBD(ContadorVersionBD));
+					objectMessage3.setObject(new ActualizacionBD(ContadorVersionBD.get(0)));
 					
 					objectMessage3.setJMSType("ObjectMessage");
 					objectMessage3.setJMSMessageID("ID-1");
@@ -139,7 +145,7 @@ public class BDTopicPublisher extends Thread{
 					//Publish the Message
 					System.out.println("- Actualizacion published in the Topic!");
 					try {
-						Thread.sleep(2000);
+						Thread.sleep(1000);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}	
@@ -173,6 +179,9 @@ public class BDTopicPublisher extends Thread{
 	
 	
 
+
+
+
 	public static void main(String[] args) {
 	}
 
@@ -195,17 +204,14 @@ public class BDTopicPublisher extends Thread{
 		this.cambio = cambio;
 	}
 
-	public int getContadorVersionBD() {
+
+	public ArrayList<Integer> getContadorVersionBD() {
 		return ContadorVersionBD;
 	}
 
-
-
-	public void setContadorVersionBD(int contadorVersionBD) {
+	public void setContadorVersionBD(ArrayList<Integer> contadorVersionBD) {
 		ContadorVersionBD = contadorVersionBD;
 	}
-
-
 
 	public ArrayList<Swarm> getSwarms() {
 		return swarms;
@@ -215,6 +221,14 @@ public class BDTopicPublisher extends Thread{
 
 	public void setSwarms(ArrayList<Swarm> swarms) {
 		this.swarms = swarms;
+	}
+
+	public LinkedList<Peer> getPeersEnCola() {
+		return PeersEnCola;
+	}
+
+	public void setPeersEnCola(LinkedList<Peer> peersEnCola) {
+		PeersEnCola = peersEnCola;
 	}
 
 

@@ -17,14 +17,14 @@ import Objetos.Tracker;
 
 public class BDTopicListener implements MessageListener {
 
-	private int ContadorVersionBD;
+	private ArrayList<Integer> ContadorVersionBD;
 	private ArrayList<EstadosBaseDeDatos> estadoActual;
 	private ArrayList<Tracker> TrackersRedundantes;
 	private ArrayList<String> ips;
 
 
 
-	public BDTopicListener(int contadorVersionBD, ArrayList<EstadosBaseDeDatos> estadoActual,
+	public BDTopicListener(ArrayList<Integer> contadorVersionBD, ArrayList<EstadosBaseDeDatos> estadoActual,
 			ArrayList<Tracker> trackersRedundantes) {
 		super();
 		ContadorVersionBD = contadorVersionBD;
@@ -72,7 +72,8 @@ public class BDTopicListener implements MessageListener {
 						ActualizacionBD actualizacionBD = (ActualizacionBD) objectMessage3.getObject();
 						
 						System.out.println("     -Version de la base de datos: " + actualizacionBD.getIdentificador());
-						setContadorVersionBD(ContadorVersionBD+1);
+						
+						ContadorVersionBD.set(0, ContadorVersionBD.get(0)+1);
 						estadoActual.set(0,EstadosBaseDeDatos.Esperando);
 						
 					  break;
@@ -90,14 +91,17 @@ public class BDTopicListener implements MessageListener {
 	}
 
 
-	public int getContadorVersionBD() {
+	public ArrayList<Integer> getContadorVersionBD() {
 		return ContadorVersionBD;
 	}
 
 
-	public void setContadorVersionBD(int contadorVersionBD) {
+
+	public void setContadorVersionBD(ArrayList<Integer> contadorVersionBD) {
 		ContadorVersionBD = contadorVersionBD;
 	}
+
+
 
 	public ArrayList<EstadosBaseDeDatos> getEstadoActual() {
 		return estadoActual;

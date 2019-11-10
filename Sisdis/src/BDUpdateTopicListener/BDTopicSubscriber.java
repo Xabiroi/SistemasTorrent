@@ -16,7 +16,7 @@ import Objetos.Tracker;
 
 public class BDTopicSubscriber extends Thread{	
 	
-	private int ContadorVersionBD;
+	private ArrayList<Integer> ContadorVersionBD;
 	private ArrayList<EstadosBaseDeDatos> estadoActual;
 	private ArrayList<Tracker> TrackersRedundantes;
 
@@ -24,7 +24,7 @@ public class BDTopicSubscriber extends Thread{
 	
 
 
-	public BDTopicSubscriber(int contadorVersionBD, ArrayList<EstadosBaseDeDatos> estadoActual,
+	public BDTopicSubscriber(ArrayList<Integer> contadorVersionBD, ArrayList<EstadosBaseDeDatos> estadoActual,
 			ArrayList<Tracker> trackersRedundantes) {
 		super();
 		ContadorVersionBD = contadorVersionBD;
