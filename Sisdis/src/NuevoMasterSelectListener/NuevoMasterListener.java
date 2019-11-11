@@ -62,7 +62,7 @@ public class NuevoMasterListener implements MessageListener {
 				} 
 				
 			} catch (Exception ex) {
-				System.err.println("# TopicListener error: " + ex.getMessage());
+				System.err.println("# NuevoMaster Listener TopicListener error: " + ex.getMessage());
 				ex.printStackTrace();
 			}
 		}		

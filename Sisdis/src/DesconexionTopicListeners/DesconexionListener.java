@@ -37,12 +37,14 @@ public class DesconexionListener implements MessageListener {
 						trackers.remove(tracker);
 						
 						if(tracker.isMaster()) {
-							nuevoMasterTopicPublisher.setEstadoActual(EstadosEleccionMaster.Decidiendo); 
+							ArrayList<EstadosEleccionMaster> estadosEleccionMasters = new ArrayList<EstadosEleccionMaster>();
+							estadosEleccionMasters.add(EstadosEleccionMaster.Decidiendo);
+							nuevoMasterTopicPublisher.setEstadoActual(estadosEleccionMasters); 
 						}
 				}
 								
 			} catch (Exception ex) {
-				System.err.println("# TopicListener error: " + ex.getMessage());
+				System.err.println("# Desconexion Listener TopicListener error: " + ex.getMessage());
 				ex.printStackTrace();
 			}
 		}		

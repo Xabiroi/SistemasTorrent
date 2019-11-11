@@ -67,6 +67,7 @@ public class DesconexionTopicPublisher extends Thread{
 			objectMessage.setJMSPriority(1);		
 			
 			topicPublisher.publish(objectMessage);
+			Thread.sleep(3000);
 			RedundantController.desconexion();
 
 		} catch (Exception e) {

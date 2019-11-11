@@ -62,15 +62,15 @@ public class BDTopicPublisher extends Thread{
 			
 			//Connection			
 			topicConnection = topicConnectionFactory.createTopicConnection();
-			System.out.println("- Topic Connection created!");
+			System.out.println("- BD Publisher Topic Connection created!");
 			
 			//Session
 			topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-			System.out.println("- Topic Session created!");
+			System.out.println("- BD Publisher Topic Session created!");
 
 			//Message Publisher
 			topicPublisher = topicSession.createPublisher(myTopic);
-			System.out.println("- TopicPublisher created!");
+			System.out.println("- BD Publisher TopicPublisher created!");
 			
 			
 			int loop=1;
@@ -161,16 +161,16 @@ public class BDTopicPublisher extends Thread{
 			
 
 		} catch (Exception e) {
-			System.err.println("# TopicPublisherTest Error: " + e.getMessage());
+			System.err.println("# BD Publisher TopicTest Error: " + e.getMessage());
 		} finally {
 			try {
 				//Close resources
 				topicPublisher.close();
 				topicSession.close();
 				topicConnection.close();
-				System.out.println("- Topic resources closed!");				
+				System.out.println("- BD Publisher Topic resources closed!");				
 			} catch (Exception ex) {
-				System.err.println("# TopicPublisherTest Error: " + ex.getMessage());
+				System.err.println("# BD Publisher TopicTest Error: " + ex.getMessage());
 			}			
 		}
 		

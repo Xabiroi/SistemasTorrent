@@ -11,6 +11,7 @@ import javax.jms.TopicSubscriber;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
+import Controllers.DataController;
 import Controllers.DataController.EstadosBaseDeDatos;
 import Controllers.DataController.EstadosEleccionMaster;
 import NuevoMasterSelectListener.NuevoMasterTopicPublisher;
@@ -18,14 +19,14 @@ import Objetos.Tracker;
 
 public class DesconexionTopicSubscriber extends Thread{	
 	
-	private EstadosEleccionMaster estadoActual;
+	private ArrayList<EstadosEleccionMaster> estadoActual;
 	private ArrayList<Tracker> TrackersRedundantes;
 	private NuevoMasterTopicPublisher nuevoMasterTopicPublisher;
 
 
-	public DesconexionTopicSubscriber(ArrayList<Tracker> trackersRedundantes, EstadosEleccionMaster estadoActual, NuevoMasterTopicPublisher nuevoMasterTopicPublisher) {
+	public DesconexionTopicSubscriber(ArrayList<Tracker> trackersRedundantes, ArrayList<EstadosEleccionMaster> estadosEleccionMasters, NuevoMasterTopicPublisher nuevoMasterTopicPublisher) {
 		super();
-		this.estadoActual = estadoActual;
+		this.estadoActual = estadosEleccionMasters;
 		TrackersRedundantes = trackersRedundantes;
 		this.nuevoMasterTopicPublisher = nuevoMasterTopicPublisher;
 	}

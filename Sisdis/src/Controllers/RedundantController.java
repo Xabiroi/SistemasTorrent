@@ -18,6 +18,7 @@ public class RedundantController extends Thread{
 	private static DesconexionTopicSubscriber DesconexionTopicSubscriber;
 	private static DesconexionTopicPublisher DesconexionTopicPublisher;
 	private static RedundantController RedundantController;
+	private static ArrayList<DataController.EstadosEleccionMaster> estadosEleccionMasters = new ArrayList<DataController.EstadosEleccionMaster>();
 	
 	
 	//master-slave
@@ -74,7 +75,8 @@ public class RedundantController extends Thread{
 		KeepaliveTopicPublisher = new KeepaliveTopicPublisher(TrackersRedundantes, miTracker);
 	
 		DesconexionTopicPublisher = new DesconexionTopicPublisher(DataController.EstadosEleccionMaster.Esperando, miTracker);
-		DesconexionTopicSubscriber = new DesconexionTopicSubscriber(TrackersRedundantes, DataController.EstadosEleccionMaster.Esperando, new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, DataController.EstadosEleccionMaster.Esperando));
+		estadosEleccionMasters.add(DataController.EstadosEleccionMaster.Esperando);
+		DesconexionTopicSubscriber = new DesconexionTopicSubscriber(TrackersRedundantes, estadosEleccionMasters, new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, estadosEleccionMasters));
 
 		RedundantController = new RedundantController(TrackersRedundantes, KeepaliveTopicPublisher, KeepaliveTopicSubscriber,  DesconexionTopicPublisher, DesconexionTopicSubscriber, miTracker);
 				

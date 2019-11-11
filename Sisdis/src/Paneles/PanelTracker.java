@@ -8,6 +8,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import Controllers.DataController;
+import Controllers.DataController.EstadosEleccionMaster;
 import Controllers.RedundantController;
 import DesconexionTopicListeners.DesconexionTopicPublisher;
 import DesconexionTopicListeners.DesconexionTopicSubscriber;
@@ -31,17 +32,14 @@ public class PanelTracker extends JPanel{
 	private static DesconexionTopicSubscriber DesconexionTopicSubscriber;
 	private static DesconexionTopicPublisher DesconexionTopicPublisher;
 	private static RedundantController RedundantController;
-	
-	
-	
-	
-	
+	private static ArrayList<EstadosEleccionMaster> estadosEleccionMasters = new ArrayList<EstadosEleccionMaster>();
 	
 	
 	/**
 	 * Create the panel.
 	 */
 	public PanelTracker() {
+		estadosEleccionMasters.add(EstadosEleccionMaster.Esperando);
 		this.setLayout(new BorderLayout(0, 0));
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
@@ -65,7 +63,7 @@ public class PanelTracker extends JPanel{
 		
 		
 		DesconexionTopicPublisher = new DesconexionTopicPublisher(DataController.EstadosEleccionMaster.Esperando, miTracker);
-		DesconexionTopicSubscriber = new DesconexionTopicSubscriber(TrackersRedundantes, DataController.EstadosEleccionMaster.Esperando, new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, DataController.EstadosEleccionMaster.Esperando));
+		DesconexionTopicSubscriber = new DesconexionTopicSubscriber(TrackersRedundantes, estadosEleccionMasters, new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, estadosEleccionMasters));
 //		DesconexionTopicPublisher.start();
 //		KeepaliveTopicPublisher.start();
 		

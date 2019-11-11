@@ -48,11 +48,11 @@ public class NuevoMasterTopicSubscriber extends Thread{
 			
 			//Set an ID to create a durable connection (optional)
 			topicConnection.setClientID("SSDDTopic.NuevoMaster");
-			System.out.println("- Topic Connection created!");
+			System.out.println("- NuevoMaster Subscriber Topic Connection created!");
 			
 			//Sessions
 			topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-			System.out.println("- Topic Session created!");
+			System.out.println("- NuevoMaster Subscriber Topic Session created!");
 
 			//Define a non-durable connection using a filter (the filter is optional)
 			topicNONDurableSubscriber = topicSession.createSubscriber(myTopic);
@@ -84,7 +84,7 @@ public class NuevoMasterTopicSubscriber extends Thread{
 			
 		
 		} catch (Exception e) {
-			System.err.println("# TopicSubscriberTest Error: " + e.getMessage());			
+			System.err.println("# NuevoMaster Subscriber TopicSubscriberTest Error: " + e.getMessage());			
 		} finally {
 
 			try {
@@ -92,9 +92,9 @@ public class NuevoMasterTopicSubscriber extends Thread{
 				topicNONDurableSubscriber.close();
 				topicSession.close();
 				topicConnection.close();
-				System.out.println("- Topic resources closed!");				
+				System.out.println("- NuevoMaster Subscriber Topic resources closed!");				
 			} catch (Exception ex) {
-				System.err.println("# TopicSubscriberTest Error: " + ex.getMessage());
+				System.err.println("# NuevoMaster Subscriber TopicSubscriberTest Error: " + ex.getMessage());
 			}
 		}
 

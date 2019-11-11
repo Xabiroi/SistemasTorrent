@@ -59,11 +59,11 @@ public class BDTopicSubscriber extends Thread{
 			//Set an ID to create a durable connection (optional)
 			topicConnection.setClientID("SSDDTopic.BDUpdate");
 			
-			System.out.println("- Topic Connection created!");
+			System.out.println("- BD Subscriber Topic Connection created!");
 			
 			//Sessions
 			topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-			System.out.println("-BD Topic Session created!");
+			System.out.println("-BD Subscriber Topic Session created!");
 
 			//Define a non-durable connection using a filter (the filter is optional)
 			topicNONDurableSubscriber = topicSession.createSubscriber(myTopic);
@@ -96,7 +96,7 @@ public class BDTopicSubscriber extends Thread{
 			
 		
 		} catch (Exception e) {
-			System.err.println("# BD TopicSubscriberTest Error: " + e.getMessage());			
+			System.err.println("# BD Subscriber TopicTest Error: " + e.getMessage());			
 		} finally {
 
 			try {
@@ -104,9 +104,9 @@ public class BDTopicSubscriber extends Thread{
 				topicNONDurableSubscriber.close();
 				topicSession.close();
 				topicConnection.close();
-				System.out.println("- BD Topic resources closed!");				
+				System.out.println("- BD Subscriber Topic resources closed!");				
 			} catch (Exception ex) {
-				System.err.println("# BD TopicSubscriberTest Error: " + ex.getMessage());
+				System.err.println("# BD Subscriber TopicSubscriberTest Error: " + ex.getMessage());
 			}
 		}
 

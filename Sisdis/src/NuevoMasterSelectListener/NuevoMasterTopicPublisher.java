@@ -18,7 +18,7 @@ import Objetos.Tracker;
 public class NuevoMasterTopicPublisher extends Thread{
 	private ArrayList<Tracker> trackers;
 	private Tracker miTracker;
-	private EstadosEleccionMaster estadoActual;
+	private ArrayList<EstadosEleccionMaster> estadoActual;
 	
 	String connectionFactoryName = "TopicConnectionFactory";
 	String topicJNDIName = "jndi.ssdd.NuevoMaster"; 			//This name is defined in jndi.properties file		
@@ -27,7 +27,7 @@ public class NuevoMasterTopicPublisher extends Thread{
 	TopicSession topicSession = null;
 	TopicPublisher topicPublisher = null;	
 	
-	public NuevoMasterTopicPublisher(ArrayList<Tracker> trackers, Tracker miTracker, EstadosEleccionMaster estadoActual) {
+	public NuevoMasterTopicPublisher(ArrayList<Tracker> trackers, Tracker miTracker, ArrayList<EstadosEleccionMaster> estadoActual) {
 		super();
 		this.trackers = trackers;
 		this.miTracker = miTracker;
@@ -48,15 +48,15 @@ public class NuevoMasterTopicPublisher extends Thread{
 			
 			//Connection			
 			topicConnection = topicConnectionFactory.createTopicConnection();
-			System.out.println("- Topic Connection created!");
+			System.out.println("- NuevoMaster Publisher Topic Connection created!");
 			
 			//Session
 			topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-			System.out.println("- Topic Session created!");
+			System.out.println("- NuevoMaster Publisher Topic Session created!");
 
 			//Message Publisher
 			topicPublisher = topicSession.createPublisher(myTopic);
-			System.out.println("- TopicPublisher created!");
+			System.out.println("- NuevoMaster Publisher TopicPublisher created!");
 			
 			
 			//TODO Comprobar ID más bajo en la lista "trackers" y enviarlo en un mensaje
@@ -78,29 +78,30 @@ public class NuevoMasterTopicPublisher extends Thread{
 			
 
 		} catch (Exception e) {
-			System.err.println("# TopicPublisherTest Error: " + e.getMessage());
+			System.err.println("# NuevoMaster Publisher TopicPublisherTest Error: " + e.getMessage());
 		} finally {
 			try {
 				//Close resources
 				topicPublisher.close();
 				topicSession.close();
 				topicConnection.close();
-				System.out.println("- Topic resources closed!");				
+				System.out.println("- NuevoMaster Publisher Topic resources closed!");				
 			} catch (Exception ex) {
-				System.err.println("# TopicPublisherTest Error: " + ex.getMessage());
+				System.err.println("# NuevoMaster Publisher TopicPublisherTest Error: " + ex.getMessage());
 			}			
 		}
 	}
 	
-	public EstadosEleccionMaster getEstadoActual() {
+	
+	
+	public ArrayList<EstadosEleccionMaster> getEstadoActual() {
 		return estadoActual;
 	}
 
-	public void setEstadoActual(EstadosEleccionMaster decidiendo) {
-		this.estadoActual = decidiendo;
+	public void setEstadoActual(ArrayList<EstadosEleccionMaster> estadosEleccionMasters) {
+		this.estadoActual = estadosEleccionMasters;
 	}
 
-	
 	public static void main(String[] args) {
 		System.out.println("Main de topic publisher");
 	}
