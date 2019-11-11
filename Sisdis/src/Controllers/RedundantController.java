@@ -78,7 +78,7 @@ public class RedundantController extends Thread{
 
 		RedundantController = new RedundantController(TrackersRedundantes, KeepaliveTopicPublisher, KeepaliveTopicSubscriber,  DesconexionTopicPublisher, DesconexionTopicSubscriber, miTracker);
 				
-		conectarJMS();
+		RedundantController.conectarJMS();
 		System.out.println("CONECTADO");
 	}
 	
@@ -86,7 +86,7 @@ public class RedundantController extends Thread{
 	
 	public void expulsar() {}
 	public void unirseARed() {}
-	public static void conectarJMS() {
+	public void conectarJMS() {
 		KeepaliveTopicSubscriber.start();
 		KeepaliveTopicPublisher.start();
 		DesconexionTopicPublisher.start();

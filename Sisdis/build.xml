@@ -61,4 +61,13 @@
 			<jvmarg value="-Dorg.apache.activemq.SERIALIZABLE_PACKAGES=*"/>
         </java>
     </target>
+	
+	<target name="VistaTracker" depends="build" description="Runs main window">
+		<java classname="Aplicacion.VistaTracker" classpathref="classpath" fork="true">
+			<jvmarg value="-Dlog4j.configuration=log4j.properties"/>
+			<jvmarg value="-Dorg.apache.activemq.SERIALIZABLE_PACKAGES=*"/>
+        </java>
+    </target>
+	
+	
 </project>
