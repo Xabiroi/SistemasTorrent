@@ -4,6 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+
+import Objetos.Peer;
+import Objetos.Swarm;
 //FIXME meter los metodos en datacontroller
 public class SQLiteDBManager {
 
@@ -84,20 +88,26 @@ public class SQLiteDBManager {
 		}
 	}
 	
-	public void loadPeers() {	
+	public ArrayList<Peer> loadPeers() {	
 		String sqlString = "SELECT * FROM PEER";
-		
+		ArrayList<Peer> arPeer = new ArrayList<Peer>();
 		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {			
 			ResultSet rs = stmt.executeQuery();
 			
 			System.out.println("\n - Loading peers from the db:");
 			
+			
 			while(rs.next()) {
 				System.out.println("    " + rs.getString("IP") + ".- " +rs.getString("PUERTO")+ ".- " +rs.getString("IDPEER"));
+		         String ip = rs.getString("IP");
+		         String puerto = rs.getString("PUERTO");
+		         String idpeer = rs.getString("IDPEER");
+		         arPeer.add(new Peer(ip,puerto,idpeer));
 			}				
 		} catch (Exception ex) {
 			System.err.println("\n # Error loading data in the db: " + ex.getMessage());
 		}
+		return arPeer;
 	}
 	
 	public void deletePeers() {	
@@ -167,21 +177,25 @@ public class SQLiteDBManager {
 		}
 	}
 	
-	public void loadSwarms() {	
+	public ArrayList<Swarm> loadSwarms() {	
 		String sqlString = "SELECT * FROM SWARM";
-		
+		ArrayList<Swarm> arSwarm = new ArrayList<Swarm>();
 		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {			
 			ResultSet rs = stmt.executeQuery();
 			
 			System.out.println("\n - Loading swarms from the db:");
 			
 			while(rs.next()) {
-				System.out.println("    " + rs.getInt("IP") + ".- " + 
-			                                rs.getString("PUERTO"));
+				System.out.println("    " + rs.getInt("IDSWARM"));
+				
+		         String idSwarm = rs.getString("IDSWARM");
+
+		         arSwarm.add(new Swarm(new ArrayList<Peer>(),idSwarm));
 			}				
 		} catch (Exception ex) {
 			System.err.println("\n # Error loading data in the db: " + ex.getMessage());
 		}
+		return arSwarm;
 	}
 	
 	public void deleteSwarms() {	
@@ -255,7 +269,7 @@ public class SQLiteDBManager {
 			System.err.println("\n # Error updating SwarmPeer's data: some parameters are 'null' or 'empty'.");
 		}
 	}
-	
+	//FIXME arreglar que devuelva una lista
 	public void loadSwarmPeers() {	
 		String sqlString = "SELECT * FROM SWARM_PEER";
 		

@@ -16,7 +16,7 @@ import KeepAliveTopicListeners.KeepaliveTopicSubscriber;
 import NuevoMasterSelectListener.NuevoMasterTopicPublisher;
 import Objetos.Tracker;
 
-public class PanelTracker extends JPanel implements Runnable{
+public class PanelTracker extends JPanel{
 
 
 	/**
@@ -55,7 +55,7 @@ public class PanelTracker extends JPanel implements Runnable{
 		model.addColumn("Puerto");
 		model.addColumn("Master");
 		scrollPane_1.setViewportView(table);
-		//Elegir el tracker de cada uno con su ip y demas
+		//FIXME Elegir el tracker de cada uno con su ip y demas
 		Tracker miTracker = new Tracker(0,"192.168.5.46","30",false,System.currentTimeMillis());
 		
 		KeepaliveTopicSubscriber= new KeepaliveTopicSubscriber(getTrackersRedundantes(), miTracker);
@@ -118,11 +118,6 @@ public class PanelTracker extends JPanel implements Runnable{
 		
 	}
 
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-	}
 
 
 	public static ArrayList<Tracker> getTrackersRedundantes() {
