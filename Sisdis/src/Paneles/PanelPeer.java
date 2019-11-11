@@ -121,9 +121,7 @@ public class PanelPeer extends JPanel{
 		DC.start();
 		//####################################
 		
-		
-		
-		//FIXME tendrian que pasarle la abse de datos al conectarse primero y luego hacer los loads y pintar
+
 		
 		//####################################
 		Thread thread = new Thread(){
@@ -164,7 +162,6 @@ public class PanelPeer extends JPanel{
 		    		try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 		    	}

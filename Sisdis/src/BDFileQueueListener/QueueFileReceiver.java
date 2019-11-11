@@ -47,8 +47,8 @@ public class QueueFileReceiver extends Thread{
 			
 			//Start receiving messages
 			queueConnection.start();
-			
-			Thread.sleep(10000);
+			//FIXME 10 segundos para recibir la bd(?)
+			Thread.sleep(20000);
 		} catch (Exception e) {
 			System.err.println("# QueueReceiverTest Error: " + e.getMessage());
 		} finally {

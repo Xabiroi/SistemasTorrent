@@ -66,8 +66,11 @@ public class KeepaliveTopicPublisher extends Thread{
 				//Object Message
 				ObjectMessage objectMessage = topicSession.createObjectMessage();
 				
-				//La creacion de keepalives con asignacion de id, no 1 (getid del tracker)
-				objectMessage.setObject(new Keepalive(miTracker.getId(), System.currentTimeMillis(), true));
+				//FIXME La creacion de keepalives con asignacion de id
+				//PRUEBA
+				objectMessage.setObject(new Keepalive(45, System.currentTimeMillis(), true));
+				//ORIGINAL
+				//objectMessage.setObject(new Keepalive(miTracker.getId(), System.currentTimeMillis(), true));
 				
 				objectMessage.setJMSType("ObjectMessage");
 				objectMessage.setJMSMessageID("ID-1");
@@ -120,5 +123,10 @@ public class KeepaliveTopicPublisher extends Thread{
 	
 	public static void main(String[] args) {
 		System.out.println("Main de topic publisher");
+		//Prueba para dos ordenadores diferentes
+//		ArrayList<Tracker> a = new ArrayList<Tracker>();
+//		Tracker t = new Tracker(2,"192.168.52.56","30",false,System.currentTimeMillis());
+//		KeepaliveTopicPublisher katp= new KeepaliveTopicPublisher(a, t);
+//		katp.start();
 	}
 }

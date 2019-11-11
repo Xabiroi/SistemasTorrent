@@ -6,17 +6,25 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
+import BDFileQueueListener.QueueFileReceiver;
+import BDFileQueueListener.QueueFileSender;
 import Mensajes.Keepalive;
 import Objetos.Tracker;
 
 public class KeepaliveListener implements MessageListener {
 	private ArrayList<Tracker> trackers;
 	private Tracker miTracker;
+	private QueueFileSender enviadorBD;
+	private QueueFileReceiver recibidorBD;
 		
-	public KeepaliveListener(ArrayList<Tracker> trackers, Tracker miTracker) {
+	
+	public KeepaliveListener(ArrayList<Tracker> trackers, Tracker miTracker, QueueFileSender enviadorBD,
+			QueueFileReceiver recibidorBD) {
 		super();
 		this.trackers = trackers;
-		this.setMiTracker(miTracker);
+		this.miTracker = miTracker;
+		this.enviadorBD = enviadorBD;
+		this.recibidorBD = recibidorBD;
 	}
 
 	@Override
@@ -27,6 +35,10 @@ public class KeepaliveListener implements MessageListener {
 			try {
 				ObjectMessage objectMessage = (ObjectMessage) message;					
 				Keepalive keepAlive = (Keepalive) objectMessage.getObject();
+				
+				//FIXME contemplar el caso de no haber trackers cuando se inicia la aplicacion para la eleccion de id
+				//el for no se si dara null pointer
+				
 				//Si llega keepalive con id 0
 				if(keepAlive.getI()==0) {
 					//Si vemos que nuestro id no es 0 pasamos(no somos nosotros)
@@ -46,6 +58,7 @@ public class KeepaliveListener implements MessageListener {
 					System.out.println("     - Keep Alive ID: " + keepAlive.getI());
 					System.out.println("     - Keep Alive IP: " + keepAlive.getIp());
 				
+					//FIXME esto no deberia contemplarse nunca creo (el if de abajo)
 					//Si no hay nadie te anyades como master
 					if(trackers.size()==0) {
 						trackers.add(new Tracker(keepAlive.getI(),keepAlive.getIp(),"20",true,System.currentTimeMillis()));
@@ -60,8 +73,10 @@ public class KeepaliveListener implements MessageListener {
 						}	
 						
 						//Si no se ha encontrado anyadir tracker
+						//FIXME quitar el puerto de los trackers ya que es 6161?
 						if(encontrado==false) {					
 							trackers.add(new Tracker((max+1),keepAlive.getIp(),"20",false,System.currentTimeMillis()));
+							enviadorBD.start();
 //							trackers.add(new Tracker(keepAlive.getI(),keepAlive.getIp(),"20",false,System.currentTimeMillis()));
 						}
 					}
@@ -86,6 +101,22 @@ public class KeepaliveListener implements MessageListener {
 
 	public void setMiTracker(Tracker miTracker) {
 		this.miTracker = miTracker;
+	}
+
+	public QueueFileSender getEnviadorBD() {
+		return enviadorBD;
+	}
+
+	public void setEnviadorBD(QueueFileSender enviadorBD) {
+		this.enviadorBD = enviadorBD;
+	}
+
+	public QueueFileReceiver getRecibidorBD() {
+		return recibidorBD;
+	}
+
+	public void setRecibidorBD(QueueFileReceiver recibidorBD) {
+		this.recibidorBD = recibidorBD;
 	}
 
 

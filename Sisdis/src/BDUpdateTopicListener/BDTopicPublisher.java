@@ -35,9 +35,6 @@ public class BDTopicPublisher extends Thread{
 	private ArrayList<Boolean> cambio;
 	private LinkedList<Peer> PeersEnCola;
 	
-	//FIXME añadir la referencia al linkedlist para poder crear los mensajes bien
-
-
 	public BDTopicPublisher(ArrayList<Integer> contadorVersionBD, ArrayList<EstadosBaseDeDatos> estadoActual, ArrayList<Swarm> swarms,
 			ArrayList<Boolean> cambio, LinkedList<Peer> peersEnCola) {
 		super();
@@ -93,7 +90,6 @@ public class BDTopicPublisher extends Thread{
 //				  	System.out.println("Bucle cambio Sugerencia=="+cambio.get(0).booleanValue());
 					ObjectMessage objectMessage = topicSession.createObjectMessage();
 					
-					//FIXME no hardcodear la ip, obtener de la cola donde se procesan los peers
 					Peer peer = PeersEnCola.getFirst();
 					objectMessage.setObject(new SugerenciaActualizacion(peer.getIP()));
 					

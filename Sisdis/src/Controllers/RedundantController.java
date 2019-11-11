@@ -2,6 +2,8 @@ package Controllers;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import BDFileQueueListener.QueueFileReceiver;
+import BDFileQueueListener.QueueFileSender;
 import DesconexionTopicListeners.DesconexionTopicPublisher;
 import DesconexionTopicListeners.DesconexionTopicSubscriber;
 import KeepAliveTopicListeners.KeepaliveTopicPublisher;
@@ -19,6 +21,8 @@ public class RedundantController extends Thread{
 	private static DesconexionTopicPublisher DesconexionTopicPublisher;
 	private static RedundantController RedundantController;
 	private static ArrayList<DataController.EstadosEleccionMaster> estadosEleccionMasters = new ArrayList<DataController.EstadosEleccionMaster>();
+	private static QueueFileSender enviadorBD;
+	private static QueueFileReceiver recibidorBD;
 	
 	
 	//master-slave
@@ -58,7 +62,6 @@ public class RedundantController extends Thread{
 		try {
 			Thread.sleep(1500);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println("Comprobando...");
@@ -71,7 +74,10 @@ public class RedundantController extends Thread{
 		//al tracker asignarle la ip de cada uno en la realidad
 		Tracker miTracker = new Tracker(0,"192.168.5.46","30",false,System.currentTimeMillis());
 		
-		KeepaliveTopicSubscriber= new KeepaliveTopicSubscriber(getTrackersRedundantes(), miTracker);
+		enviadorBD=new QueueFileSender();
+		recibidorBD= new QueueFileReceiver();
+		
+		KeepaliveTopicSubscriber= new KeepaliveTopicSubscriber(getTrackersRedundantes(), miTracker,enviadorBD,recibidorBD);
 		KeepaliveTopicPublisher = new KeepaliveTopicPublisher(TrackersRedundantes, miTracker);
 	
 		DesconexionTopicPublisher = new DesconexionTopicPublisher(DataController.EstadosEleccionMaster.Esperando, miTracker);
@@ -86,14 +92,15 @@ public class RedundantController extends Thread{
 	
 	
 	
-	public void expulsar() {}
-	public void unirseARed() {}
+//	public void expulsar() {}
+//	public void unirseARed() {}
 	public void conectarJMS() {
 		KeepaliveTopicSubscriber.start();
 		KeepaliveTopicPublisher.start();
 		DesconexionTopicPublisher.start();
 		DesconexionTopicSubscriber.start();
 		RedundantController.start();
+		recibidorBD.start();
 	}
 	public static void desconexion() {
 		DesconexionTopicPublisher.interrupt();
@@ -141,6 +148,30 @@ public class RedundantController extends Thread{
 
 	public static void setDesconexionTopicPublisher(DesconexionTopicPublisher desconexionTopicPublisher) {
 		DesconexionTopicPublisher = desconexionTopicPublisher;
+	}
+
+
+
+	public static QueueFileSender getEnviadorBD() {
+		return enviadorBD;
+	}
+
+
+
+	public static void setEnviadorBD(QueueFileSender enviadorBD) {
+		RedundantController.enviadorBD = enviadorBD;
+	}
+
+
+
+	public static QueueFileReceiver getRecibidorBD() {
+		return recibidorBD;
+	}
+
+
+
+	public static void setRecibidorBD(QueueFileReceiver recibidorBD) {
+		RedundantController.recibidorBD = recibidorBD;
 	}
 
 	

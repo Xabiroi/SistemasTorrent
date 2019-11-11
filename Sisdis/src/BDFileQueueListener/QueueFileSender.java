@@ -54,6 +54,7 @@ public class QueueFileSender extends Thread{
 			queueSender.send(bytesMessage);
 			
 			System.out.println("- ByteMessage sent to the Queue!");
+			
 		} catch (Exception e) {
 			System.err.println("# QueueSenderTest Error: " + e.getMessage());
 			e.printStackTrace();

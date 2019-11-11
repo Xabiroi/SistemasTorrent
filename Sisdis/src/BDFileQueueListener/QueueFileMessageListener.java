@@ -26,7 +26,7 @@ public class QueueFileMessageListener implements MessageListener  {
 					
 					//Print received file details
 					File file = new File(fileName);					
-					System.out.println("     - Received file:  '" + file.getName() + "' (" + file.length() + " bytes)");
+					System.out.println("     - Received BD file:  '" + file.getName() + "' (" + file.length() + " bytes)");
 				}
 			
 			} catch (Exception ex) {

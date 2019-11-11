@@ -55,17 +55,17 @@ public class DataController extends Thread{
 		System.out.println("Enjambres=="+Enjambres);
 		if(!PeersEnCola.isEmpty()) {
 			System.out.println("estadoActual="+estadoActual.get(0));
-			cambio.set(0, true);//TODO
+			cambio.set(0, true);
 
 			if(estadoActual.get(0)==EstadosBaseDeDatos.Actualizacion) {
 				Peer aux = PeersEnCola.poll();
 				boolean swarmDisponible=false;
 				for(Swarm swarm:Enjambres) {
-					//FIXME que los peers con mismo id se agrupen en el mismo enjambre
+
 					if(aux.getIdentificadorSwarm().equals(swarm.getIdentificadorSwarm())) {
 						swarm.getListaPeers().add(aux);
 						manager.insertPeer(aux.getIP(), aux.getPuerto(),aux.getIdentificadorSwarm());
-						//TODO habria que meter los hashes de archivosaqui en vez de las ids
+						//TODO habria que meter los hashes de archivos aqui en vez de las ids
 						manager.insertSwarmPeer(swarm.getIdentificadorSwarm(),aux.getIdentificadorSwarm(),0);
 						swarmDisponible=true;
 					}
@@ -79,7 +79,7 @@ public class DataController extends Thread{
 					Enjambres.add(new Swarm(ListaPeers,aux.getIdentificadorSwarm()));	
 					
 					manager.insertPeer(aux.getIP(), aux.getPuerto(),aux.getIdentificadorSwarm());
-					//TODO habria que meter los hashes de archivosaqui en vez de las ids
+					//TODO habria que meter los hashes de archivos aqui en vez de las ids
 					manager.insertSwarm(aux.getIdentificadorSwarm());
 					manager.insertSwarmPeer(aux.getIdentificadorSwarm(),aux.getIdentificadorSwarm(),0);
 				}
@@ -124,6 +124,7 @@ public class DataController extends Thread{
 		TrackersRedundantes.add(t2);
 		TrackersRedundantes.add(t3);
 		
+		//FIXME quitar las clases estas (no se utilizan)
 		QueueFileSender enviadorBD=new QueueFileSender();
 		QueueFileReceiver recibidorBD= new QueueFileReceiver();
 		

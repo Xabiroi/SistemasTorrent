@@ -11,18 +11,26 @@ import javax.jms.TopicSubscriber;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
+import BDFileQueueListener.QueueFileReceiver;
+import BDFileQueueListener.QueueFileSender;
 import Objetos.Tracker;
 
 public class KeepaliveTopicSubscriber extends Thread{	
 	private ArrayList<Tracker> trackers=new ArrayList<Tracker>();
 	private Tracker miTracker;
-	
+	private QueueFileSender enviadorBD;
+	private QueueFileReceiver recibidorBD;
 	
 
-	public KeepaliveTopicSubscriber(ArrayList<Tracker> trackers, Tracker miTracker) {
+
+
+	public KeepaliveTopicSubscriber(ArrayList<Tracker> trackers, Tracker miTracker, QueueFileSender enviadorBD,
+			QueueFileReceiver recibidorBD) {
 		super();
 		this.trackers = trackers;
 		this.miTracker = miTracker;
+		this.enviadorBD = enviadorBD;
+		this.recibidorBD = recibidorBD;
 	}
 
 
@@ -58,7 +66,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 			topicNONDurableSubscriber = topicSession.createSubscriber(myTopic);
 			
 			//Topic Listener
-			KeepaliveListener topicListener = new KeepaliveListener(trackers, miTracker);
+			KeepaliveListener topicListener = new KeepaliveListener(trackers, miTracker,enviadorBD,recibidorBD);
 			
 			//Set the same message listener for the non-durable subscriber
 			topicNONDurableSubscriber.setMessageListener(topicListener);
@@ -79,7 +87,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 						loop=false;
 						e.printStackTrace();
 					}	
-					loop1++;//FIXME
+					loop1++;
 			}
 			
 		
@@ -116,7 +124,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 //			try {
 //				topicSubscriberTest.join();
 //			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
+//				
 //				e.printStackTrace();
 //			}
 //			topicSubscriberTest.stop();
@@ -125,6 +133,26 @@ public class KeepaliveTopicSubscriber extends Thread{
 //		
 
 		
+	}
+
+
+	public QueueFileSender getEnviadorBD() {
+		return enviadorBD;
+	}
+
+
+	public void setEnviadorBD(QueueFileSender enviadorBD) {
+		this.enviadorBD = enviadorBD;
+	}
+
+
+	public QueueFileReceiver getRecibidorBD() {
+		return recibidorBD;
+	}
+
+
+	public void setRecibidorBD(QueueFileReceiver recibidorBD) {
+		this.recibidorBD = recibidorBD;
 	}
 }
 

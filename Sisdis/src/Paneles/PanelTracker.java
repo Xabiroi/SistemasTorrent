@@ -7,6 +7,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import BDFileQueueListener.QueueFileReceiver;
+import BDFileQueueListener.QueueFileSender;
 import Controllers.DataController;
 import Controllers.DataController.EstadosEleccionMaster;
 import Controllers.RedundantController;
@@ -33,6 +35,8 @@ public class PanelTracker extends JPanel{
 	private static DesconexionTopicPublisher DesconexionTopicPublisher;
 	private static RedundantController RedundantController;
 	private static ArrayList<EstadosEleccionMaster> estadosEleccionMasters = new ArrayList<EstadosEleccionMaster>();
+	private static QueueFileSender enviadorBD;
+	private static QueueFileReceiver recibidorBD;
 	
 	
 	/**
@@ -56,7 +60,10 @@ public class PanelTracker extends JPanel{
 		//FIXME Elegir el tracker de cada uno con su ip y demas
 		Tracker miTracker = new Tracker(0,"192.168.5.46","30",false,System.currentTimeMillis());
 		
-		KeepaliveTopicSubscriber= new KeepaliveTopicSubscriber(getTrackersRedundantes(), miTracker);
+		enviadorBD=new QueueFileSender();
+		recibidorBD= new QueueFileReceiver();
+		
+		KeepaliveTopicSubscriber= new KeepaliveTopicSubscriber(getTrackersRedundantes(), miTracker,enviadorBD,recibidorBD);
 		KeepaliveTopicPublisher = new KeepaliveTopicPublisher(TrackersRedundantes, miTracker);
 		KeepaliveTopicSubscriber.start();
 		KeepaliveTopicPublisher.start();
@@ -66,9 +73,10 @@ public class PanelTracker extends JPanel{
 		DesconexionTopicSubscriber = new DesconexionTopicSubscriber(TrackersRedundantes, estadosEleccionMasters, new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, estadosEleccionMasters));
 //		DesconexionTopicPublisher.start();
 //		KeepaliveTopicPublisher.start();
-		
+		recibidorBD.start();
 		setRedundantController(new RedundantController(TrackersRedundantes, KeepaliveTopicPublisher, KeepaliveTopicSubscriber,  DesconexionTopicPublisher, DesconexionTopicSubscriber, miTracker));
 		RedundantController.start();
+		
 //		RedundantController.conectarJMS();
 		System.out.println("CONECTADO");
 		
@@ -133,6 +141,30 @@ public class PanelTracker extends JPanel{
 
 	public static void setRedundantController(RedundantController redundantController) {
 		RedundantController = redundantController;
+	}
+
+
+
+	public static QueueFileSender getEnviadorBD() {
+		return enviadorBD;
+	}
+
+
+
+	public static void setEnviadorBD(QueueFileSender enviadorBD) {
+		PanelTracker.enviadorBD = enviadorBD;
+	}
+
+
+
+	public static QueueFileReceiver getRecibidorBD() {
+		return recibidorBD;
+	}
+
+
+
+	public static void setRecibidorBD(QueueFileReceiver recibidorBD) {
+		PanelTracker.recibidorBD = recibidorBD;
 	}
 
 
