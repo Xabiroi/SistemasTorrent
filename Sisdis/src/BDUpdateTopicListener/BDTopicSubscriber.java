@@ -34,7 +34,7 @@ public class BDTopicSubscriber extends Thread{
 
 
 
-	String connectionFactoryName = "TopicConnectionFactory";
+	String connectionFactoryName = "BDTopicConnectionFactory";
 	//This name is defined in jndi.properties file
 	String topicJNDIName = "jndi.ssdd.bdupdate";//FIXME cambiar topics
 	TopicConnection topicConnection = null;

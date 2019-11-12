@@ -21,7 +21,7 @@ import Objetos.Peer;
 import Objetos.Swarm;
 
 public class BDTopicPublisher extends Thread{	
-	String connectionFactoryName = "TopicConnectionFactory";
+	String connectionFactoryName = "BDTopicConnectionFactory";
 	//This name is defined in jndi.properties file
 	String topicJNDIName = "jndi.ssdd.bdupdate";		
 	

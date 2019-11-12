@@ -61,7 +61,7 @@ public class KeepaliveTopicPublisher extends Thread{
 			boolean loop=true;
 			int loop1=1;
 			//cambio a un numero limitado para comprobar que desconecta al usuario
-			while(loop1<10) {
+			while(loop1<30) {
 				System.out.println("Espera de 1 segundo antes de enviar el keepalive");
 				//Object Message
 				ObjectMessage objectMessage = topicSession.createObjectMessage();
