@@ -68,7 +68,7 @@ public class KeepaliveTopicPublisher extends Thread{
 				
 				//FIXME La creacion de keepalives con asignacion de id
 				//PRUEBA
-				objectMessage.setObject(new Keepalive(45, System.currentTimeMillis(), true));
+				objectMessage.setObject(new Keepalive(miTracker.getId(), System.currentTimeMillis(), false));
 				//ORIGINAL
 				//objectMessage.setObject(new Keepalive(miTracker.getId(), System.currentTimeMillis(), true));
 				

@@ -16,6 +16,7 @@ public class KeepaliveListener implements MessageListener {
 	private Tracker miTracker;
 	private QueueFileSender enviadorBD;
 	private QueueFileReceiver recibidorBD;
+	private int counter;
 		
 	
 	public KeepaliveListener(ArrayList<Tracker> trackers, Tracker miTracker, QueueFileSender enviadorBD,
@@ -43,17 +44,42 @@ public class KeepaliveListener implements MessageListener {
 				if(keepAlive.getI()==0) {
 					//Si vemos que nuestro id no es 0 pasamos(no somos nosotros)
 					if(miTracker.getId()==0) {
+						//########################################
+							//Compruebas que no hay ids iguales para actualizar los tiempos
+							boolean encontrado=false;
+							for(Tracker tracker:trackers) {
+								if(tracker.getId()==keepAlive.getI()) {
+									encontrado=true;
+								}
+							}	
+							if(encontrado==false) {					
+								trackers.add(new Tracker(keepAlive.getI(),keepAlive.getIp(),"20",false,System.currentTimeMillis()));;
+							}
+							
+							//########################################						
+
+						if(encontrado) {
+						int master=0;
 						for(Tracker tracker:trackers) {
 							if(tracker.getId()>max) {
 								max=tracker.getId();
 							}
+							if(tracker.isMaster()==true) {
+								master++;
+							}
+							
 						}
+						if(master==0) {miTracker.setMaster(true);}
+
 						miTracker.setId(max+1);
+						
+						
 						System.out.println("Asignando id al tracker nuevo...");
 						System.out.println("     - Keep Alive ID: " + miTracker.getId());
 						System.out.println("     - Keep Alive IP: " + keepAlive.getIp());
-						
+						}
 					}
+					
 				}else {
 					System.out.println("     - Keep Alive ID: " + keepAlive.getI());
 					System.out.println("     - Keep Alive IP: " + keepAlive.getIp());
