@@ -102,7 +102,7 @@ public class KeepaliveListener implements MessageListener {
 						//FIXME quitar el puerto de los trackers ya que es 6161?
 						if(encontrado==false) {					
 							trackers.add(new Tracker((max+1),keepAlive.getIp(),"20",false,System.currentTimeMillis()));
-							enviadorBD.start();
+							//enviadorBD.start();FIXME
 //							trackers.add(new Tracker(keepAlive.getI(),keepAlive.getIp(),"20",false,System.currentTimeMillis()));
 						}
 					}

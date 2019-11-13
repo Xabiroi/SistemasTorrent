@@ -13,7 +13,7 @@ import javax.naming.InitialContext;
 public class QueueFileSender extends Thread{
 	
 	private static String SRC_FILE = "./bd/test.db";
-	
+	//FIXME cambiar de run a un metodo
 	public void run() {		
 		String connectionFactoryName = "QueueConnectionFactory";
 		String queueJNDIName = "jndi.ssdd.BDfileQueue";		

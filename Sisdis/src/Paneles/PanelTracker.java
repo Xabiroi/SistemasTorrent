@@ -92,7 +92,7 @@ public class PanelTracker extends JPanel{
 					model.setRowCount(0);
 					
 					for(Tracker tracker:TrackersRedundantes) {
-						model.addRow(new Object[] {tracker.getIP(),tracker.getPuerto(),tracker.isMaster()});
+						model.addRow(new Object[] {tracker.getIP(),tracker.getId(),tracker.isMaster()});
 						System.out.println("Añadiendo="+tracker.getIP());
 					}
 					model.fireTableDataChanged();
