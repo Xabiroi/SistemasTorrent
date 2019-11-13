@@ -21,7 +21,7 @@ public class NuevoMasterTopicPublisher extends Thread{
 	private ArrayList<EstadosEleccionMaster> estadoActual;
 	
 	String connectionFactoryName = "TopicConnectionFactory";
-	String topicJNDIName = "jndi.ssdd.NuevoMaster"; 			//This name is defined in jndi.properties file		
+	String topicJNDIName = "jndi.ssdd.nuevomaster"; 			//This name is defined in jndi.properties file		
 	
 	TopicConnection topicConnection = null;
 	TopicSession topicSession = null;

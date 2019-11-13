@@ -29,7 +29,7 @@ public class NuevoMasterTopicSubscriber extends Thread{
 	public void run() {
 		String connectionFactoryName = "TopicConnectionFactory";
 		//This name is defined in jndi.properties file
-		String topicJNDIName = "jndi.ssdd.NuevoMaster";		
+		String topicJNDIName = "jndi.ssdd.nuevomaster";		
 		TopicConnection topicConnection = null;
 		TopicSession topicSession = null;
 		TopicSubscriber topicNONDurableSubscriber = null;
