@@ -55,7 +55,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 			topicConnection = topicConnectionFactory.createTopicConnection();
 			
 			//Set an ID to create a durable connection (optional)
-			topicConnection.setClientID("SSDDTopic.Keepalive");
+//			topicConnection.setClientID("SSDDTopic.Keepalive");
 			System.out.println("- KeepAlive Topic Connection created!");
 			
 			//Sessions
@@ -92,7 +92,8 @@ public class KeepaliveTopicSubscriber extends Thread{
 			
 		
 		} catch (Exception e) {
-			System.err.println("# KeepAlive TopicSubscriberTest Error: " + e.getMessage());			
+			System.err.println("# KeepAlive TopicSubscriberTest Error: " + e.getMessage());	
+			e.printStackTrace();
 		} finally {
 
 			try {
@@ -103,6 +104,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 				System.out.println("- KeepAlive Topic resources closed!");				
 			} catch (Exception ex) {
 				System.err.println("# KeepAlive TopicSubscriberTest Error: " + ex.getMessage());
+				ex.printStackTrace();
 			}
 		}
 

@@ -57,7 +57,7 @@ public class BDTopicSubscriber extends Thread{
 			topicConnection = topicConnectionFactory.createTopicConnection();
 			
 			//Set an ID to create a durable connection (optional)
-			topicConnection.setClientID("SSDDTopic.BDUpdate");
+//			topicConnection.setClientID("SSDDTopic.BDUpdate");
 			
 			System.out.println("- BD Subscriber Topic Connection created!");
 			

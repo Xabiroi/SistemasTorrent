@@ -47,7 +47,7 @@ public class NuevoMasterTopicSubscriber extends Thread{
 			topicConnection = topicConnectionFactory.createTopicConnection();
 			
 			//Set an ID to create a durable connection (optional)
-			topicConnection.setClientID("SSDDTopic.NuevoMaster");
+//			topicConnection.setClientID("SSDDTopic.NuevoMaster");
 			System.out.println("- NuevoMaster Subscriber Topic Connection created!");
 			
 			//Sessions

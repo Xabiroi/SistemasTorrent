@@ -54,7 +54,7 @@ public class DesconexionTopicSubscriber extends Thread{
 			topicConnection = topicConnectionFactory.createTopicConnection();
 			
 			//Set an ID to create a durable connection (optional)
-			topicConnection.setClientID("SSDDTopic.Desconexion");
+//			topicConnection.setClientID("SSDDTopic.Desconexion");
 			
 			System.out.println("- Desconexion Topic Connection created!");
 			
