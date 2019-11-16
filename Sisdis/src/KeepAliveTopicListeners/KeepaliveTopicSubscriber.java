@@ -80,7 +80,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 			int loop1=1;
 			while(loop1<60) {
 				//Comprobacion de que funciona, habria que habilitar handlers de excepciones para detenerlo como cambio de master y otros
-					System.out.println("- Waiting 0.5 seconds for messages...");
+					//System.out.println("- Waiting 0.5 seconds for messages...");
 					try {
 						Thread.sleep(500);
 					} catch (Exception e) {

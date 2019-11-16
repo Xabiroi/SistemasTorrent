@@ -84,7 +84,7 @@ public class BDTopicSubscriber extends Thread{
 			int loop1=1;
 			while(loop1<100) {
 				//Comprobacion de que funciona, habria que habilitar handlers de excepciones para detenerlo como cambio de master y otros
-					System.out.println("- Waiting 0.5 seconds for updates...");
+					//System.out.println("- Waiting 0.5 seconds for updates...");
 					try {
 						Thread.sleep(500);
 					} catch (Exception e) {
