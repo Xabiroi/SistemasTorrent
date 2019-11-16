@@ -55,7 +55,7 @@ public class KeepaliveListener implements MessageListener {
 								}
 							}	
 							if(encontrado==false) {					
-								trackers.add(new Tracker(keepAlive.getI(),keepAlive.getIp(),"20",false,System.currentTimeMillis()));;
+								trackers.add(new Tracker(keepAlive.getI(),keepAlive.getIp(),"20",false,System.currentTimeMillis()));
 							}
 							
 							//########################################						
@@ -93,6 +93,13 @@ public class KeepaliveListener implements MessageListener {
 					if(trackers.size()==0) {
 						trackers.add(new Tracker(max+1,keepAlive.getIp(),"20",true,System.currentTimeMillis()));
 					}else {
+						
+						for(Tracker tracker:trackers) {
+							if(tracker.getId()>=max) {
+								max=tracker.getId();
+								System.out.println("EL VALOR DE MAX EN EL ELSE="+max);
+							}
+						}
 						//Compruebas que no hay ids iguales para actualizar los tiempos
 						boolean encontrado=false;
 						for(Tracker tracker:trackers) {
@@ -105,12 +112,13 @@ public class KeepaliveListener implements MessageListener {
 							System.out.println("keepAlive.getI()="+keepAlive.getI());
 							System.out.println("keepAlive.getIp()="+keepAlive.getIp());
 							System.out.println("OOOOOOOOOOOOOOOOOOOO");
-							if(tracker.getId()==keepAlive.getI()) {
+							if(tracker.getIP()==keepAlive.getIp()) {
 								System.out.println("&&&&&&&&&&&&&&&");
 								System.out.println("LO HA ENCONTRADO");
 								System.out.println("&&&&&&&&&&&&&&&");
 								encontrado=true;
 								tracker.setTiempo(System.currentTimeMillis());
+								//Break; FIXME
 							}
 						}	
 						
