@@ -54,43 +54,52 @@ public class KeepaliveListener implements MessageListener {
 									encontrado=true;
 								}
 							}	
-							if(encontrado==false) {					
-								trackers.add(new Tracker(keepAlive.getI(),keepAlive.getIp(),"20",false,System.currentTimeMillis()));
+							if(encontrado==false) {	
+								//Anyadirse a si mismo
+								trackers.add(new Tracker(keepAlive.getI(),keepAlive.getIp(),"20",keepAlive.isB(),System.currentTimeMillis()));
 							}
 							
 							//########################################						
 
 						if(encontrado) {
-						int master=0;
+//						int master=0;
 						for(Tracker tracker:trackers) {
 							if(tracker.getId()>=max) {
 								max=tracker.getId();
 								System.out.println("EL VALOR DE MAX="+max);
 							}
-							if(tracker.isMaster()==true) {
-								System.out.println("Tracker master encontrado");
-								master++;
-							}
+//							if(tracker.isMaster()==true) {
+//								System.out.println("Tracker master encontrado");
+//								master++;
+//							}
 							
 						}
-						if(master==0) {
-							System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
-							System.out.println("Asignando como master");
-							System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
-							miTracker.setMaster(true);
-						
-						}
+//						if(master==0) {
+//							System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+//							System.out.println("Asignando como master");
+//							System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+//							miTracker.setMaster(true);
+//							System.out.println("Es master?==="+miTracker.isMaster());
+//						}
 						
 						miTracker.setId(max+1);
 						System.out.println("EL ID NUESTRO PUESTO A miTracker ="+miTracker.getId());
 						
+						if(trackers.size()==1) {
+							miTracker.setMaster(true);
+						}
+
+						
 						System.out.println("Asignando id al tracker nuevo...");
-						System.out.println("     - Keep Alive ID: " + miTracker.getId());
-						System.out.println("     - Keep Alive IP: " + keepAlive.getIp());
+						System.out.println("ID: " + miTracker.getId());
+						System.out.println("IP: " + keepAlive.getIp());
 						}
 					}
 					
 				}else {
+					
+					
+					
 					System.out.println("     - Keep Alive ID: " + keepAlive.getI());
 					System.out.println("     - Keep Alive IP: " + keepAlive.getIp());
 				
@@ -98,7 +107,7 @@ public class KeepaliveListener implements MessageListener {
 					//Si no hay nadie te anyades como master
 					if(trackers.size()==0) {
 						if(!(keepAlive.getI()==0)) {
-						trackers.add(new Tracker(max+1,keepAlive.getIp(),"20",true,System.currentTimeMillis()));
+						trackers.add(new Tracker(max+1,keepAlive.getIp(),"20",keepAlive.isB(),System.currentTimeMillis()));
 						}
 					}else {
 						
@@ -113,8 +122,8 @@ public class KeepaliveListener implements MessageListener {
 						for(Tracker tracker:trackers) {
 							System.out.println("trackers size=="+trackers.size());
 							System.out.println("OOOOOOOOOOOOOOOOOOOO");
-							System.out.println("EL ID NUESTRO PUESTO A miTracker ="+miTracker.getId());
-							System.out.println("EL IP miTracker ="+miTracker.getIP());
+//							System.out.println("EL ID NUESTRO PUESTO A miTracker ="+miTracker.getId());
+//							System.out.println("EL IP miTracker ="+miTracker.getIP());
 							System.out.println("tracker.getId()="+tracker.getId());
 							System.out.println("tracker.getIp()="+tracker.getIP());
 							System.out.println("keepAlive.getI()="+keepAlive.getI());
@@ -143,7 +152,7 @@ public class KeepaliveListener implements MessageListener {
 							
 							System.out.println("Trackers ESTA AHORA ASI ANTES DE AÑADIR=="+trackers.size());
 							
-							trackers.add(new Tracker((max+1),keepAlive.getIp(),"20",false,System.currentTimeMillis()));
+							trackers.add(new Tracker((max+1),keepAlive.getIp(),"20",keepAlive.isB(),System.currentTimeMillis()));
 							
 							System.out.println("Trackers ESTA AHORA ASI DESPUES DE AÑADIR=="+trackers.size());
 							System.out.println("/////////////////////");
