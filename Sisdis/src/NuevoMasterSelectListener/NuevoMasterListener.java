@@ -7,20 +7,16 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
+import Controllers.DataController.EstadosEleccionMaster;
 import Mensajes.NuevoMaster;
 import Objetos.Tracker;
 
-enum EstadosNuevoMaster
-{ 
-		comprobandoMensajes,
-		tomandoDecision
-}
 
 public class NuevoMasterListener implements MessageListener {
 	private ArrayList<Tracker> trackers;
 	private Tracker miTracker;
 	private int IdMasBajo = 0, numeroDeMensajesRecibidos = 0;
-	public EstadosNuevoMaster estadosNuevoMaster;
+	public EstadosEleccionMaster estadosEleccionMaster;
 	
 	
 	public NuevoMasterListener(ArrayList<Tracker> trackers, Tracker miTracker) {
@@ -39,22 +35,23 @@ public class NuevoMasterListener implements MessageListener {
 				
 				System.out.println("     - Received ID: " + nuevoMaster.getIdMaster());
 
-				switch (estadosNuevoMaster) {
+				switch (estadosEleccionMaster) {
 					
-					case comprobandoMensajes:
+					case Esperando:
 						
 						IdMasBajo = nuevoMaster.getIdMaster();
 						numeroDeMensajesRecibidos++;
 						
 						if(numeroDeMensajesRecibidos == trackers.size()-1)
-							estadosNuevoMaster = EstadosNuevoMaster.tomandoDecision;
+							estadosEleccionMaster = EstadosEleccionMaster.Decidiendo;
 						
 						break;
 						
-					case tomandoDecision:
+					case Decidiendo:
 						if(miTracker.getId() == IdMasBajo)
 							miTracker.setMaster(true);
 						//no hay else porque no hay reasignación hasta que no se va el master
+						estadosEleccionMaster = EstadosEleccionMaster.Esperando;
 						break;
 					default:
 						System.out.println("Error: Estado de Nuevo Master no contemplado");

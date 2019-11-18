@@ -73,7 +73,8 @@ public class RedundantController extends Thread{
 	public static void main(String args[]) {
 		//al tracker asignarle la ip de cada uno en la realidad
 		Tracker miTracker = new Tracker(0,"192.168.5.46","30",false,System.currentTimeMillis());
-		
+		ArrayList<Boolean> cambio = new ArrayList<Boolean>();
+		cambio.add(0, false);
 		enviadorBD=new QueueFileSender();
 		recibidorBD= new QueueFileReceiver();
 		
@@ -82,7 +83,7 @@ public class RedundantController extends Thread{
 	
 		DesconexionTopicPublisher = new DesconexionTopicPublisher(DataController.EstadosEleccionMaster.Esperando, miTracker);
 		estadosEleccionMasters.add(DataController.EstadosEleccionMaster.Esperando);
-		DesconexionTopicSubscriber = new DesconexionTopicSubscriber(TrackersRedundantes, estadosEleccionMasters, new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, estadosEleccionMasters));
+		DesconexionTopicSubscriber = new DesconexionTopicSubscriber(TrackersRedundantes, estadosEleccionMasters, new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, estadosEleccionMasters, cambio));
 
 		RedundantController = new RedundantController(TrackersRedundantes, KeepaliveTopicPublisher, KeepaliveTopicSubscriber,  DesconexionTopicPublisher, DesconexionTopicSubscriber, miTracker);
 				

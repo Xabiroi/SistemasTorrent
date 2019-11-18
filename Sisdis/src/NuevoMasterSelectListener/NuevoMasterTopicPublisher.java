@@ -11,6 +11,7 @@ import javax.jms.TopicSession;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
+import Controllers.DataController.EstadosBaseDeDatos;
 import Controllers.DataController.EstadosEleccionMaster;
 import Mensajes.NuevoMaster;
 import Objetos.Tracker;
@@ -19,6 +20,7 @@ public class NuevoMasterTopicPublisher extends Thread{
 	private ArrayList<Tracker> trackers;
 	private Tracker miTracker;
 	private ArrayList<EstadosEleccionMaster> estadoActual;
+	private ArrayList<Boolean> cambio;
 	
 	String connectionFactoryName = "TopicConnectionFactory";
 	String topicJNDIName = "jndi.ssdd.nuevomaster"; 			//This name is defined in jndi.properties file		
@@ -27,11 +29,12 @@ public class NuevoMasterTopicPublisher extends Thread{
 	TopicSession topicSession = null;
 	TopicPublisher topicPublisher = null;	
 	
-	public NuevoMasterTopicPublisher(ArrayList<Tracker> trackers, Tracker miTracker, ArrayList<EstadosEleccionMaster> estadoActual) {
+	public NuevoMasterTopicPublisher(ArrayList<Tracker> trackers, Tracker miTracker, ArrayList<EstadosEleccionMaster> estadoActual, ArrayList<Boolean> cambio) {
 		super();
 		this.trackers = trackers;
 		this.miTracker = miTracker;
 		this.estadoActual = estadoActual;
+		this.cambio = cambio;
 	}
 	
 	public void run() {	
@@ -58,25 +61,42 @@ public class NuevoMasterTopicPublisher extends Thread{
 			topicPublisher = topicSession.createPublisher(myTopic);
 			System.out.println("- NuevoMaster Publisher TopicPublisher created!");
 			
-			
-			//TODO Comprobar ID más bajo en la lista "trackers" y enviarlo en un mensaje
-			int idMasBajo = miTracker.getId();
-			for(Tracker tracker : trackers) {
-				if(tracker.getId() < idMasBajo)
-					idMasBajo = tracker.getId();
+			switch(estadoActual.get(0)) {
+			case Esperando:
+				while(!cambio.get(0).booleanValue()) {					  
+					try {
+						Thread.sleep(100);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}	
+			  }
+			  estadoActual.set(0,EstadosEleccionMaster.Decidiendo);
+			  break;
+			case Decidiendo:
+				int idMasBajo = miTracker.getId();
+				for(Tracker tracker : trackers) {
+					if(tracker.getId() < idMasBajo)
+						idMasBajo = tracker.getId();
+				}
+				
+				ObjectMessage objectMessage = topicSession.createObjectMessage();
+				
+				objectMessage.setObject(new NuevoMaster(idMasBajo));
+				
+				objectMessage.setJMSType("ObjectMessage");
+				objectMessage.setJMSMessageID("ID-1");
+				objectMessage.setJMSPriority(1);		
+				
+				topicPublisher.publish(objectMessage);
+				
+				try {
+					Thread.sleep(1000);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}	
+				
+				break;
 			}
-			
-			ObjectMessage objectMessage = topicSession.createObjectMessage();
-			
-			objectMessage.setObject(new NuevoMaster(idMasBajo));
-			
-			objectMessage.setJMSType("ObjectMessage");
-			objectMessage.setJMSMessageID("ID-1");
-			objectMessage.setJMSPriority(1);		
-			
-			topicPublisher.publish(objectMessage);
-			
-
 		} catch (Exception e) {
 			System.err.println("# NuevoMaster Publisher TopicPublisherTest Error: " + e.getMessage());
 		} finally {

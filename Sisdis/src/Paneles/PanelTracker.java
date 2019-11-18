@@ -43,6 +43,8 @@ public class PanelTracker extends JPanel{
 	 * Create the panel.
 	 */
 	public PanelTracker() {
+		ArrayList<Boolean> cambio = new ArrayList<Boolean>();
+		cambio.add(0, false);
 		estadosEleccionMasters.add(EstadosEleccionMaster.Esperando);
 		this.setLayout(new BorderLayout(0, 0));
 		
@@ -70,9 +72,8 @@ public class PanelTracker extends JPanel{
 		
 		
 		DesconexionTopicPublisher = new DesconexionTopicPublisher(DataController.EstadosEleccionMaster.Esperando, miTracker);
-		DesconexionTopicSubscriber = new DesconexionTopicSubscriber(TrackersRedundantes, estadosEleccionMasters, new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, estadosEleccionMasters));
-//		DesconexionTopicPublisher.start();
-//		KeepaliveTopicPublisher.start();
+		DesconexionTopicSubscriber = new DesconexionTopicSubscriber(TrackersRedundantes, estadosEleccionMasters, new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, estadosEleccionMasters, cambio));
+		DesconexionTopicPublisher.start();
 		recibidorBD.start();
 		setRedundantController(new RedundantController(TrackersRedundantes, KeepaliveTopicPublisher, KeepaliveTopicSubscriber,  DesconexionTopicPublisher, DesconexionTopicSubscriber, miTracker));
 		RedundantController.start();

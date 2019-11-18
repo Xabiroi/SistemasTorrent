@@ -71,7 +71,9 @@ public class DesconexionTopicPublisher extends Thread{
 			RedundantController.desconexion();
 
 		} catch (Exception e) {
-			System.err.println("# Desconexion TopicPublisherTest Error: " + e.getMessage());
+			System.out.println("Se ha desonectado el tracker");
+//			System.err.println("# Desconexion TopicPublisherTest Error 1: " + e.getMessage());
+			
 		} finally {
 			try {
 				//Close resources
@@ -80,7 +82,7 @@ public class DesconexionTopicPublisher extends Thread{
 				topicConnection.close();
 				System.out.println("- Desconexion Topic resources closed!");				
 			} catch (Exception ex) {
-				System.err.println("# Desconexion TopicPublisherTest Error: " + ex.getMessage());
+				System.err.println("# Desconexion TopicPublisherTest Error 2: " + ex.getMessage());
 			}			
 		}	
 	}
