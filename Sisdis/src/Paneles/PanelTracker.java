@@ -34,6 +34,7 @@ public class PanelTracker extends JPanel{
 	private static DesconexionTopicSubscriber DesconexionTopicSubscriber;
 	private static DesconexionTopicPublisher DesconexionTopicPublisher;
 	private static RedundantController RedundantController;
+	private static NuevoMasterTopicPublisher NuevoMasterTopicPublisher;
 	private static ArrayList<EstadosEleccionMaster> estadosEleccionMasters = new ArrayList<EstadosEleccionMaster>();
 	private static QueueFileSender enviadorBD;
 	private static QueueFileReceiver recibidorBD;
@@ -71,7 +72,7 @@ public class PanelTracker extends JPanel{
 		KeepaliveTopicPublisher.start();
 		
 		
-		DesconexionTopicPublisher = new DesconexionTopicPublisher(DataController.EstadosEleccionMaster.Esperando, miTracker);
+		DesconexionTopicPublisher = new DesconexionTopicPublisher(DataController.EstadosEleccionMaster.Esperando, miTracker, NuevoMasterTopicPublisher);
 		DesconexionTopicSubscriber = new DesconexionTopicSubscriber(TrackersRedundantes, estadosEleccionMasters, new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, estadosEleccionMasters, cambio));
 		DesconexionTopicPublisher.start();
 		recibidorBD.start();

@@ -4,11 +4,13 @@ import java.util.Iterator;
 
 import BDFileQueueListener.QueueFileReceiver;
 import BDFileQueueListener.QueueFileSender;
+import Controllers.DataController.EstadosEleccionMaster;
 import DesconexionTopicListeners.DesconexionTopicPublisher;
 import DesconexionTopicListeners.DesconexionTopicSubscriber;
 import KeepAliveTopicListeners.KeepaliveTopicPublisher;
 import KeepAliveTopicListeners.KeepaliveTopicSubscriber;
 import NuevoMasterSelectListener.NuevoMasterTopicPublisher;
+import NuevoMasterSelectListener.NuevoMasterTopicSubscriber;
 import Objetos.Tracker;
 
 public class RedundantController extends Thread{
@@ -20,6 +22,8 @@ public class RedundantController extends Thread{
 	private static DesconexionTopicSubscriber DesconexionTopicSubscriber;
 	private static DesconexionTopicPublisher DesconexionTopicPublisher;
 	private static RedundantController RedundantController;
+	private static NuevoMasterTopicSubscriber NuevoMasterTopicSubscriber;
+	private static NuevoMasterTopicPublisher NuevoMasterTopicPublisher;
 	private static ArrayList<DataController.EstadosEleccionMaster> estadosEleccionMasters = new ArrayList<DataController.EstadosEleccionMaster>();
 	private static QueueFileSender enviadorBD;
 	private static QueueFileReceiver recibidorBD;
@@ -78,10 +82,12 @@ public class RedundantController extends Thread{
 		enviadorBD=new QueueFileSender();
 		recibidorBD= new QueueFileReceiver();
 		
+		NuevoMasterTopicPublisher = new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, estadosEleccionMasters, cambio);
+		NuevoMasterTopicSubscriber = new NuevoMasterTopicSubscriber(TrackersRedundantes, miTracker);
 		KeepaliveTopicSubscriber= new KeepaliveTopicSubscriber(getTrackersRedundantes(), miTracker,enviadorBD,recibidorBD);
 		KeepaliveTopicPublisher = new KeepaliveTopicPublisher(TrackersRedundantes, miTracker);
 	
-		DesconexionTopicPublisher = new DesconexionTopicPublisher(DataController.EstadosEleccionMaster.Esperando, miTracker);
+		DesconexionTopicPublisher = new DesconexionTopicPublisher(DataController.EstadosEleccionMaster.Esperando, miTracker, NuevoMasterTopicPublisher);
 		estadosEleccionMasters.add(DataController.EstadosEleccionMaster.Esperando);
 		DesconexionTopicSubscriber = new DesconexionTopicSubscriber(TrackersRedundantes, estadosEleccionMasters, new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, estadosEleccionMasters, cambio));
 

@@ -1,5 +1,7 @@
 package DesconexionTopicListeners;
 
+import java.util.ArrayList;
+
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.jms.Topic;
@@ -14,9 +16,11 @@ import Controllers.DataController;
 import Controllers.DataController.EstadosEleccionMaster;
 import Controllers.RedundantController;
 import Mensajes.Desconexion;
+import NuevoMasterSelectListener.NuevoMasterTopicPublisher;
 import Objetos.Tracker;
 
-public class DesconexionTopicPublisher extends Thread{	
+public class DesconexionTopicPublisher extends Thread{
+	NuevoMasterTopicPublisher nuevoMasterTopicPublisher; 
 	String connectionFactoryName = "TopicConnectionFactory";
 	//This name is defined in jndi.properties file
 	String topicJNDIName = "jndi.ssdd.desconexion";		
@@ -29,10 +33,11 @@ public class DesconexionTopicPublisher extends Thread{
 	private Tracker miTracker;
 	
 
-	public DesconexionTopicPublisher(EstadosEleccionMaster estadoActual, Tracker miTracker) {
+	public DesconexionTopicPublisher(EstadosEleccionMaster estadoActual, Tracker miTracker, NuevoMasterTopicPublisher nuevoMasterTopicPublisher) {
 		super();
 		this.estadoActual = estadoActual;
 		this.miTracker = miTracker;
+		this.nuevoMasterTopicPublisher = nuevoMasterTopicPublisher;
 	}
 	
 	public void run() {
@@ -68,6 +73,9 @@ public class DesconexionTopicPublisher extends Thread{
 			
 			topicPublisher.publish(objectMessage);
 			Thread.sleep(3000);
+			ArrayList<EstadosEleccionMaster> nuevoEstado = new ArrayList<EstadosEleccionMaster>();
+			nuevoEstado.add(EstadosEleccionMaster.Decidiendo);
+			nuevoMasterTopicPublisher.setEstadoActual(nuevoEstado);
 			RedundantController.desconexion();
 
 		} catch (Exception e) {
