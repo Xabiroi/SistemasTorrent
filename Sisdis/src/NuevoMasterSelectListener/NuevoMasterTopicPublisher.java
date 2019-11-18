@@ -73,6 +73,7 @@ public class NuevoMasterTopicPublisher extends Thread{
 			  estadoActual.set(0,EstadosEleccionMaster.Decidiendo);
 			  break;
 			case Decidiendo:
+				System.out.println("ESTAMOS DECIDIENDO!!\n\n\n");
 				int idMasBajo = miTracker.getId();
 				for(Tracker tracker : trackers) {
 					if(tracker.getId() < idMasBajo)

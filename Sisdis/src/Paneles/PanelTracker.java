@@ -17,6 +17,7 @@ import DesconexionTopicListeners.DesconexionTopicSubscriber;
 import KeepAliveTopicListeners.KeepaliveTopicPublisher;
 import KeepAliveTopicListeners.KeepaliveTopicSubscriber;
 import NuevoMasterSelectListener.NuevoMasterTopicPublisher;
+import NuevoMasterSelectListener.NuevoMasterTopicSubscriber;
 import Objetos.Tracker;
 
 public class PanelTracker extends JPanel{
@@ -35,6 +36,7 @@ public class PanelTracker extends JPanel{
 	private static DesconexionTopicPublisher DesconexionTopicPublisher;
 	private static RedundantController RedundantController;
 	private static NuevoMasterTopicPublisher NuevoMasterTopicPublisher;
+	private static NuevoMasterTopicSubscriber NuevoMasterTopicSubscriber;
 	private static ArrayList<EstadosEleccionMaster> estadosEleccionMasters = new ArrayList<EstadosEleccionMaster>();
 	private static QueueFileSender enviadorBD;
 	private static QueueFileReceiver recibidorBD;
@@ -46,6 +48,8 @@ public class PanelTracker extends JPanel{
 	public PanelTracker() {
 		ArrayList<Boolean> cambio = new ArrayList<Boolean>();
 		cambio.add(0, false);
+		ArrayList<Boolean> cambio2 = new ArrayList<Boolean>();
+		cambio2.add(0, false);
 		estadosEleccionMasters.add(EstadosEleccionMaster.Esperando);
 		this.setLayout(new BorderLayout(0, 0));
 		
@@ -66,6 +70,8 @@ public class PanelTracker extends JPanel{
 		enviadorBD=new QueueFileSender();
 		recibidorBD= new QueueFileReceiver();
 		
+		NuevoMasterTopicPublisher = new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, estadosEleccionMasters, cambio2);
+		NuevoMasterTopicSubscriber = new NuevoMasterTopicSubscriber(TrackersRedundantes, miTracker);
 		KeepaliveTopicSubscriber= new KeepaliveTopicSubscriber(getTrackersRedundantes(), miTracker,enviadorBD,recibidorBD);
 		KeepaliveTopicPublisher = new KeepaliveTopicPublisher(TrackersRedundantes, miTracker);
 		KeepaliveTopicSubscriber.start();
