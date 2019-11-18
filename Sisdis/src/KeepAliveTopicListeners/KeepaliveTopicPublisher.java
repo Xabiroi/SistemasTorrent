@@ -62,13 +62,13 @@ public class KeepaliveTopicPublisher extends Thread{
 			int loop1=1;
 			//cambio a un numero limitado para comprobar que desconecta al usuario
 			while(loop1<30) {
-				System.out.println("Espera de 1 segundo antes de enviar el keepalive");
+				//System.out.println("Espera de 1 segundo antes de enviar el keepalive");
 				//Object Message
 				ObjectMessage objectMessage = topicSession.createObjectMessage();
 				
 				//FIXME La creacion de keepalives con asignacion de id
 				//PRUEBA
-				objectMessage.setObject(new Keepalive(45, System.currentTimeMillis(), true));
+				objectMessage.setObject(new Keepalive(miTracker.getId(), System.currentTimeMillis(), miTracker.isMaster()));
 				//ORIGINAL
 				//objectMessage.setObject(new Keepalive(miTracker.getId(), System.currentTimeMillis(), true));
 				
@@ -78,7 +78,7 @@ public class KeepaliveTopicPublisher extends Thread{
 				
 				topicPublisher.publish(objectMessage);
 				//Publish the Message
-				System.out.println("- KeepAlive Object published in the Topic!");
+				//System.out.println("- KeepAlive Object published in the Topic!");
 					try {
 						Thread.sleep(1000);
 					} catch (Exception e) {

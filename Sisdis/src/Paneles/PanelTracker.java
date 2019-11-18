@@ -88,16 +88,16 @@ public class PanelTracker extends JPanel{
 				int loop=0;
 				
 				while(loop<60) {
-					System.out.println("TrackersRedundantes="+TrackersRedundantes);
+					//System.out.println("TrackersRedundantes="+TrackersRedundantes);
 					model.setRowCount(0);
 					
 					for(Tracker tracker:TrackersRedundantes) {
-						model.addRow(new Object[] {tracker.getIP(),tracker.getPuerto(),tracker.isMaster()});
-						System.out.println("Añadiendo="+tracker.getIP());
+						model.addRow(new Object[] {tracker.getIP(),tracker.getId(),tracker.isMaster()});
+						System.out.println("Añadiendo en la interfaz="+tracker.getIP());
 					}
 					model.fireTableDataChanged();
 					try {
-						Thread.sleep(1000);
+						Thread.sleep(1500);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
