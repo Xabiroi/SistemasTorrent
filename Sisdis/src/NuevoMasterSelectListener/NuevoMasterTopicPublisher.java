@@ -61,43 +61,45 @@ public class NuevoMasterTopicPublisher extends Thread{
 			topicPublisher = topicSession.createPublisher(myTopic);
 			System.out.println("- NuevoMaster Publisher TopicPublisher created!");
 			
-			switch(estadoActual.get(0)) {
-			case Esperando:
-				while(!cambio.get(0).booleanValue()) {					  
+				switch(estadoActual.get(0)) {
+				case Esperando:
+					while(!cambio.get(0).booleanValue()) {					  
+						try {
+							Thread.sleep(100);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}	
+				  }
+				  estadoActual.set(0,EstadosEleccionMaster.Decidiendo);
+				  break;
+				  
+				case Decidiendo:
+					System.out.println("ESTAMOS DECIDIENDO!!\n\n\n");
+					int idMasBajo = miTracker.getId();
+					for(Tracker tracker : trackers) {
+						if(tracker.getId() < idMasBajo)
+							idMasBajo = tracker.getId();
+					}
+					
+					ObjectMessage objectMessage = topicSession.createObjectMessage();
+					
+					objectMessage.setObject(new NuevoMaster(idMasBajo));
+					
+					objectMessage.setJMSType("ObjectMessage");
+					objectMessage.setJMSMessageID("ID-1");
+					objectMessage.setJMSPriority(1);		
+					
+					topicPublisher.publish(objectMessage);
+					
 					try {
-						Thread.sleep(100);
+						Thread.sleep(1000);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}	
-			  }
-			  estadoActual.set(0,EstadosEleccionMaster.Decidiendo);
-			  break;
-			case Decidiendo:
-				System.out.println("ESTAMOS DECIDIENDO!!\n\n\n");
-				int idMasBajo = miTracker.getId();
-				for(Tracker tracker : trackers) {
-					if(tracker.getId() < idMasBajo)
-						idMasBajo = tracker.getId();
+					
+					break;
 				}
-				
-				ObjectMessage objectMessage = topicSession.createObjectMessage();
-				
-				objectMessage.setObject(new NuevoMaster(idMasBajo));
-				
-				objectMessage.setJMSType("ObjectMessage");
-				objectMessage.setJMSMessageID("ID-1");
-				objectMessage.setJMSPriority(1);		
-				
-				topicPublisher.publish(objectMessage);
-				
-				try {
-					Thread.sleep(1000);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}	
-				
-				break;
-			}
+			
 		} catch (Exception e) {
 			System.err.println("# NuevoMaster Publisher TopicPublisherTest Error: " + e.getMessage());
 		} finally {

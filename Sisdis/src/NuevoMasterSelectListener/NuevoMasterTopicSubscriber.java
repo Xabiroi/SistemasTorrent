@@ -11,18 +11,21 @@ import javax.jms.TopicSubscriber;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
+import Controllers.DataController.EstadosEleccionMaster;
 import Objetos.Tracker;
 
 public class NuevoMasterTopicSubscriber extends Thread{	
 	private ArrayList<Tracker> trackers=new ArrayList<Tracker>();
 	private Tracker miTracker;
+	private ArrayList<EstadosEleccionMaster> estadoActual;
 	
 	
 
-	public NuevoMasterTopicSubscriber(ArrayList<Tracker> trackers, Tracker miTracker) {
+	public NuevoMasterTopicSubscriber(ArrayList<Tracker> trackers, Tracker miTracker, ArrayList<EstadosEleccionMaster> estadoActual) {
 		super();
 		this.trackers = trackers;
 		this.miTracker = miTracker;
+		this.estadoActual = estadoActual;
 	}
 
 
@@ -58,7 +61,7 @@ public class NuevoMasterTopicSubscriber extends Thread{
 			topicNONDurableSubscriber = topicSession.createSubscriber(myTopic);
 			
 			//Topic Listener
-			NuevoMasterListener topicListener = new NuevoMasterListener(trackers, miTracker);
+			NuevoMasterListener topicListener = new NuevoMasterListener(trackers, miTracker, estadoActual);
 			
 			//Set the same message listener for the non-durable subscriber
 			topicNONDurableSubscriber.setMessageListener(topicListener);

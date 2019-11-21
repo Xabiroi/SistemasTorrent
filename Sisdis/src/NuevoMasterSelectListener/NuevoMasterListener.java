@@ -16,13 +16,14 @@ public class NuevoMasterListener implements MessageListener {
 	private ArrayList<Tracker> trackers;
 	private Tracker miTracker;
 	private int IdMasBajo = 0, numeroDeMensajesRecibidos = 0;
-	public EstadosEleccionMaster estadosEleccionMaster;
+	public ArrayList<EstadosEleccionMaster> estadosEleccionMaster;
 	
 	
-	public NuevoMasterListener(ArrayList<Tracker> trackers, Tracker miTracker) {
+	public NuevoMasterListener(ArrayList<Tracker> trackers, Tracker miTracker, ArrayList<EstadosEleccionMaster> estadosEleccionMaster) {
 		super();
 		this.trackers = trackers;
 		this.miTracker = miTracker;
+		this.estadosEleccionMaster = estadosEleccionMaster;
 	}
 
 	@Override
@@ -34,8 +35,8 @@ public class NuevoMasterListener implements MessageListener {
 				NuevoMaster nuevoMaster = (NuevoMaster) objectMessage.getObject();
 				
 				System.out.println("     - Received ID: " + nuevoMaster.getIdMaster());
-
-				switch (estadosEleccionMaster) {
+				while(true) {
+					switch (estadosEleccionMaster.get(0)) {
 					
 					case Esperando:
 						
@@ -43,21 +44,26 @@ public class NuevoMasterListener implements MessageListener {
 						numeroDeMensajesRecibidos++;
 						
 						if(numeroDeMensajesRecibidos == trackers.size()-1)
-							estadosEleccionMaster = EstadosEleccionMaster.Decidiendo;
+							estadosEleccionMaster.set(0, EstadosEleccionMaster.Decidiendo);
 						
 						break;
 						
 					case Decidiendo:
+						
 						System.out.println("Nuevo Estado De Elección: "+ estadosEleccionMaster.toString());
 						if(miTracker.getId() == IdMasBajo)
 							miTracker.setMaster(true);
+						System.out.println("Decisión tomada: "+miTracker.isMaster());
 						//no hay else porque no hay reasignación hasta que no se va el master
-						estadosEleccionMaster = EstadosEleccionMaster.Esperando;
+						estadosEleccionMaster.set(0, EstadosEleccionMaster.Decidiendo);
+						System.out.println("Estado de elección de master: "+estadosEleccionMaster.toString());
 						break;
 					default:
 						System.out.println("Error: Estado de Nuevo Master no contemplado");
 						break;
 				} 
+				}
+				
 				
 			} catch (Exception ex) {
 				System.err.println("# NuevoMaster Listener TopicListener error: " + ex.getMessage());

@@ -71,7 +71,7 @@ public class PanelTracker extends JPanel{
 		recibidorBD= new QueueFileReceiver();
 		
 		NuevoMasterTopicPublisher = new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, estadosEleccionMasters, cambio2);
-		NuevoMasterTopicSubscriber = new NuevoMasterTopicSubscriber(TrackersRedundantes, miTracker);
+		NuevoMasterTopicSubscriber = new NuevoMasterTopicSubscriber(TrackersRedundantes, miTracker, estadosEleccionMasters);
 		KeepaliveTopicSubscriber= new KeepaliveTopicSubscriber(getTrackersRedundantes(), miTracker,enviadorBD,recibidorBD);
 		KeepaliveTopicPublisher = new KeepaliveTopicPublisher(TrackersRedundantes, miTracker);
 		KeepaliveTopicSubscriber.start();
