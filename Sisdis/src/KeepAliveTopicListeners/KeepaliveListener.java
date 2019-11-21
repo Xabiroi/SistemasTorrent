@@ -125,7 +125,7 @@ public class KeepaliveListener implements MessageListener {
 				}
 				
 			} catch (Exception ex) {
-				System.err.println("# KeepAlive Listener TopicListener error: " + ex.getMessage());
+				System.err.println("# KeepAlive Listener TopicListener error 1 : " + ex.getMessage());
 				ex.printStackTrace();
 			}
 		}		

@@ -104,6 +104,7 @@ public class RedundantController extends Thread{
 		recibidorBD.start();
 	}
 	public static void desconexion() {
+		//cambiar boolean a true
 		DesconexionTopicPublisher.interrupt();
 		DesconexionTopicSubscriber.interrupt();
 		KeepaliveTopicPublisher.interrupt();

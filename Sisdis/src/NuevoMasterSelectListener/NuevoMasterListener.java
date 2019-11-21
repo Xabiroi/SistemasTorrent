@@ -48,6 +48,7 @@ public class NuevoMasterListener implements MessageListener {
 						break;
 						
 					case Decidiendo:
+						System.out.println("Nuevo Estado De Elección: "+ estadosEleccionMaster.toString());
 						if(miTracker.getId() == IdMasBajo)
 							miTracker.setMaster(true);
 						//no hay else porque no hay reasignación hasta que no se va el master

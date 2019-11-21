@@ -76,6 +76,8 @@ public class PanelTracker extends JPanel{
 		KeepaliveTopicPublisher = new KeepaliveTopicPublisher(TrackersRedundantes, miTracker);
 		KeepaliveTopicSubscriber.start();
 		KeepaliveTopicPublisher.start();
+		NuevoMasterTopicPublisher.start();
+		NuevoMasterTopicSubscriber.start();
 		
 		
 		DesconexionTopicPublisher = new DesconexionTopicPublisher(DataController.EstadosEleccionMaster.Esperando, miTracker, NuevoMasterTopicPublisher);

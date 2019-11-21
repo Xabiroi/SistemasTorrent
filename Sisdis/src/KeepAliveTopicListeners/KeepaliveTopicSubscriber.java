@@ -92,7 +92,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 			
 		
 		} catch (Exception e) {
-			System.err.println("# KeepAlive TopicSubscriberTest Error: " + e.getMessage());	
+			System.err.println("# KeepAlive TopicSubscriberTest Error 2: " + e.getMessage());	
 			e.printStackTrace();
 		} finally {
 
@@ -103,7 +103,7 @@ public class KeepaliveTopicSubscriber extends Thread{
 				topicConnection.close();
 				System.out.println("- KeepAlive Topic resources closed!");				
 			} catch (Exception ex) {
-				System.err.println("# KeepAlive TopicSubscriberTest Error: " + ex.getMessage());
+				System.err.println("# KeepAlive TopicSubscriberTest Error 2: " + ex.getMessage());
 				ex.printStackTrace();
 			}
 		}

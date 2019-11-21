@@ -72,11 +72,15 @@ public class DesconexionTopicPublisher extends Thread{
 			objectMessage.setJMSPriority(1);		
 			
 			topicPublisher.publish(objectMessage);
+			System.out.println("Desconexión enviada");
 			Thread.sleep(3000);
 			ArrayList<EstadosEleccionMaster> nuevoEstado = new ArrayList<EstadosEleccionMaster>();
 			nuevoEstado.add(EstadosEleccionMaster.Decidiendo);
+			
 			nuevoMasterTopicPublisher.setEstadoActual(nuevoEstado);
+			System.out.println("Cambio de estado de Elección : " + nuevoMasterTopicPublisher.getEstadoActual());
 			RedundantController.desconexion();
+			System.out.println("DESCONECTADO");
 
 		} catch (Exception e) {
 			System.out.println("Se ha desonectado el tracker");
