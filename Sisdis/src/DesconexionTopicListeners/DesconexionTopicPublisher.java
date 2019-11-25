@@ -77,8 +77,10 @@ public class DesconexionTopicPublisher extends Thread{
 			ArrayList<EstadosEleccionMaster> nuevoEstado = new ArrayList<EstadosEleccionMaster>();
 			nuevoEstado.add(EstadosEleccionMaster.Decidiendo);
 			
+			System.out.println("OLD ESTADO ******"+ nuevoMasterTopicPublisher.getEstadoActual());
 			nuevoMasterTopicPublisher.setEstadoActual(nuevoEstado);
-			System.out.println("Cambio de estado de Elección : " + nuevoMasterTopicPublisher.getEstadoActual());
+			System.out.println("NUEVO ESTADO ******"+ nuevoMasterTopicPublisher.getEstadoActual());
+			
 			RedundantController.desconexion();
 			System.out.println("DESCONECTADO");
 

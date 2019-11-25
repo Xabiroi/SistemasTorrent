@@ -60,7 +60,7 @@ public class NuevoMasterTopicPublisher extends Thread{
 			//Message Publisher
 			topicPublisher = topicSession.createPublisher(myTopic);
 			System.out.println("- NuevoMaster Publisher TopicPublisher created!");
-			
+			System.out.println("ESTADO ACTUAL _______ "+estadoActual.get(0));
 				switch(estadoActual.get(0)) {
 				case Esperando:
 					while(!cambio.get(0).booleanValue()) {					  
