@@ -84,6 +84,7 @@ public class RedundantController extends Thread{
 		KeepaliveTopicPublisher = new KeepaliveTopicPublisher(TrackersRedundantes, miTracker);
 		
 		DesconexionTopicPublisher = new DesconexionTopicPublisher(estadosEleccionMasters, miTracker, NuevoMasterTopicPublisher);
+		DesconexionTopicSubscriber = new DesconexionTopicSubscriber(TrackersRedundantes, estadosEleccionMasters,NuevoMasterTopicPublisher);
 		estadosEleccionMasters.add(DataController.EstadosEleccionMaster.Esperando);
 		RedundantController = new RedundantController(TrackersRedundantes, KeepaliveTopicPublisher, KeepaliveTopicSubscriber,  DesconexionTopicPublisher, DesconexionTopicSubscriber, miTracker);
 				
