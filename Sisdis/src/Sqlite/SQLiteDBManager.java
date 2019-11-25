@@ -21,18 +21,18 @@ public class SQLiteDBManager {
 			con = DriverManager.getConnection("jdbc:sqlite:" + dbname);
 			con.setAutoCommit(false);
 			
-			System.out.println(" - Db connection was opened :)");
+//			//System.out.println(" - Db connection was opened :)");
 		} catch (Exception ex) {
-			System.err.println(" # Unable to create SQLiteDBManager: " + ex.getMessage());
+			//System.err.println(" # Unable to create SQLiteDBManager: " + ex.getMessage());
 		}
 	}
 	
 	public void closeConnection() {
 		try {
 			con.close();
-			System.out.println("\n - Db connection was closed :)");
+//			//System.out.println("\n - Db connection was closed :)");
 		} catch (Exception ex) {
-			System.err.println("\n # Error closing db connection: " + ex.getMessage());
+			//System.err.println("\n # Error closing db connection: " + ex.getMessage());
 		}
 	}
 //	#######################################################
@@ -49,17 +49,17 @@ public class SQLiteDBManager {
 
 				
 				if (stmt.executeUpdate() == 1) {
-					System.out.println("\n - A new peer was inserted. :)");
+					//System.out.println("\n - A new peer was inserted. :)");
 					con.commit();
 				} else {
-					System.err.println("\n - A new peer wasn't inserted. :(");
+					//System.err.println("\n - A new peer wasn't inserted. :(");
 					con.rollback();
 				}	
 			} catch (Exception ex) {
-				System.err.println("\n # Error storing data in the db: " + ex.getMessage());
+				//System.err.println("\n # Error storing data in the db: " + ex.getMessage());
 			}
 		} else {
-			System.err.println("\n # Error inserting a new peer: some parameters are 'null' or 'empty'.");
+			//System.err.println("\n # Error inserting a new peer: some parameters are 'null' or 'empty'.");
 		}
 	}
 	
@@ -74,17 +74,17 @@ public class SQLiteDBManager {
 				stmt.setString(2, ip);
 				
 				if (stmt.executeUpdate() != 0) {
-					System.out.println("\n - Peer's data was updated. :)");
+					//System.out.println("\n - Peer's data was updated. :)");
 					con.commit();
 				} else {
-					System.err.println("\n - Peer's data wasn't updated. :(");
+					//System.err.println("\n - Peer's data wasn't updated. :(");
 					con.rollback();
 				}	
 			} catch (Exception ex) {
-				System.err.println("\n # Error updating data in the db: " + ex.getMessage());
+				//System.err.println("\n # Error updating data in the db: " + ex.getMessage());
 			}
 		} else {
-			System.err.println("\n # Error updating Peer's data: some parameters are 'null' or 'empty'.");
+			//System.err.println("\n # Error updating Peer's data: some parameters are 'null' or 'empty'.");
 		}
 	}
 	
@@ -94,18 +94,18 @@ public class SQLiteDBManager {
 		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {			
 			ResultSet rs = stmt.executeQuery();
 			
-			System.out.println("\n - Loading peers from the db:");
+			//System.out.println("\n - Loading peers from the db:");
 			
 			
 			while(rs.next()) {
-				System.out.println("    " + rs.getString("IP") + ".- " +rs.getString("PUERTO")+ ".- " +rs.getString("IDPEER"));
+				//System.out.println("    " + rs.getString("IP") + ".- " +rs.getString("PUERTO")+ ".- " +rs.getString("IDPEER"));
 		         String ip = rs.getString("IP");
 		         String puerto = rs.getString("PUERTO");
 		         String idpeer = rs.getString("IDPEER");
 		         arPeer.add(new Peer(ip,puerto,idpeer));
 			}				
 		} catch (Exception ex) {
-			System.err.println("\n # Error loading data in the db: " + ex.getMessage());
+			//System.err.println("\n # Error loading data in the db: " + ex.getMessage());
 		}
 		return arPeer;
 	}
@@ -117,14 +117,14 @@ public class SQLiteDBManager {
 			int deleted = stmt.executeUpdate();
 			
 			if (deleted > 0) {
-				System.out.println("\n - '" + deleted + "' peers were deleted.");
+				//System.out.println("\n - '" + deleted + "' peers were deleted.");
 				con.commit();
 			} else {
-				System.out.println("\n - None peer was deleted.");
+				//System.out.println("\n - None peer was deleted.");
 				con.rollback();
 			}				
 		} catch (Exception ex) {
-			System.err.println("\n # Error cleaning the db: " + ex.getMessage());
+			//System.err.println("\n # Error cleaning the db: " + ex.getMessage());
 		}
 	}
 //##########################################################################
@@ -140,17 +140,17 @@ public class SQLiteDBManager {
 
 				
 				if (stmt.executeUpdate() == 1) {
-					System.out.println("\n - A new swarm was inserted. :)");
+					//System.out.println("\n - A new swarm was inserted. :)");
 					con.commit();
 				} else {
-					System.err.println("\n - A new swarm wasn't inserted. :(");
+					//System.err.println("\n - A new swarm wasn't inserted. :(");
 					con.rollback();
 				}	
 			} catch (Exception ex) {
-				System.err.println("\n # Error storing data in the db: " + ex.getMessage());
+				//System.err.println("\n # Error storing data in the db: " + ex.getMessage());
 			}
 		} else {
-			System.err.println("\n # Error inserting a new swarm: some parameters are 'null' or 'empty'.");
+			//System.err.println("\n # Error inserting a new swarm: some parameters are 'null' or 'empty'.");
 		}
 	}
 	
@@ -163,17 +163,17 @@ public class SQLiteDBManager {
 				stmt.setString(1, idSwarm);
 				
 				if (stmt.executeUpdate() != 0) {
-					System.out.println("\n - Swarm's data was updated. :)");
+					//System.out.println("\n - Swarm's data was updated. :)");
 					con.commit();
 				} else {
-					System.err.println("\n - Swarm's data wasn't updated. :(");
+					//System.err.println("\n - Swarm's data wasn't updated. :(");
 					con.rollback();
 				}	
 			} catch (Exception ex) {
-				System.err.println("\n # Error updating data in the db: " + ex.getMessage());
+				//System.err.println("\n # Error updating data in the db: " + ex.getMessage());
 			}
 		} else {
-			System.err.println("\n # Error updating Swarm's data: some parameters are 'null' or 'empty'.");
+			//System.err.println("\n # Error updating Swarm's data: some parameters are 'null' or 'empty'.");
 		}
 	}
 	
@@ -183,17 +183,17 @@ public class SQLiteDBManager {
 		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {			
 			ResultSet rs = stmt.executeQuery();
 			
-			System.out.println("\n - Loading swarms from the db:");
+			//System.out.println("\n - Loading swarms from the db:");
 			
 			while(rs.next()) {
-				System.out.println("    " + rs.getInt("IDSWARM"));
+				//System.out.println("    " + rs.getInt("IDSWARM"));
 				
 		         String idSwarm = rs.getString("IDSWARM");
 
 		         arSwarm.add(new Swarm(new ArrayList<Peer>(),idSwarm));
 			}				
 		} catch (Exception ex) {
-			System.err.println("\n # Error loading data in the db: " + ex.getMessage());
+			//System.err.println("\n # Error loading data in the db: " + ex.getMessage());
 		}
 		return arSwarm;
 	}
@@ -205,14 +205,14 @@ public class SQLiteDBManager {
 			int deleted = stmt.executeUpdate();
 			
 			if (deleted > 0) {
-				System.out.println("\n - '" + deleted + "' swarms were deleted.");
+				//System.out.println("\n - '" + deleted + "' swarms were deleted.");
 				con.commit();
 			} else {
-				System.out.println("\n - None swarm was deleted.");
+				//System.out.println("\n - None swarm was deleted.");
 				con.rollback();
 			}				
 		} catch (Exception ex) {
-			System.err.println("\n # Error cleaning the db: " + ex.getMessage());
+			//System.err.println("\n # Error cleaning the db: " + ex.getMessage());
 		}
 	}
 	
@@ -230,17 +230,17 @@ public class SQLiteDBManager {
 
 				
 				if (stmt.executeUpdate() == 1) {
-					System.out.println("\n - A new Swarm_peer was inserted. :)");
+					//System.out.println("\n - A new Swarm_peer was inserted. :)");
 					con.commit();
 				} else {
-					System.err.println("\n - A new Swarm_peer wasn't inserted. :(");
+					//System.err.println("\n - A new Swarm_peer wasn't inserted. :(");
 					con.rollback();
 				}	
 			} catch (Exception ex) {
-				System.err.println("\n # Error storing data in the db: " + ex.getMessage());
+				//System.err.println("\n # Error storing data in the db: " + ex.getMessage());
 			}
 		} else {
-			System.err.println("\n # Error inserting a new Swarm_peer: some parameters are 'null' or 'empty'.");
+			//System.err.println("\n # Error inserting a new Swarm_peer: some parameters are 'null' or 'empty'.");
 		}
 	}
 	
@@ -256,17 +256,17 @@ public class SQLiteDBManager {
 				stmt.setString(3, idPeer);
 				
 				if (stmt.executeUpdate() != 0) {
-					System.out.println("\n - SwarmPeer's data was updated. :)");
+					//System.out.println("\n - SwarmPeer's data was updated. :)");
 					con.commit();
 				} else {
-					System.err.println("\n - SwarmPeer's data wasn't updated. :(");
+					//System.err.println("\n - SwarmPeer's data wasn't updated. :(");
 					con.rollback();
 				}	
 			} catch (Exception ex) {
-				System.err.println("\n # Error updating data in the db: " + ex.getMessage());
+				//System.err.println("\n # Error updating data in the db: " + ex.getMessage());
 			}
 		} else {
-			System.err.println("\n # Error updating SwarmPeer's data: some parameters are 'null' or 'empty'.");
+			//System.err.println("\n # Error updating SwarmPeer's data: some parameters are 'null' or 'empty'.");
 		}
 	}
 	//FIXME arreglar que devuelva una lista
@@ -276,13 +276,13 @@ public class SQLiteDBManager {
 		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {			
 			ResultSet rs = stmt.executeQuery();
 			
-			System.out.println("\n - Loading peers from the db:");
+			//System.out.println("\n - Loading peers from the db:");
 			
 			while(rs.next()) {
-				System.out.println("    " + rs.getString("IDSWARM") + ".- " + rs.getString("IDPEER")+ ".- "+rs.getFloat("DESCARGADO"));
+				//System.out.println("    " + rs.getString("IDSWARM") + ".- " + rs.getString("IDPEER")+ ".- "+rs.getFloat("DESCARGADO"));
 			}				
 		} catch (Exception ex) {
-			System.err.println("\n # Error loading data in the db: " + ex.getMessage());
+			//System.err.println("\n # Error loading data in the db: " + ex.getMessage());
 		}
 	}
 	
@@ -293,14 +293,14 @@ public class SQLiteDBManager {
 			int deleted = stmt.executeUpdate();
 			
 			if (deleted > 0) {
-				System.out.println("\n - '" + deleted + "' peers were deleted.");
+				//System.out.println("\n - '" + deleted + "' peers were deleted.");
 				con.commit();
 			} else {
-				System.out.println("\n - None peer was deleted.");
+				//System.out.println("\n - None peer was deleted.");
 				con.rollback();
 			}				
 		} catch (Exception ex) {
-			System.err.println("\n # Error cleaning the db: " + ex.getMessage());
+			//System.err.println("\n # Error cleaning the db: " + ex.getMessage());
 		}
 	}
 	
