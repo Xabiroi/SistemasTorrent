@@ -29,11 +29,11 @@ public class DesconexionTopicPublisher extends Thread{
 	TopicSession topicSession = null;
 	TopicPublisher topicPublisher = null;	
 	
-	private EstadosEleccionMaster estadoActual;
+	private ArrayList<EstadosEleccionMaster> estadoActual;
 	private Tracker miTracker;
 	
 
-	public DesconexionTopicPublisher(EstadosEleccionMaster estadoActual, Tracker miTracker, NuevoMasterTopicPublisher nuevoMasterTopicPublisher) {
+	public DesconexionTopicPublisher(ArrayList<EstadosEleccionMaster> estadoActual, Tracker miTracker, NuevoMasterTopicPublisher nuevoMasterTopicPublisher) {
 		super();
 		this.estadoActual = estadoActual;
 		this.miTracker = miTracker;
@@ -58,11 +58,11 @@ public class DesconexionTopicPublisher extends Thread{
 			
 			//Session
 			topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-			System.out.println("- Desconexion Topic Session created!");
+//			System.out.println("- Desconexion Topic Session created!");
 
 			//Message Publisher
 			topicPublisher = topicSession.createPublisher(myTopic);
-			System.out.println("- Desconexion TopicPublisher created!");
+//			System.out.println("- Desconexion TopicPublisher created!");
 			
 			ObjectMessage objectMessage = topicSession.createObjectMessage();
 		
@@ -71,7 +71,6 @@ public class DesconexionTopicPublisher extends Thread{
 			objectMessage.setJMSMessageID("ID-1");
 			objectMessage.setJMSPriority(1);		
 			
-			topicPublisher.publish(objectMessage);
 			System.out.println("Desconexión enviada");
 			Thread.sleep(3000);
 			ArrayList<EstadosEleccionMaster> nuevoEstado = new ArrayList<EstadosEleccionMaster>();
@@ -81,8 +80,10 @@ public class DesconexionTopicPublisher extends Thread{
 			nuevoMasterTopicPublisher.setEstadoActual(nuevoEstado);
 			System.out.println("NUEVO ESTADO ******"+ nuevoMasterTopicPublisher.getEstadoActual());
 			
+			
+			topicPublisher.publish(objectMessage);
 			RedundantController.desconexion();
-			System.out.println("DESCONECTADO");
+//			System.out.println("DESCONECTADO");
 
 		} catch (Exception e) {
 			System.out.println("Se ha desonectado el tracker");
@@ -106,10 +107,10 @@ public class DesconexionTopicPublisher extends Thread{
 	}
 
 	public EstadosEleccionMaster getEstadoActual() {
-		return estadoActual;
+		return estadoActual.get(0);
 	}
 
-	public void setEstadoActual(EstadosEleccionMaster estadoActual) {
+	public void setEstadoActual(ArrayList<EstadosEleccionMaster> estadoActual) {
 		this.estadoActual = estadoActual;
 	}
 

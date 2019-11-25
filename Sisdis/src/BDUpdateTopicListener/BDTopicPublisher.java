@@ -59,15 +59,15 @@ public class BDTopicPublisher extends Thread{
 			
 			//Connection			
 			topicConnection = topicConnectionFactory.createTopicConnection();
-			System.out.println("- BD Publisher Topic Connection created!");
+//			System.out.println("- BD Publisher Topic Connection created!");
 			
 			//Session
 			topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-			System.out.println("- BD Publisher Topic Session created!");
+//			System.out.println("- BD Publisher Topic Session created!");
 
 			//Message Publisher
 			topicPublisher = topicSession.createPublisher(myTopic);
-			System.out.println("- BD Publisher TopicPublisher created!");
+//			System.out.println("- BD Publisher TopicPublisher created!");
 			
 			
 			int loop=1;
@@ -99,7 +99,7 @@ public class BDTopicPublisher extends Thread{
 					
 					topicPublisher.publish(objectMessage);
 					//Publish the Message
-					System.out.println("- Sugerencia published in the Topic!");
+//					System.out.println("- Sugerencia published in the Topic!");
 					
 					try {
 						Thread.sleep(1000);
@@ -119,7 +119,7 @@ public class BDTopicPublisher extends Thread{
 					
 					topicPublisher.publish(objectMessage2);
 
-					System.out.println("- Preparacion published in the Topic!");
+//					System.out.println("- Preparacion published in the Topic!");
 					try {
 						Thread.sleep(1000);
 					} catch (Exception e) {
@@ -139,7 +139,7 @@ public class BDTopicPublisher extends Thread{
 					
 					topicPublisher.publish(objectMessage3);
 					//Publish the Message
-					System.out.println("- Actualizacion published in the Topic!");
+//					System.out.println("- Actualizacion published in the Topic!");
 					try {
 						Thread.sleep(1000);
 					} catch (Exception e) {

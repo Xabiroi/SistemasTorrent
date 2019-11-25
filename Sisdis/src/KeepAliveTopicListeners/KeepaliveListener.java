@@ -39,10 +39,10 @@ public class KeepaliveListener implements MessageListener {
 
 				//Si llega keepalive con id 0
 				if(keepAlive.getI()==0) {
-					System.out.println("HA LLEGADO UN TRACKER CON ID 0");
+//					System.out.println("HA LLEGADO UN TRACKER CON ID 0");
 					//Si vemos que nuestro id no es 0 pasamos(no somos nosotros)
 					if(miTracker.getId()==0) {
-						System.out.println("AÑADIENDO TRACKER CON ID 0");
+//						System.out.println("AÑADIENDO TRACKER CON ID 0");
 						//########################################
 							//Compruebas que no hay ids iguales para actualizar los tiempos
 							boolean encontrado=false;
@@ -63,7 +63,7 @@ public class KeepaliveListener implements MessageListener {
 						for(Tracker tracker:trackers) {
 							if(tracker.getId()>=max) {
 								max=tracker.getId();
-								System.out.println("EL VALOR DE MAX="+max);
+//								System.out.println("EL VALOR DE MAX="+max);
 							}
 
 						}
@@ -94,7 +94,7 @@ public class KeepaliveListener implements MessageListener {
 						for(Tracker tracker:trackers) {
 							if(tracker.getId()>=max) {
 								max=tracker.getId();
-								System.out.println("EL VALOR DE MAX EN EL ELSE="+max);
+//								System.out.println("EL VALOR DE MAX EN EL ELSE="+max);
 							}
 						}
 						//Compruebas que no hay ids iguales para actualizar los tiempos

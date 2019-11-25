@@ -23,7 +23,8 @@ public class DesconexionListener implements MessageListener {
 
 	@Override
 	//This method is call when a new Message arrives to the topic
-	public void onMessage(Message message) {		
+	public void onMessage(Message message) {	
+		System.out.println("---------MENSAJE DE DESCONEXIÖN RECIBIDO----------");
 		if (message != null) {
 			try {
 				ObjectMessage objectMessage = (ObjectMessage) message;					

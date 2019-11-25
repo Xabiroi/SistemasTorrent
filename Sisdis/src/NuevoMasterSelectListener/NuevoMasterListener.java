@@ -36,6 +36,7 @@ public class NuevoMasterListener implements MessageListener {
 				
 				System.out.println("     - Received ID: " + nuevoMaster.getIdMaster());
 				while(true) {
+					System.out.println(estadosEleccionMaster.get(0));
 					switch (estadosEleccionMaster.get(0)) {
 					
 					case Esperando:
@@ -56,7 +57,7 @@ public class NuevoMasterListener implements MessageListener {
 						System.out.println("Decisión tomada: "+miTracker.isMaster());
 						//no hay else porque no hay reasignación hasta que no se va el master
 						estadosEleccionMaster.set(0, EstadosEleccionMaster.Decidiendo);
-						System.out.println("Estado de elección de master: "+estadosEleccionMaster.toString());
+//						System.out.println("Estado de elección de master: "+estadosEleccionMaster.toString());
 						break;
 					default:
 						System.out.println("Error: Estado de Nuevo Master no contemplado");

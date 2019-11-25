@@ -51,16 +51,16 @@ public class NuevoMasterTopicPublisher extends Thread{
 			
 			//Connection			
 			topicConnection = topicConnectionFactory.createTopicConnection();
-			System.out.println("- NuevoMaster Publisher Topic Connection created!");
+//			System.out.println("- NuevoMaster Publisher Topic Connection created!");
 			
 			//Session
 			topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-			System.out.println("- NuevoMaster Publisher Topic Session created!");
+//			System.out.println("- NuevoMaster Publisher Topic Session created!");
 
 			//Message Publisher
 			topicPublisher = topicSession.createPublisher(myTopic);
-			System.out.println("- NuevoMaster Publisher TopicPublisher created!");
-			System.out.println("ESTADO ACTUAL _______ "+estadoActual.get(0));
+//			System.out.println("- NuevoMaster Publisher TopicPublisher created!");
+//			System.out.println("ESTADO ACTUAL _______ "+estadoActual.get(0));
 				switch(estadoActual.get(0)) {
 				case Esperando:
 					while(!cambio.get(0).booleanValue()) {					  

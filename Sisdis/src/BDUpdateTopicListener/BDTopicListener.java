@@ -41,18 +41,18 @@ public class BDTopicListener implements MessageListener {
 	public void onMessage(Message message) {		
 		if (message != null) {
 			try {
-				System.out.println("Estado actual del Listener="+estadoActual);
+//				System.out.println("Estado actual del Listener="+estadoActual);
 				switch(estadoActual.get(0)) {
 				  case Esperando:
 					  System.out.println("De aqui no sale");
 					break;
 				
 				  case Sugerencia:
-					  System.out.println("Ha recibido la sugerencia!¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
+//					  System.out.println("Ha recibido la sugerencia!¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
 					  	ObjectMessage objectMessage = (ObjectMessage) message;					
 						SugerenciaActualizacion sugerenciaActualizacion = (SugerenciaActualizacion) objectMessage.getObject();
 						
-						System.out.println("     - Detectado nuevo peer con IP: " + sugerenciaActualizacion.getIpPeer());
+//						System.out.println("     - Detectado nuevo peer con IP: " + sugerenciaActualizacion.getIpPeer());
 						ips.add(sugerenciaActualizacion.getIpPeer());
 						
 						if(ips.size()==TrackersRedundantes.size()){
@@ -64,14 +64,14 @@ public class BDTopicListener implements MessageListener {
 					  	ObjectMessage objectMessage1 = (ObjectMessage) message;					
 						PreparacionActualizacion preparacionActualizacion = (PreparacionActualizacion) objectMessage1.getObject();
 						
-						System.out.println("     - Preparandose para actualizar");
+//						System.out.println("     - Preparandose para actualizar");
 						estadoActual.set(0,EstadosBaseDeDatos.Actualizacion);
 				    break;
 				  case Actualizacion:
 					  	ObjectMessage objectMessage3 = (ObjectMessage) message;					
 						ActualizacionBD actualizacionBD = (ActualizacionBD) objectMessage3.getObject();
 						
-						System.out.println("     -Version de la base de datos: " + actualizacionBD.getIdentificador());
+//						System.out.println("     -Version de la base de datos: " + actualizacionBD.getIdentificador());
 						
 						ContadorVersionBD.set(0, ContadorVersionBD.get(0)+1);
 						estadoActual.set(0,EstadosBaseDeDatos.Esperando);

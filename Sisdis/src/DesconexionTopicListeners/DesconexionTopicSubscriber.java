@@ -11,8 +11,6 @@ import javax.jms.TopicSubscriber;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
-import Controllers.DataController;
-import Controllers.DataController.EstadosBaseDeDatos;
 import Controllers.DataController.EstadosEleccionMaster;
 import NuevoMasterSelectListener.NuevoMasterTopicPublisher;
 import Objetos.Tracker;
