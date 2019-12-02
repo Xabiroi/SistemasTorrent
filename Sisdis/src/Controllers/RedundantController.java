@@ -48,12 +48,15 @@ public class RedundantController extends Thread{
 		if(TrackersRedundantes.size()!=0) {
 			for(Iterator<Tracker> iterator = TrackersRedundantes.iterator(); iterator.hasNext();) {
 				Tracker tracker =iterator.next();
-				System.out.println("System.currentTimeMillis()"+System.currentTimeMillis());
-				System.out.println("tracker.getTiempo()"+tracker.getTiempo());
+//				System.out.println("System.currentTimeMillis()"+System.currentTimeMillis());
+//				System.out.println("tracker.getTiempo()"+tracker.getTiempo());
 				System.out.println("Resta="+(System.currentTimeMillis()-tracker.getTiempo()));
 				if(System.currentTimeMillis()-tracker.getTiempo()>1500) {
 					System.out.println("Quitando el tracker");
 					iterator.remove();
+					if(tracker.isMaster()) {
+						NuevoMasterTopicPublisher.elegirNuevoMaster();
+					}
 				}
 				
 			}

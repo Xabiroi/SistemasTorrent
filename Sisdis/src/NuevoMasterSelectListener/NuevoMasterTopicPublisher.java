@@ -37,7 +37,7 @@ public class NuevoMasterTopicPublisher extends Thread{
 		this.cambio = cambio;
 	}
 	
-	public void run() {	
+	public void elegirNuevoMaster() {	
 		
 		try {
 			//JNDI Initial Context
@@ -59,46 +59,28 @@ public class NuevoMasterTopicPublisher extends Thread{
 
 			//Message Publisher
 			topicPublisher = topicSession.createPublisher(myTopic);
-//			System.out.println("- NuevoMaster Publisher TopicPublisher created!");
-//			System.out.println("ESTADO ACTUAL _______ "+estadoActual.get(0));
-				switch(estadoActual.get(0)) {
-				case Esperando:
-					while(!cambio.get(0).booleanValue()) {					  
-						try {
-							Thread.sleep(100);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}	
-				  }
-				  estadoActual.set(0,EstadosEleccionMaster.Decidiendo);
-				  break;
-				  
-				case Decidiendo:
-					System.out.println("ESTAMOS DECIDIENDO!!\n\n\n");
-					int idMasBajo = miTracker.getId();
-					for(Tracker tracker : trackers) {
-						if(tracker.getId() < idMasBajo)
-							idMasBajo = tracker.getId();
-					}
-					
-					ObjectMessage objectMessage = topicSession.createObjectMessage();
-					
-					objectMessage.setObject(new NuevoMaster(idMasBajo));
-					
-					objectMessage.setJMSType("ObjectMessage");
-					objectMessage.setJMSMessageID("ID-1");
-					objectMessage.setJMSPriority(1);		
-					
-					topicPublisher.publish(objectMessage);
-					
-					try {
-						Thread.sleep(1000);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}	
-					
-					break;
-				}
+			System.out.println("ESTAMOS DECIDIENDO!!\n\n\n");
+			int idMasBajo = miTracker.getId();
+			for(Tracker tracker : trackers) {
+				if(tracker.getId() < idMasBajo)
+					idMasBajo = tracker.getId();
+			}
+			
+			ObjectMessage objectMessage = topicSession.createObjectMessage();
+			
+			objectMessage.setObject(new NuevoMaster(idMasBajo));
+			
+			objectMessage.setJMSType("ObjectMessage");
+			objectMessage.setJMSMessageID("ID-1");
+			objectMessage.setJMSPriority(1);		
+			
+			topicPublisher.publish(objectMessage);
+			
+			try {
+				Thread.sleep(1000);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
 			
 		} catch (Exception e) {
 			System.err.println("# NuevoMaster Publisher TopicPublisherTest Error: " + e.getMessage());

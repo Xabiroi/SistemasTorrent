@@ -76,12 +76,12 @@ public class PanelTracker extends JPanel{
 		KeepaliveTopicPublisher = new KeepaliveTopicPublisher(TrackersRedundantes, miTracker);
 		KeepaliveTopicSubscriber.start();
 		KeepaliveTopicPublisher.start();
-		NuevoMasterTopicPublisher.start();
+//		NuevoMasterTopicPublisher.start();
 		NuevoMasterTopicSubscriber.start();
 		
 		DesconexionTopicPublisher = new DesconexionTopicPublisher(estadosEleccionMasters, miTracker, NuevoMasterTopicPublisher);
 		DesconexionTopicSubscriber = new DesconexionTopicSubscriber(TrackersRedundantes, estadosEleccionMasters, new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, estadosEleccionMasters, cambio));
-		DesconexionTopicPublisher.start();
+//		DesconexionTopicPublisher.start();
 		recibidorBD.start();
 		setRedundantController(new RedundantController(TrackersRedundantes, KeepaliveTopicPublisher, KeepaliveTopicSubscriber,  DesconexionTopicPublisher, DesconexionTopicSubscriber, miTracker));
 		RedundantController.start();
@@ -101,8 +101,10 @@ public class PanelTracker extends JPanel{
 					model.setRowCount(0);
 					
 					for(Tracker tracker:TrackersRedundantes) {
+						if(tracker.getId()!=0) {
 						model.addRow(new Object[] {tracker.getIP(),tracker.getId(),tracker.isMaster()});
 						System.out.println("Añadiendo en la interfaz="+tracker.getIP());
+						}
 					}
 					model.fireTableDataChanged();
 					try {
