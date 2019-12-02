@@ -36,7 +36,7 @@ public class NuevoMasterListener implements MessageListener {
 				System.out.println("     - Received ID: " + nuevoMaster.getIdMaster());
 				System.out.println(estadosEleccionMaster.get(0));
 				System.out.println("Nuevo Estado De Elección: "+ estadosEleccionMaster.toString());
-				if(miTracker.getId() == IdMasBajo)
+				if(miTracker.getId() == nuevoMaster.getIdMaster())
 					miTracker.setMaster(true);
 				System.out.println("Decisión tomada: "+miTracker.isMaster());
 
