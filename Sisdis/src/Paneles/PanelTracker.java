@@ -1,6 +1,7 @@
 package Paneles;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -97,14 +98,16 @@ public class PanelTracker extends JPanel{
 				while(loop<60) {
 					//System.out.println("TrackersRedundantes="+TrackersRedundantes);
 					model.setRowCount(0);
+					//Iterator
 					
-					for(Tracker tracker:TrackersRedundantes) {
+					
+					for(Iterator<Tracker> iterator = TrackersRedundantes.iterator(); iterator.hasNext();) {
+						Tracker tracker =iterator.next();
 						if(tracker.getId()!=0) {
 						model.addRow(new Object[] {tracker.getIP(),tracker.getId(),tracker.isMaster()});
 						System.out.println("Añadiendo en la interfaz="+tracker.getIP());
 						}
 					}
-					
 					model.fireTableDataChanged();
 					try {
 						Thread.sleep(1500);
