@@ -106,6 +106,7 @@ public class PanelTracker extends JPanel{
 						System.out.println("Añadiendo en la interfaz="+tracker.getIP());
 						}
 					}
+					
 					model.fireTableDataChanged();
 					try {
 						Thread.sleep(1500);
