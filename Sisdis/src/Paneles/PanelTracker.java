@@ -83,14 +83,12 @@ public class PanelTracker extends JPanel{
 		DesconexionTopicSubscriber = new DesconexionTopicSubscriber(TrackersRedundantes, estadosEleccionMasters, new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, estadosEleccionMasters, cambio));
 //		DesconexionTopicPublisher.start();
 		recibidorBD.start();
-		setRedundantController(new RedundantController(TrackersRedundantes, KeepaliveTopicPublisher, KeepaliveTopicSubscriber,  DesconexionTopicPublisher, DesconexionTopicSubscriber, miTracker));
+		setRedundantController(new RedundantController(TrackersRedundantes, KeepaliveTopicPublisher, KeepaliveTopicSubscriber,  DesconexionTopicPublisher, DesconexionTopicSubscriber, miTracker,NuevoMasterTopicPublisher));
 		RedundantController.start();
 		
 //		RedundantController.conectarJMS();
 		System.out.println("CONECTADO");
-		
-		
-		
+			
 		Thread thread = new Thread(){
 		    public void run(){
 		      System.out.println("Thread Running");

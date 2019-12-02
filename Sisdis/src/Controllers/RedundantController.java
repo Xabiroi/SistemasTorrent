@@ -23,6 +23,18 @@ public class RedundantController extends Thread{
 	private static DesconexionTopicPublisher DesconexionTopicPublisher;
 	private static RedundantController RedundantController;
 	private static NuevoMasterTopicSubscriber NuevoMasterTopicSubscriber;
+	public static NuevoMasterTopicPublisher getNuevoMasterTopicPublisher() {
+		return NuevoMasterTopicPublisher;
+	}
+
+
+
+	public static void setNuevoMasterTopicPublisher(NuevoMasterTopicPublisher nuevoMasterTopicPublisher) {
+		NuevoMasterTopicPublisher = nuevoMasterTopicPublisher;
+	}
+
+
+
 	private static NuevoMasterTopicPublisher NuevoMasterTopicPublisher;
 	private static ArrayList<DataController.EstadosEleccionMaster> estadosEleccionMasters = new ArrayList<DataController.EstadosEleccionMaster>(1);
 	private static QueueFileSender enviadorBD;
@@ -32,7 +44,7 @@ public class RedundantController extends Thread{
 	//master-slave
 	public RedundantController(ArrayList<Tracker> trackersRedundantes, KeepaliveTopicPublisher keepaliveTopicPublisher,
 			KeepaliveTopicSubscriber keepaliveTopicSubscriber, DesconexionTopicPublisher desconexionTopicPublisher,
-			DesconexionTopicSubscriber desconexionTopicSubscriber,Tracker myTracker) {
+			DesconexionTopicSubscriber desconexionTopicSubscriber,Tracker myTracker, NuevoMasterTopicPublisher nuevoMasterTopicPublisher) {
 		super();
 		TrackersRedundantes = trackersRedundantes;
 		miTracker = myTracker;
@@ -40,6 +52,8 @@ public class RedundantController extends Thread{
 		setKeepaliveTopicSubscriber(keepaliveTopicSubscriber);
 		setDesconexionTopicPublisher(desconexionTopicPublisher);
 		setDesconexionTopicSubscriber(desconexionTopicSubscriber);
+		setNuevoMasterTopicPublisher(nuevoMasterTopicPublisher);
+
 	}
 	
 
@@ -77,28 +91,7 @@ public class RedundantController extends Thread{
 		}
 	}
 	
-	public static void main(String args[]) {
-		//al tracker asignarle la ip de cada uno en la realidad
-		Tracker miTracker = new Tracker(0,"192.168.5.46","30",false,System.currentTimeMillis());
-		enviadorBD=new QueueFileSender();
-		recibidorBD= new QueueFileReceiver();
-		
-		KeepaliveTopicSubscriber= new KeepaliveTopicSubscriber(getTrackersRedundantes(), miTracker,enviadorBD,recibidorBD);
-		KeepaliveTopicPublisher = new KeepaliveTopicPublisher(TrackersRedundantes, miTracker);
-		
-		DesconexionTopicPublisher = new DesconexionTopicPublisher(estadosEleccionMasters, miTracker, NuevoMasterTopicPublisher);
-		DesconexionTopicSubscriber = new DesconexionTopicSubscriber(TrackersRedundantes, estadosEleccionMasters,NuevoMasterTopicPublisher);
-		estadosEleccionMasters.add(DataController.EstadosEleccionMaster.Esperando);
-		RedundantController = new RedundantController(TrackersRedundantes, KeepaliveTopicPublisher, KeepaliveTopicSubscriber,  DesconexionTopicPublisher, DesconexionTopicSubscriber, miTracker);
-				
-		RedundantController.conectarJMS();
-		System.out.println("CONECTADO");
-	}
-	
-	
-	
-//	public void expulsar() {}
-//	public void unirseARed() {}
+
 	public void conectarJMS() {
 		KeepaliveTopicSubscriber.start();
 		KeepaliveTopicPublisher.start();
@@ -178,6 +171,30 @@ public class RedundantController extends Thread{
 
 	public static void setRecibidorBD(QueueFileReceiver recibidorBD) {
 		RedundantController.recibidorBD = recibidorBD;
+	}
+
+
+
+	public static NuevoMasterTopicSubscriber getNuevoMasterTopicSubscriber() {
+		return NuevoMasterTopicSubscriber;
+	}
+
+
+
+	public static void setNuevoMasterTopicSubscriber(NuevoMasterTopicSubscriber nuevoMasterTopicSubscriber) {
+		NuevoMasterTopicSubscriber = nuevoMasterTopicSubscriber;
+	}
+
+
+
+	public static ArrayList<DataController.EstadosEleccionMaster> getEstadosEleccionMasters() {
+		return estadosEleccionMasters;
+	}
+
+
+
+	public static void setEstadosEleccionMasters(ArrayList<DataController.EstadosEleccionMaster> estadosEleccionMasters) {
+		RedundantController.estadosEleccionMasters = estadosEleccionMasters;
 	}
 
 	
