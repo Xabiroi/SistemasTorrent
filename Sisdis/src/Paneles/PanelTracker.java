@@ -100,8 +100,8 @@ public class PanelTracker extends JPanel{
 					model.setRowCount(0);
 					//Iterator
 					
-					
-					for(Iterator<Tracker> iterator = TrackersRedundantes.iterator(); iterator.hasNext();) {
+					ArrayList<Tracker> trackers = TrackersRedundantes;
+					for(Iterator<Tracker> iterator = trackers.iterator(); iterator.hasNext();) {
 						Tracker tracker =iterator.next();
 						if(tracker.getId()!=0) {
 						model.addRow(new Object[] {tracker.getIP(),tracker.getId(),tracker.isMaster()});
