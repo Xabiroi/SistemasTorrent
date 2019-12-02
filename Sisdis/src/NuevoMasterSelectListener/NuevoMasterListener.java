@@ -32,40 +32,14 @@ public class NuevoMasterListener implements MessageListener {
 		if (message != null) {
 			try {
 				ObjectMessage objectMessage = (ObjectMessage) message;					
-				NuevoMaster nuevoMaster = (NuevoMaster) objectMessage.getObject();
-				
+				NuevoMaster nuevoMaster = (NuevoMaster) objectMessage.getObject();		
 				System.out.println("     - Received ID: " + nuevoMaster.getIdMaster());
-				while(true) {
-					System.out.println(estadosEleccionMaster.get(0));
-					switch (estadosEleccionMaster.get(0)) {
-					
-					case Esperando:
-						
-						IdMasBajo = nuevoMaster.getIdMaster();
-						numeroDeMensajesRecibidos++;
-						
-						if(numeroDeMensajesRecibidos == trackers.size()-1)
-							estadosEleccionMaster.set(0, EstadosEleccionMaster.Decidiendo);
-						
-						break;
-						
-					case Decidiendo:
-						
-						System.out.println("Nuevo Estado De Elección: "+ estadosEleccionMaster.toString());
-						if(miTracker.getId() == IdMasBajo)
-							miTracker.setMaster(true);
-						System.out.println("Decisión tomada: "+miTracker.isMaster());
-						//no hay else porque no hay reasignación hasta que no se va el master
-						estadosEleccionMaster.set(0, EstadosEleccionMaster.Decidiendo);
-//						System.out.println("Estado de elección de master: "+estadosEleccionMaster.toString());
-						break;
-					default:
-						System.out.println("Error: Estado de Nuevo Master no contemplado");
-						break;
-				} 
-				}
-				
-				
+				System.out.println(estadosEleccionMaster.get(0));
+				System.out.println("Nuevo Estado De Elección: "+ estadosEleccionMaster.toString());
+				if(miTracker.getId() == IdMasBajo)
+					miTracker.setMaster(true);
+				System.out.println("Decisión tomada: "+miTracker.isMaster());
+
 			} catch (Exception ex) {
 				System.err.println("# NuevoMaster Listener TopicListener error: " + ex.getMessage());
 				ex.printStackTrace();
