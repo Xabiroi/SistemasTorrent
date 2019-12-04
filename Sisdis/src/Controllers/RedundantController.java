@@ -72,6 +72,11 @@ public class RedundantController extends Thread{
 						NuevoMasterTopicPublisher.elegirNuevoMaster();
 					}
 				}
+				if(miTracker.getId()==tracker.getId()) {
+					if(miTracker.isMaster()) {
+						tracker.setMaster(true);
+					}
+				}
 				
 			}
 		}
