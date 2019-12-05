@@ -10,11 +10,8 @@ import javax.swing.table.DefaultTableModel;
 
 import BDFileQueueListener.QueueFileReceiver;
 import BDFileQueueListener.QueueFileSender;
-import Controllers.DataController;
 import Controllers.DataController.EstadosEleccionMaster;
 import Controllers.RedundantController;
-import DesconexionTopicListeners.DesconexionTopicPublisher;
-import DesconexionTopicListeners.DesconexionTopicSubscriber;
 import KeepAliveTopicListeners.KeepaliveTopicPublisher;
 import KeepAliveTopicListeners.KeepaliveTopicSubscriber;
 import NuevoMasterSelectListener.NuevoMasterTopicPublisher;
@@ -33,20 +30,21 @@ public class PanelTracker extends JPanel{
 	private static ArrayList<Tracker> TrackersRedundantes=new ArrayList<Tracker>();
 	private static KeepaliveTopicPublisher KeepaliveTopicPublisher;
 	private static KeepaliveTopicSubscriber KeepaliveTopicSubscriber;
-	private static DesconexionTopicSubscriber DesconexionTopicSubscriber;
-	private static DesconexionTopicPublisher DesconexionTopicPublisher;
 	private static RedundantController RedundantController;
 	private static NuevoMasterTopicPublisher NuevoMasterTopicPublisher;
 	private static NuevoMasterTopicSubscriber NuevoMasterTopicSubscriber;
 	private static ArrayList<EstadosEleccionMaster> estadosEleccionMasters = new ArrayList<EstadosEleccionMaster>(1);
 	private static QueueFileSender enviadorBD;
 	private static QueueFileReceiver recibidorBD;
-	
+	private ArrayList<Boolean> desconexion=new ArrayList<Boolean>(1);
 	
 	/**
 	 * Create the panel.
 	 */
-	public PanelTracker() {
+	public PanelTracker(ArrayList<Boolean> desconexion) {
+		
+		setDesconexion(desconexion);
+		
 		ArrayList<Boolean> cambio = new ArrayList<Boolean>();
 		cambio.add(0, false);
 		ArrayList<Boolean> cambio2 = new ArrayList<Boolean>();
@@ -72,19 +70,16 @@ public class PanelTracker extends JPanel{
 		recibidorBD= new QueueFileReceiver();
 		
 		NuevoMasterTopicPublisher = new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, estadosEleccionMasters, cambio2);
-		NuevoMasterTopicSubscriber = new NuevoMasterTopicSubscriber(TrackersRedundantes, miTracker, estadosEleccionMasters);
-		KeepaliveTopicSubscriber= new KeepaliveTopicSubscriber(getTrackersRedundantes(), miTracker,enviadorBD,recibidorBD);
-		KeepaliveTopicPublisher = new KeepaliveTopicPublisher(TrackersRedundantes, miTracker);
+		NuevoMasterTopicSubscriber = new NuevoMasterTopicSubscriber(TrackersRedundantes, miTracker, estadosEleccionMasters,desconexion);
+		KeepaliveTopicSubscriber= new KeepaliveTopicSubscriber(getTrackersRedundantes(), miTracker,enviadorBD,recibidorBD,desconexion);
+		KeepaliveTopicPublisher = new KeepaliveTopicPublisher(TrackersRedundantes, miTracker,desconexion);
 		KeepaliveTopicSubscriber.start();
 		KeepaliveTopicPublisher.start();
 //		NuevoMasterTopicPublisher.start();
 		NuevoMasterTopicSubscriber.start();
 		
-		DesconexionTopicPublisher = new DesconexionTopicPublisher(estadosEleccionMasters, miTracker, NuevoMasterTopicPublisher);
-		DesconexionTopicSubscriber = new DesconexionTopicSubscriber(TrackersRedundantes, estadosEleccionMasters, new NuevoMasterTopicPublisher(TrackersRedundantes, miTracker, estadosEleccionMasters, cambio));
-//		DesconexionTopicPublisher.start();
 		recibidorBD.start();
-		setRedundantController(new RedundantController(TrackersRedundantes, KeepaliveTopicPublisher, KeepaliveTopicSubscriber,  DesconexionTopicPublisher, DesconexionTopicSubscriber, miTracker,NuevoMasterTopicPublisher));
+		setRedundantController(new RedundantController(TrackersRedundantes, KeepaliveTopicPublisher, KeepaliveTopicSubscriber,miTracker,NuevoMasterTopicPublisher,desconexion));
 		RedundantController.start();
 		
 //		RedundantController.conectarJMS();
@@ -92,16 +87,15 @@ public class PanelTracker extends JPanel{
 			
 		Thread thread = new Thread(){
 		    public void run(){
-		      System.out.println("Thread Running");
-				int loop=0;
+
+		    	System.out.println("Thread Running");
 				
-				while(loop<60) {
+				while(desconexion.get(0)) {
+			    	synchronized(TrackersRedundantes) {
 					//System.out.println("TrackersRedundantes="+TrackersRedundantes);
 					model.setRowCount(0);
 					//Iterator
-					
-					ArrayList<Tracker> trackers = TrackersRedundantes;
-					for(Iterator<Tracker> iterator = trackers.iterator(); iterator.hasNext();) {
+					for(Iterator<Tracker> iterator = TrackersRedundantes.iterator(); iterator.hasNext();) {
 						Tracker tracker =iterator.next();
 						if(tracker.getId()!=0) {
 						model.addRow(new Object[] {tracker.getIP(),tracker.getId(),tracker.isMaster()});
@@ -109,31 +103,21 @@ public class PanelTracker extends JPanel{
 						}
 					}
 					model.fireTableDataChanged();
+			    	}
 					try {
 						Thread.sleep(1500);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					loop++;
-				}
+				
+		    	}
 		    }
 		  };
 
 		  thread.start();
 		
-		
 
-		
-//		Tracker a = new Tracker(1,"192.168.1.2","65",true, System.currentTimeMillis());
-//		Tracker b = new Tracker(2,"192.168.1.3","64",false,System.currentTimeMillis());
-//		Tracker c = new Tracker(3,"192.168.1.4","63",false,System.currentTimeMillis());
-//		Tracker d = new Tracker(4,"192.168.1.5","89",false,System.currentTimeMillis());
-//		
-//		model.addRow(new Object[] {a.getIP(),a.getPuerto(),a.isMaster()});
-//		model.addRow(new Object[] {b.getIP(),b.getPuerto(),b.isMaster()});
-//		model.addRow(new Object[] {c.getIP(),c.getPuerto(),c.isMaster()});
-//		model.addRow(new Object[] {d.getIP(),d.getPuerto(),d.isMaster()});
 		
 	}
 
@@ -178,6 +162,18 @@ public class PanelTracker extends JPanel{
 
 	public static void setRecibidorBD(QueueFileReceiver recibidorBD) {
 		PanelTracker.recibidorBD = recibidorBD;
+	}
+
+
+
+	public ArrayList<Boolean> getDesconexion() {
+		return desconexion;
+	}
+
+
+
+	public void setDesconexion(ArrayList<Boolean> desconexion) {
+		this.desconexion = desconexion;
 	}
 
 

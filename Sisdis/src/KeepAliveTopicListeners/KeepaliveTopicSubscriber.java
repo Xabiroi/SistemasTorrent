@@ -20,17 +20,19 @@ public class KeepaliveTopicSubscriber extends Thread{
 	private Tracker miTracker;
 	private QueueFileSender enviadorBD;
 	private QueueFileReceiver recibidorBD;
+	private ArrayList<Boolean> desconexion=new ArrayList<Boolean>(1);
 	
 
 
 
 	public KeepaliveTopicSubscriber(ArrayList<Tracker> trackers, Tracker miTracker, QueueFileSender enviadorBD,
-			QueueFileReceiver recibidorBD) {
+			QueueFileReceiver recibidorBD,ArrayList<Boolean> desconexion) {
 		super();
 		this.trackers = trackers;
 		this.miTracker = miTracker;
 		this.enviadorBD = enviadorBD;
 		this.recibidorBD = recibidorBD;
+		this.desconexion = desconexion;
 	}
 
 
@@ -75,19 +77,15 @@ public class KeepaliveTopicSubscriber extends Thread{
 			topicConnection.start();
 			
 			//Bucle infinito
-			boolean loop=true;
-			//FIXME Comprobacion evitando el bucle infinito
-			int loop1=1;
-			while(loop1<60) {
+
+			while(desconexion.get(0)) {
 				//Comprobacion de que funciona, habria que habilitar handlers de excepciones para detenerlo como cambio de master y otros
 					//System.out.println("- Waiting 0.5 seconds for messages...");
 					try {
 						Thread.sleep(500);
 					} catch (Exception e) {
-						loop=false;
 						e.printStackTrace();
 					}	
-					loop1++;
 			}
 			
 		
@@ -155,6 +153,16 @@ public class KeepaliveTopicSubscriber extends Thread{
 
 	public void setRecibidorBD(QueueFileReceiver recibidorBD) {
 		this.recibidorBD = recibidorBD;
+	}
+
+
+	public ArrayList<Boolean> getDesconexion() {
+		return desconexion;
+	}
+
+
+	public void setDesconexion(ArrayList<Boolean> desconexion) {
+		this.desconexion = desconexion;
 	}
 }
 

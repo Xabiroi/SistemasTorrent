@@ -18,14 +18,15 @@ public class NuevoMasterTopicSubscriber extends Thread{
 	private ArrayList<Tracker> trackers=new ArrayList<Tracker>();
 	private Tracker miTracker;
 	private ArrayList<EstadosEleccionMaster> estadoActual;
-	
+	private ArrayList<Boolean> desconexion=new ArrayList<Boolean>(1);
 	
 
-	public NuevoMasterTopicSubscriber(ArrayList<Tracker> trackers, Tracker miTracker, ArrayList<EstadosEleccionMaster> estadoActual) {
+	public NuevoMasterTopicSubscriber(ArrayList<Tracker> trackers, Tracker miTracker, ArrayList<EstadosEleccionMaster> estadoActual,ArrayList<Boolean> desconexion) {
 		super();
 		this.trackers = trackers;
 		this.miTracker = miTracker;
 		this.estadoActual = estadoActual;
+		this.setDesconexion(desconexion);
 	}
 
 
@@ -70,19 +71,14 @@ public class NuevoMasterTopicSubscriber extends Thread{
 			topicConnection.start();
 			
 			//Bucle infinito
-			boolean loop=true;
-			//FIXME Comprobacion evitando el bucle infinito
-			int loop1=1;
-			while(loop1<60) {
+			while(desconexion.get(0)) {
 				//Comprobacion de que funciona, habria que habilitar handlers de excepciones para detenerlo como cambio de master y otros
 					System.out.println("- Waiting 0.5 seconds for messages...");
 					try {
 						Thread.sleep(500);
 					} catch (Exception e) {
-						loop=false;
 						e.printStackTrace();
-					}	
-					loop1++;//FIXME
+					}
 			}
 			
 		
@@ -128,6 +124,16 @@ public class NuevoMasterTopicSubscriber extends Thread{
 //		
 
 		
+	}
+
+
+	public ArrayList<Boolean> getDesconexion() {
+		return desconexion;
+	}
+
+
+	public void setDesconexion(ArrayList<Boolean> desconexion) {
+		this.desconexion = desconexion;
 	}
 }
 

@@ -34,15 +34,17 @@ public class BDTopicPublisher extends Thread{
 	private ArrayList<Swarm> swarms;
 	private ArrayList<Boolean> cambio;
 	private LinkedList<Peer> PeersEnCola;
+	private ArrayList<Boolean> desconexion=new ArrayList<Boolean>(1);
 	
 	public BDTopicPublisher(ArrayList<Integer> contadorVersionBD, ArrayList<EstadosBaseDeDatos> estadoActual, ArrayList<Swarm> swarms,
-			ArrayList<Boolean> cambio, LinkedList<Peer> peersEnCola) {
+			ArrayList<Boolean> cambio, LinkedList<Peer> peersEnCola,ArrayList<Boolean> desconexion) {
 		super();
 		ContadorVersionBD = contadorVersionBD;
 		this.estadoActual = estadoActual;
 		this.swarms = swarms;
 		this.cambio = cambio;
 		PeersEnCola = peersEnCola;
+		this.setDesconexion(desconexion);
 	}
 	
 	public void run() {
@@ -69,10 +71,9 @@ public class BDTopicPublisher extends Thread{
 			topicPublisher = topicSession.createPublisher(myTopic);
 //			System.out.println("- BD Publisher TopicPublisher created!");
 			
-			
-			int loop=1;
+
 			//cambio a un numero limitado para comprobar que desconecta al usuario
-			while(loop<100) {
+			while(desconexion.get(0)) {
 		
 			switch(estadoActual.get(0)) {
 			  case Esperando:
@@ -151,8 +152,7 @@ public class BDTopicPublisher extends Thread{
 			  default:
 			    // code block
 			}
-			
-			loop++;
+
 			}
 			
 
@@ -225,6 +225,14 @@ public class BDTopicPublisher extends Thread{
 
 	public void setPeersEnCola(LinkedList<Peer> peersEnCola) {
 		PeersEnCola = peersEnCola;
+	}
+
+	public ArrayList<Boolean> getDesconexion() {
+		return desconexion;
+	}
+
+	public void setDesconexion(ArrayList<Boolean> desconexion) {
+		this.desconexion = desconexion;
 	}
 
 

@@ -38,7 +38,7 @@ public class PanelPeer extends JPanel{
 	private static LinkedList<Peer> PeersEnCola = new LinkedList<Peer>();
 	private SQLiteDBManager manager = new SQLiteDBManager("bd/test.db");
 	private static DataController DC;
-	
+	private ArrayList<Boolean> desconexion=new ArrayList<Boolean>(1);
 	
 	
 	
@@ -47,43 +47,18 @@ public class PanelPeer extends JPanel{
 	/**
 	 * Create the panel.
 	 */
-	public PanelPeer() {
+	public PanelPeer(ArrayList<Boolean> desconexion) {
+		
+		setDesconexion(desconexion);
 		this.setLayout(new BorderLayout(0, 0));
 		
 		JScrollPane scrollPane = new JScrollPane();
 		this.add(scrollPane);
-		
-		//Ejemplo de como tendria que ser
+
 		DefaultMutableTreeNode titulo = new DefaultMutableTreeNode("Swarms");
 		//####################################
-//		DefaultMutableTreeNode subtitulo1 = new DefaultMutableTreeNode("Swarm#ABCD1234");
-//		DefaultMutableTreeNode subtitulo2 = new DefaultMutableTreeNode("Swarm#EFGH1234");
-//		DefaultMutableTreeNode subtitulo3 = new DefaultMutableTreeNode("Swarm#IJKL1234");
-		
-//		Peer p1=new Peer("192.168.10.2","42","1");
-//		Peer p2=new Peer("192.168.10.3","41","1");
-//		Peer p3=new Peer("192.168.10.4","42","1");
-//		Peer p4=new Peer("192.168.10.5","46","1");
-//		Peer p5=new Peer("192.168.10.6","42","2");
-//		Peer p6=new Peer("192.168.10.7","67","2");
-//				
-//		titulo.add(subtitulo1);
-//		titulo.add(subtitulo2);
-//		titulo.add(subtitulo3);
-//		
-//		subtitulo1.add(new DefaultMutableTreeNode("Peer		"+p1.getIP()+":"+p1.getPuerto()));
-//		subtitulo2.add(new DefaultMutableTreeNode("Peer		"+p2.getIP()+":"+p2.getPuerto()));
-//		subtitulo2.add(new DefaultMutableTreeNode("Peer		"+p3.getIP()+":"+p3.getPuerto()));
-//		subtitulo2.add(new DefaultMutableTreeNode("Peer		"+p4.getIP()+":"+p4.getPuerto()));
-//		subtitulo3.add(new DefaultMutableTreeNode("Peer		"+p5.getIP()+":"+p5.getPuerto()));
-//		subtitulo3.add(new DefaultMutableTreeNode("Peer		"+p6.getIP()+":"+p6.getPuerto()));
-//		subtitulo3.add(new DefaultMutableTreeNode("Peer		"+p1.getIP()+":"+p1.getPuerto()));
-		//####################################
-		
 		JTree tree = new JTree(titulo);
 		scrollPane.setViewportView(tree);
-		
-		
 		//####################################
 		
 		ArrayList<Peer> a =new ArrayList<Peer>();
@@ -109,12 +84,12 @@ public class PanelPeer extends JPanel{
 		ArrayList<EstadosBaseDeDatos> estadosBaseDeDatos= new ArrayList<EstadosBaseDeDatos>();
 		estadosBaseDeDatos.add(0, EstadosBaseDeDatos.Esperando);
 		
-		topicActualizarPublisher = new BDTopicPublisher(ContadorVersionBD,estadosBaseDeDatos,Enjambres,cambio,PeersEnCola);
-		topicActualizarSubscriber = new BDTopicSubscriber(ContadorVersionBD, estadosBaseDeDatos,TrackersRedundantes);
+		topicActualizarPublisher = new BDTopicPublisher(ContadorVersionBD,estadosBaseDeDatos,Enjambres,cambio,PeersEnCola,desconexion);
+		topicActualizarSubscriber = new BDTopicSubscriber(ContadorVersionBD, estadosBaseDeDatos,TrackersRedundantes,desconexion);
 
 		
 		
-		DC = new DataController(TrackersRedundantes, Enjambres, enviadorBD, recibidorBD, topicActualizarPublisher, topicActualizarSubscriber, estadosBaseDeDatos,cambio);
+		DC = new DataController(TrackersRedundantes, Enjambres, enviadorBD, recibidorBD, topicActualizarPublisher, topicActualizarSubscriber, estadosBaseDeDatos,cambio,desconexion);
 
 		topicActualizarSubscriber.start();
 		topicActualizarPublisher.start();
@@ -165,36 +140,59 @@ public class PanelPeer extends JPanel{
 						e.printStackTrace();
 					}
 		    	}
-
-		    	//
 		    }
 		  };
-
 		  thread.start();
 		//####################################
-		
-
+	
 	}
-
-
-
-
-
 
 	public SQLiteDBManager getManager() {
 		return manager;
 	}
 
-
-
-
-
-
 	public void setManager(SQLiteDBManager manager) {
 		this.manager = manager;
 	}
 
+	public ArrayList<Boolean> getDesconexion() {
+		return desconexion;
+	}
 
+	public void setDesconexion(ArrayList<Boolean> desconexion) {
+		this.desconexion = desconexion;
+	}
 
+	public static ArrayList<EstadosBaseDeDatos> getEstadoActual() {
+		return estadoActual;
+	}
+
+	public static void setEstadoActual(ArrayList<EstadosBaseDeDatos> estadoActual) {
+		PanelPeer.estadoActual = estadoActual;
+	}
+
+	public ArrayList<Boolean> getCambio() {
+		return cambio;
+	}
+
+	public void setCambio(ArrayList<Boolean> cambio) {
+		this.cambio = cambio;
+	}
+
+	public static QueueFileReceiver getRecibidorBD() {
+		return recibidorBD;
+	}
+
+	public static void setRecibidorBD(QueueFileReceiver recibidorBD) {
+		PanelPeer.recibidorBD = recibidorBD;
+	}
+
+	public static QueueFileSender getEnviadorBD() {
+		return enviadorBD;
+	}
+
+	public static void setEnviadorBD(QueueFileSender enviadorBD) {
+		PanelPeer.enviadorBD = enviadorBD;
+	}
 
 }

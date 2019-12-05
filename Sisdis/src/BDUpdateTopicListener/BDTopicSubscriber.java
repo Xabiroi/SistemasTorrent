@@ -19,17 +19,18 @@ public class BDTopicSubscriber extends Thread{
 	private ArrayList<Integer> ContadorVersionBD;
 	private ArrayList<EstadosBaseDeDatos> estadoActual;
 	private ArrayList<Tracker> TrackersRedundantes;
-
+	private ArrayList<Boolean> desconexion=new ArrayList<Boolean>(1);
 
 	
 
 
 	public BDTopicSubscriber(ArrayList<Integer> contadorVersionBD, ArrayList<EstadosBaseDeDatos> estadoActual,
-			ArrayList<Tracker> trackersRedundantes) {
+			ArrayList<Tracker> trackersRedundantes,ArrayList<Boolean> desconexion) {
 		super();
 		ContadorVersionBD = contadorVersionBD;
 		this.estadoActual = estadoActual;
 		TrackersRedundantes = trackersRedundantes;
+		this.setDesconexion(desconexion);
 	}
 
 
@@ -79,19 +80,17 @@ public class BDTopicSubscriber extends Thread{
 			topicConnection.start();
 			
 			//Bucle infinito
-			boolean loop=true;
-			//FIXME Comprobacion evitando el bucle infinito
-			int loop1=1;
-			while(loop1<100) {
+
+			while(desconexion.get(0)) {
 				//Comprobacion de que funciona, habria que habilitar handlers de excepciones para detenerlo como cambio de master y otros
 					//System.out.println("- Waiting 0.5 seconds for updates...");
 					try {
 						Thread.sleep(500);
 					} catch (Exception e) {
-						loop=false;
+
 						e.printStackTrace();
 					}	
-					loop1++;//FIXME
+
 			}
 			
 		
@@ -115,6 +114,16 @@ public class BDTopicSubscriber extends Thread{
 	
 	public static void main(String[] args) {
 
+	}
+
+
+	public ArrayList<Boolean> getDesconexion() {
+		return desconexion;
+	}
+
+
+	public void setDesconexion(ArrayList<Boolean> desconexion) {
+		this.desconexion = desconexion;
 	}
 
 
