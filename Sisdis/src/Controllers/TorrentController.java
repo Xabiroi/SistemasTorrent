@@ -39,21 +39,22 @@ public class TorrentController extends Thread{
 
 	
 	//Funcionalidad UDP del torrent
-	public TorrentController() {
-		
+	public TorrentController(String iP, ArrayList<Integer> puerto, ArrayList<Boolean> bucle,
+			ArrayList<Peer> peersTransactionId, ConnectionListener connectionListener,
+			AnnounceListener announceListener, ScrapeListener scrapeListener) {
+		super();
+		IP = iP;
+		this.puerto = puerto;
+		this.bucle = bucle;
+		this.peersTransactionId = peersTransactionId;
+		this.connectionListener = connectionListener;
+		this.announceListener = announceListener;
+		this.scrapeListener = scrapeListener;
 	}
-	
-	
-
-	
-	//FIXME las variables de aqui van a cambiar, son solo de momento hasta que funcione el proceso entero de conexion
-	//FIXME habra que encapsular en algun objeto tipo las variables que se necesiten para evitar redundancia y tal
-	private ArrayList<Long> connectionId; //primitivos que se necesitaran
 
 
 
 
-	
 	public void run() {
 		
 		//Argumentos, de momento innecesarios ya que usamos la aplicacion por default
@@ -72,9 +73,9 @@ public class TorrentController extends Thread{
 						byteBuffer.order(ByteOrder.BIG_ENDIAN);
 						
 						//Con el primer int obtenemos la id del response para clasificarla
-					    int a= byteBuffer.getInt(0); //FIXME era 4 en los request(?)
+					    int a= byteBuffer.getInt(8); //FIXME era 8 en los request(?)
 					    
-					    System.out.println("a="+a);
+					    System.out.println("server a="+a);
 						
 
 					    

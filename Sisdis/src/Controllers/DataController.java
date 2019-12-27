@@ -67,7 +67,7 @@ public class DataController extends Thread{
 
 					if(aux.getIdentificadorSwarm().equals(swarm.getIdentificadorSwarm())) {
 						swarm.getListaPeers().add(aux);
-						manager.insertPeer(aux.getIP(), aux.getPuerto(),aux.getIdentificadorSwarm());
+						manager.insertPeer(aux.getIP(), Integer.toString(aux.getPuerto()),aux.getIdentificadorSwarm());
 						//TODO habria que meter los hashes de archivos aqui en vez de las ids
 						manager.insertSwarmPeer(swarm.getIdentificadorSwarm(),aux.getIdentificadorSwarm(),0);
 						swarmDisponible=true;
@@ -81,7 +81,7 @@ public class DataController extends Thread{
 					ListaPeers.add(aux);
 					Enjambres.add(new Swarm(ListaPeers,aux.getIdentificadorSwarm()));	
 					
-					manager.insertPeer(aux.getIP(), aux.getPuerto(),aux.getIdentificadorSwarm());
+					manager.insertPeer(aux.getIP(), Integer.toString(aux.getPuerto()),aux.getIdentificadorSwarm());
 					//TODO habria que meter los hashes de archivos aqui en vez de las ids
 					manager.insertSwarm(aux.getIdentificadorSwarm());
 					manager.insertSwarmPeer(aux.getIdentificadorSwarm(),aux.getIdentificadorSwarm(),0);

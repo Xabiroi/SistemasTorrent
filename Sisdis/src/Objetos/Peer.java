@@ -4,7 +4,7 @@ import java.util.Observable;
 public class Peer extends Observable{
 	
 	private String IP;
-	private String Puerto;
+	private int Puerto;
 	private String identificadorSwarm;
 	private int transactionId;
 	private int connectionIdPrincipal;
@@ -12,11 +12,11 @@ public class Peer extends Observable{
 
 	public Peer() {
 		this.setIP("");
-		this.setPuerto("");
+		this.setPuerto(0);
 		
 	}
 
-	public Peer(String iP, String puerto, String identificadorSwarm) {
+	public Peer(String iP, int puerto, String identificadorSwarm) {
 		super();
 		IP = iP;
 		Puerto = puerto;
@@ -24,7 +24,7 @@ public class Peer extends Observable{
 	}
 	
 
-	public Peer(String iP, String puerto, String identificadorSwarm, int transactionId, int connectionIdPrincipal,
+	public Peer(String iP, int puerto, String identificadorSwarm, int transactionId, int connectionIdPrincipal,
 			int connectionIdSecundario) {
 		super();
 		IP = iP;
@@ -51,12 +51,12 @@ public class Peer extends Observable{
 		this.connectionIdSecundario = connectionIdSecundario;
 	}
 
-	public String getPuerto() {
+	public int getPuerto() {
 		return Puerto;
 	}
 
 
-	public void setPuerto(String puerto) {
+	public void setPuerto(int puerto) {
 		Puerto = puerto;
 	}
 

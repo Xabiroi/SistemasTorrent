@@ -36,7 +36,7 @@ public class PanelPeer extends JPanel{
 	private ArrayList<Boolean> cambio=new ArrayList<Boolean>(1);
 	private static ArrayList<Integer> ContadorVersionBD=new ArrayList<Integer>(1);
 	private static LinkedList<Peer> PeersEnCola = new LinkedList<Peer>();
-	private SQLiteDBManager manager = new SQLiteDBManager("bd/test.db");
+	private SQLiteDBManager manager = new SQLiteDBManager("bd/test.db");//FIXME cambio al nombre con timestamp o algo asi
 	private static DataController DC;
 	private ArrayList<Boolean> desconexion=new ArrayList<Boolean>(1);
 	
@@ -64,9 +64,9 @@ public class PanelPeer extends JPanel{
 		ArrayList<Peer> a =new ArrayList<Peer>();
 		ArrayList<Boolean> cambio = new ArrayList<Boolean>();
 		cambio.add(new Boolean(false));
-		a.add(new Peer("192.168.1.56","30","1"));
-		a.add(new Peer("192.168.1.57","31","1"));
-		a.add(new Peer("192.168.1.58","34","2"));
+		a.add(new Peer("192.168.1.56",30,"1"));
+		a.add(new Peer("192.168.1.57",31,"1"));
+		a.add(new Peer("192.168.1.58",34,"2"));
 		Swarm s1=new Swarm(a,"2");
 		Enjambres.add(s1);
 		ContadorVersionBD.add(1);

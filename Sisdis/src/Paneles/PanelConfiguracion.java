@@ -2,12 +2,19 @@ package Paneles;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import Controllers.TorrentController;
+import Objetos.Peer;
+import TorrentListeners.AnnounceListener;
+import TorrentListeners.ConnectionListener;
+import TorrentListeners.ScrapeListener;
 
 public class PanelConfiguracion extends JPanel {
 	private JTextField textField_4;
@@ -21,10 +28,47 @@ public class PanelConfiguracion extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	
+	private String IP;
+	private ArrayList<Integer> puerto;
+	private ArrayList<Boolean> bucle;
+	
+	//TODO los arrays de peers funcionales
+	private ArrayList<Peer> peersTransactionId;
+	
+	private ConnectionListener connectionListener;
+	private AnnounceListener announceListener;
+	private ScrapeListener scrapeListener;
+	
+	private TorrentController torrentController;
+
 	/**
 	 * Create the panel.
 	 */
 	public PanelConfiguracion() {
+		//Creacion de los atributos
+		//############################
+		IP="127.0.0.1"; //FIXME hardcodeado
+		puerto=new ArrayList<Integer>(1);
+		puerto.add(7000); //FIXME hardcodeado
+		
+		peersTransactionId = new ArrayList<Peer>(10);//FIXME hardcodeado
+		peersTransactionId.add(new Peer(IP, puerto.get(0),"ABCD", 1, 123,456));
+		
+		bucle= new ArrayList<Boolean>(1);
+		bucle.add(false);
+		
+		connectionListener = new ConnectionListener(peersTransactionId, IP, puerto);
+		announceListener = new AnnounceListener();
+		scrapeListener = new ScrapeListener();
+		
+		torrentController = new TorrentController(IP, puerto, bucle, peersTransactionId, connectionListener, announceListener, scrapeListener);
+		torrentController.start();
+		
+		
+		
+		
+		//############################
 		this.setLayout(new GridLayout(0, 3, 0, 0));
 		
 		JLabel lblJms = new JLabel("JMS");
@@ -121,6 +165,70 @@ public class PanelConfiguracion extends JPanel {
 	public static void main(String[] args) {
 		PanelConfiguracion a= new PanelConfiguracion();
 		System.out.println(a.isValid("192.168.1.2"));
+	}
+	
+	public String getIP() {
+		return IP;
+	}
+
+	public void setIP(String iP) {
+		IP = iP;
+	}
+
+	public ArrayList<Integer> getPuerto() {
+		return puerto;
+	}
+
+	public void setPuerto(ArrayList<Integer> puerto) {
+		this.puerto = puerto;
+	}
+
+	public ArrayList<Boolean> getBucle() {
+		return bucle;
+	}
+
+	public void setBucle(ArrayList<Boolean> bucle) {
+		this.bucle = bucle;
+	}
+
+	public ArrayList<Peer> getPeersTransactionId() {
+		return peersTransactionId;
+	}
+
+	public void setPeersTransactionId(ArrayList<Peer> peersTransactionId) {
+		this.peersTransactionId = peersTransactionId;
+	}
+
+	public ConnectionListener getConnectionListener() {
+		return connectionListener;
+	}
+
+	public void setConnectionListener(ConnectionListener connectionListener) {
+		this.connectionListener = connectionListener;
+	}
+
+	public AnnounceListener getAnnounceListener() {
+		return announceListener;
+	}
+
+	public void setAnnounceListener(AnnounceListener announceListener) {
+		this.announceListener = announceListener;
+	}
+
+	public ScrapeListener getScrapeListener() {
+		return scrapeListener;
+	}
+
+	public void setScrapeListener(ScrapeListener scrapeListener) {
+		this.scrapeListener = scrapeListener;
+	}
+
+	public TorrentController getTorrentController() {
+		return torrentController;
+	}
+
+	public void setTorrentController(TorrentController torrentController) {
+		this.torrentController = torrentController;
 	}
 	
 }

@@ -102,7 +102,7 @@ public class SQLiteDBManager {
 		         String ip = rs.getString("IP");
 		         String puerto = rs.getString("PUERTO");
 		         String idpeer = rs.getString("IDPEER");
-		         arPeer.add(new Peer(ip,puerto,idpeer));
+		         arPeer.add(new Peer(ip,Integer.parseInt(puerto),idpeer));
 			}				
 		} catch (Exception ex) {
 			//System.err.println("\n # Error loading data in the db: " + ex.getMessage());
