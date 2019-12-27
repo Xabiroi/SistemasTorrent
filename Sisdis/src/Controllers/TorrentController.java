@@ -3,19 +3,20 @@ package Controllers;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.Random;
-
+import java.util.Collections;
+import java.util.Enumeration;
 import Objetos.Peer;
 import TorrentListeners.AnnounceListener;
 import TorrentListeners.ConnectionListener;
 import TorrentListeners.ScrapeListener;
-import bitTorrent.tracker.protocol.udp.ConnectRequest;
-import bitTorrent.tracker.protocol.udp.ConnectResponse;
 
 public class TorrentController extends Thread{
 
@@ -29,7 +30,7 @@ public class TorrentController extends Thread{
 	private ArrayList<Integer> puerto;
 	private ArrayList<Boolean> bucle;
 	
-	//TODO los arrays de peers funcionales
+	//Los arrays de peers funcionales
 	private ArrayList<Peer> peersTransactionId;
 	
 	private ConnectionListener connectionListener;
@@ -52,22 +53,48 @@ public class TorrentController extends Thread{
 		this.scrapeListener = scrapeListener;
 	}
 
-
-
-
+	
+//	private static final String DEFAULT_IP = "228.5.6.7"; //La multicast a la que nos tenemos que conectar tiene esta pinta
+//	private static final int DEFAULT_PORT = 9000;
+//	private static final String DEFAULT_MESSAGE = "Hello World!";
+	
 	public void run() {
 		
 		//Argumentos, de momento innecesarios ya que usamos la aplicacion por default
 				String serverIP = this.getIP();
 				int serverPort = this.getPuerto().get(0);
 
-
-				while(this.getBucle().get(0)) {
-					try (DatagramSocket udpSocket = new DatagramSocket(serverPort, InetAddress.getByName(serverIP))) {
-
+				
+//				String groupIP = DEFAULT_IP;
+//				int port = DEFAULT_PORT;
+				
+//				String message = DEFAULT_MESSAGE;
+				System.out.println("(((((((((((((((((((((((((((((((((");
+				System.out.println("(((((((((((((((((((((((((((((((((");
+				System.out.println("Conectando a multicast");
+				System.out.println("(((((((((((((((((((((((((((((((((");
+				System.out.println("(((((((((((((((((((((((((((((((((");
+				try (MulticastSocket socket = new MulticastSocket(serverPort)) {
+					System.out.println("ServerIP="+serverIP);
+					InetAddress group = InetAddress.getByName(serverIP);
+					socket.setNetworkInterface(getActiveInterface());
+					socket.joinGroup(group);	
+				
+//					try (DatagramSocket udpSocket = new DatagramSocket(serverPort, InetAddress.getByName(serverIP))) {
+					System.out.println("=======================================");
+					System.out.println("=======================================");
+					System.out.println(this.getBucle().get(0));
+					System.out.println("=======================================");
+					System.out.println("=======================================");
+					while(this.getBucle().get(0)) {
+						//TODO Ajustar aqui al size de los mensajes recibidos
 						byte[] buffer = new byte[16];
-						DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-						udpSocket.receive(reply);		
+						System.out.println("¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿");
+						System.out.println("ESPERANDO AL PAQUETE");
+						System.out.println("¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿");
+						DatagramPacket reply = new DatagramPacket(buffer, buffer.length, group, serverPort);
+
+						socket.receive(reply);		
 
 						ByteBuffer byteBuffer = ByteBuffer.wrap(reply.getData());
 						byteBuffer.order(ByteOrder.BIG_ENDIAN);
@@ -76,11 +103,22 @@ public class TorrentController extends Thread{
 					    int a= byteBuffer.getInt(8); //FIXME era 8 en los request(?)
 					    
 					    System.out.println("server a="+a);
-						
-
 					    
+	//					    byte[] buffer = new byte[16];
+	//						DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
+	//						udpSocket.receive(reply);		
+	//
+	//						ByteBuffer byteBuffer = ByteBuffer.wrap(reply.getData());
+	//						byteBuffer.order(ByteOrder.BIG_ENDIAN);
+	//						
+	//						//Con el primer int obtenemos la id del response para clasificarla
+	//					    int a= byteBuffer.getInt(8); //FIXME era 8 en los request(?)
+	//					    
+	//					    System.out.println("server a="+a);
+						
 					    if(a == 0) {
 							//CONNECT_RESPONSE
+					    	System.out.println("Connect response");
 							getConnectionListener().receive(reply);
 						}
 						else if (a == 1){
@@ -89,7 +127,7 @@ public class TorrentController extends Thread{
 						}
 						else if (a == 2){
 							//SCRAPE_RESPONSE
-
+	
 							getScrapeListener().receive(reply);
 						}
 						else if (a == 3){
@@ -97,16 +135,58 @@ public class TorrentController extends Thread{
 							//TODO gestionar mensaje error (simple)
 						}
 
-
-					} catch (SocketException e) {
-						System.err.println("# UDPClient Socket error: " + e.getMessage());
-						e.printStackTrace();
-					} catch (IOException e) {
-						System.err.println("# UDPClient IO error: " + e.getMessage());
 					}
+					socket.leaveGroup(group);
+					
+				} catch (SocketException e) {
+					System.err.println("# UDPClient Socket error: " + e.getMessage());
+					e.printStackTrace();
+				} catch (IOException e) {
+					System.err.println("# UDPClient IO error: " + e.getMessage());
 				}
+				
 		
 		}
+	
+
+	public static NetworkInterface getActiveInterface() {
+		
+		try {		
+			//iterate over the network interfaces known to java
+			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+		
+			for (NetworkInterface networkInterface : Collections.list(interfaces)) {
+				// we shouldn't care about loopback addresses
+				if (networkInterface.isLoopback())
+					continue;
+
+				// if you don't expect the interface to be up you can skip this
+				// though it would question the usability of the rest of the code
+				if (!networkInterface.isUp())
+					continue;
+
+				// iterate over the addresses associated with the interface
+				Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+		  
+				for (InetAddress address : Collections.list(addresses)) {
+					// look only for ipv4 addresses
+					if (address instanceof Inet6Address)
+						continue;
+
+					// use a timeout big enough for your needs
+					if (!address.isReachable(1000))
+						continue;
+
+					return networkInterface;
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return null;
+	}
+
 
 	public String getIP() {
 		return IP;

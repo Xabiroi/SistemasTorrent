@@ -34,11 +34,12 @@ public class ConnectionListener {
 
 	//TODO mandar error en caso de que n se cumpla ninguna de las condiciones de que el peer no tenga conexion id valida
 	public void receive(DatagramPacket reply) {
-
+		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 	    ConnectRequest cr = ConnectRequest.parse(reply.getData());
 	    System.out.println("CR="+cr.getAction()); //CONNECT=0
 	    System.out.println("CR="+cr.getTransactionId()); 
 		System.out.println("CR="+cr.getConnectionId()); 
+		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 		
 		//VALIDATE
 		if(reply.getLength()==16) {
@@ -59,6 +60,7 @@ public class ConnectionListener {
 					
 					//mirar si el connection id es el default u otro, sino adjuntarle otro
 					if(cr.getConnectionId()==Long.decode("0x41727101980")) {
+						//FIXME con set o con igual como los arraylist
 						p.setTransactionId(cr.getTransactionId());
 						System.out.println("ConnectRequest primero valido");
 						Random r=new Random();

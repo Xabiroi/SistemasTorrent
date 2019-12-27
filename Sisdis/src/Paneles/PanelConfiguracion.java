@@ -48,15 +48,15 @@ public class PanelConfiguracion extends JPanel {
 	public PanelConfiguracion() {
 		//Creacion de los atributos
 		//############################
-		IP="127.0.0.1"; //FIXME hardcodeado
+		IP="192.168.0.11"; //FIXME hardcodeado
 		puerto=new ArrayList<Integer>(1);
 		puerto.add(7000); //FIXME hardcodeado
 		
 		peersTransactionId = new ArrayList<Peer>(10);//FIXME hardcodeado
-		peersTransactionId.add(new Peer(IP, puerto.get(0),"ABCD", 1, 123,456));
+		peersTransactionId.add(new Peer(IP, puerto.get(0),"ABCD", 1, Long.decode("0x41727101980"),456));
 		
 		bucle= new ArrayList<Boolean>(1);
-		bucle.add(false);
+		bucle.add(true);
 		
 		connectionListener = new ConnectionListener(peersTransactionId, IP, puerto);
 		announceListener = new AnnounceListener();

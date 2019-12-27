@@ -7,8 +7,8 @@ public class Peer extends Observable{
 	private int Puerto;
 	private String identificadorSwarm;
 	private int transactionId;
-	private int connectionIdPrincipal;
-	private int connectionIdSecundario;
+	private long connectionIdPrincipal;
+	private long connectionIdSecundario;
 
 	public Peer() {
 		this.setIP("");
@@ -22,10 +22,9 @@ public class Peer extends Observable{
 		Puerto = puerto;
 		this.identificadorSwarm = identificadorSwarm;
 	}
-	
 
-	public Peer(String iP, int puerto, String identificadorSwarm, int transactionId, int connectionIdPrincipal,
-			int connectionIdSecundario) {
+	public Peer(String iP, int puerto, String identificadorSwarm, int transactionId, long connectionIdPrincipal,
+			long connectionIdSecundario) {
 		super();
 		IP = iP;
 		Puerto = puerto;
@@ -35,19 +34,19 @@ public class Peer extends Observable{
 		this.connectionIdSecundario = connectionIdSecundario;
 	}
 
-	public int getConnectionIdPrincipal() {
+	public long getConnectionIdPrincipal() {
 		return connectionIdPrincipal;
 	}
 
-	public void setConnectionIdPrincipal(int connectionIdPrincipal) {
+	public void setConnectionIdPrincipal(long connectionIdPrincipal) {
 		this.connectionIdPrincipal = connectionIdPrincipal;
 	}
 
-	public int getConnectionIdSecundario() {
+	public long getConnectionIdSecundario() {
 		return connectionIdSecundario;
 	}
 
-	public void setConnectionIdSecundario(int connectionIdSecundario) {
+	public void setConnectionIdSecundario(long connectionIdSecundario) {
 		this.connectionIdSecundario = connectionIdSecundario;
 	}
 
