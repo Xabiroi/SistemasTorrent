@@ -34,14 +34,19 @@ public class ConnectionListener {
 
 	//TODO mandar error en caso de que n se cumpla ninguna de las condiciones de que el peer no tenga conexion id valida
 	public void receive(DatagramPacket reply) {
+		System.out.println("RECEIVE DEL CONNECTION LISTENER");
 		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 	    ConnectRequest cr = ConnectRequest.parse(reply.getData());
 	    System.out.println("CR="+cr.getAction()); //CONNECT=0
 	    System.out.println("CR="+cr.getTransactionId()); 
 		System.out.println("CR="+cr.getConnectionId()); 
+		System.out.println("Tamaño reply="+reply.getLength());
+		System.out.println("Bytes getdata reply="+reply.getData());
+		System.out.println("Bytes getdata.length reply="+reply.getData().length);
 		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 		
 		//VALIDATE
+		
 		if(reply.getLength()==16) {
 			//for de buscar transaction id con el peer
 			for(Peer p:peersTransactionId) {
@@ -56,7 +61,7 @@ public class ConnectionListener {
 				
 				if(address.equals(aadd)) {
 					
-					
+					System.out.println("Entra en el if del address");
 					
 					//mirar si el connection id es el default u otro, sino adjuntarle otro
 					if(cr.getConnectionId()==Long.decode("0x41727101980")) {
@@ -85,6 +90,15 @@ public class ConnectionListener {
 							connectResponse.setTransactionId(p.getTransactionId());
 							connectResponse.setConnectionId(newConnectionId);
 
+							System.out.println("CONNECTION_LISTER");
+							System.out.println("¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬");
+							System.out.println("¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬");
+							System.out.println("ACTION connectionresponse="+connectResponse.getAction());
+							System.out.println("TRANSACTION connectionresponse="+connectResponse.getTransactionId());
+							System.out.println("ConnectionId connectionresponse"+connectResponse.getConnectionId());
+							System.out.println("¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬");
+							System.out.println("¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬");
+							
 							
 							//#############################
 							byte[] requestBytes = connectResponse.getBytes();			
