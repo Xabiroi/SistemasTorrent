@@ -44,7 +44,7 @@ public class BDTopicListener implements MessageListener {
 //				System.out.println("Estado actual del Listener="+estadoActual);
 				switch(estadoActual.get(0)) {
 				  case Esperando:
-					  System.out.println("De aqui no sale");
+//					  System.out.println("De aqui no sale");
 					break;
 				
 				  case Sugerencia:

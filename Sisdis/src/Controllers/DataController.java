@@ -55,9 +55,9 @@ public class DataController extends Thread{
 
 	//Esperar un rato y comprobar si ha habido cambios en ese instante
 	public void comprobar() {
-		System.out.println("Enjambres=="+Enjambres);
+//		System.out.println("Enjambres=="+Enjambres);
 		if(!PeersEnCola.isEmpty()) {
-			System.out.println("estadoActual="+estadoActual.get(0));
+//			System.out.println("estadoActual="+estadoActual.get(0));
 			cambio.set(0, true);
 
 			if(estadoActual.get(0)==EstadosBaseDeDatos.Actualizacion) {
@@ -76,7 +76,7 @@ public class DataController extends Thread{
 				}
 				//Enjambres.add(PeersEnCola.poll());
 				if(!swarmDisponible) {
-					System.out.println("Entras en nuevo swarm");
+//					System.out.println("Entras en nuevo swarm");
 					ArrayList<Peer> ListaPeers= new ArrayList<Peer>();
 					ListaPeers.add(aux);
 					Enjambres.add(new Swarm(ListaPeers,aux.getIdentificadorSwarm()));	
@@ -88,7 +88,8 @@ public class DataController extends Thread{
 				}
 			}
 		}
-		else {System.out.println("HA LLEGADO AQUI Y HA CAMBIADO A FALSO");
+		else {
+//			System.out.println("HA LLEGADO AQUI Y HA CAMBIADO A FALSO");
 			cambio.set(0, false);}
 	}
 	
@@ -101,7 +102,7 @@ public class DataController extends Thread{
 
 			e.printStackTrace();
 		}
-		System.out.println("Comprobando...");
+//		System.out.println("Comprobando...");
 		comprobar();
 		loop++;
 		}

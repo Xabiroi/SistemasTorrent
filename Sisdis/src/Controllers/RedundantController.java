@@ -44,7 +44,7 @@ public class RedundantController extends Thread{
 				Tracker tracker =iterator.next();
 //				System.out.println("System.currentTimeMillis()"+System.currentTimeMillis());
 //				System.out.println("tracker.getTiempo()"+tracker.getTiempo());
-				System.out.println("Resta="+(System.currentTimeMillis()-tracker.getTiempo()));
+//				System.out.println("Resta="+(System.currentTimeMillis()-tracker.getTiempo()));
 				if(System.currentTimeMillis()-tracker.getTiempo()>1500) {
 					System.out.println("Quitando el tracker");
 					iterator.remove();
@@ -70,7 +70,7 @@ public class RedundantController extends Thread{
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			System.out.println("Comprobando...");
+//			System.out.println("Comprobando...");
 			synchronized(TrackersRedundantes) {
 			comprobar();
 			}
