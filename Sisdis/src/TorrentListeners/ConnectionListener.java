@@ -12,6 +12,7 @@ import java.util.Random;
 import Objetos.Peer;
 import bitTorrent.tracker.protocol.udp.ConnectRequest;
 import bitTorrent.tracker.protocol.udp.ConnectResponse;
+import bitTorrent.tracker.protocol.udp.BitTorrentUDPMessage.Action;
 
 public class ConnectionListener {
 	
@@ -37,7 +38,10 @@ public class ConnectionListener {
 		System.out.println("RECEIVE DEL CONNECTION LISTENER");
 		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 	    ConnectRequest cr = ConnectRequest.parse(reply.getData());
-
+	    System.out.println("Action="+cr.getAction()); //CONNECT=0
+	    System.out.println("Transaction="+cr.getTransactionId()); 
+		System.out.println("Connection="+cr.getConnectionId()); 
+		System.out.println("€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€");
 		
 		//VALIDATE
 		
@@ -60,34 +64,31 @@ public class ConnectionListener {
 //			    System.out.println("aadd="+aadd);
 //			    System.out.println("Equal?="+address.equals(aadd));
 //			    System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-				if(address.equals(aadd)) {
-					
+				if(address.equals(aadd) && p.getConnectionIdSecundario()==Long.decode("0x41727101980")) {}
+				else {
 //					System.out.println("Entra en el if del address");
 //					System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 					//mirar si el connection id es el default u otro, sino adjuntarle otro
 					if(cr.getConnectionId()==Long.decode("0x41727101980")) {
 						if(cr.getConnectionId()==p.getTransactionId()) {}
-						else if(cr.getTransactionId()==p.getConnectionIdPrincipal() || cr.getTransactionId()==p.getConnectionIdSecundario()) {}
-						else if(cr.getTransactionId()==p.getTransactionId()) {}
+						else if(cr.getTransactionId()==p.getConnectionIdPrincipal() || cr.getTransactionId()==p.getConnectionIdSecundario()) {System.out.println("ConListener 1");}
+						else if(cr.getTransactionId()==p.getTransactionId()) {System.out.println("ConListener 2");}
 						else {
-							for(Peer p1:peersTransactionId) {
-								System.out.println("111111111111111111111111111111");
-								System.out.println("Peer id principal=="+p1.getConnectionIdPrincipal());
-								System.out.println("Peer id secundario=="+p1.getConnectionIdSecundario());
-							}
+//							for(Peer p1:peersTransactionId) {
+//								System.out.println("111111111111111111111111111111");
+//								System.out.println("Peer id principal=="+p1.getConnectionIdPrincipal());
+//								System.out.println("Peer id secundario=="+p1.getConnectionIdSecundario());
+//							}
 						    System.out.println("Action="+cr.getAction()); //CONNECT=0
 						    System.out.println("Transaction="+cr.getTransactionId()); 
 							System.out.println("Connection="+cr.getConnectionId()); 
-							System.out.println("Tamaño reply="+reply.getLength());
-							System.out.println("Bytes getdata reply="+reply.getData());
-							System.out.println("Bytes getdata.length reply="+reply.getData().length);
 							System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 							//FIXME con set o con igual como los arraylist
 							p.setTransactionId(cr.getTransactionId());
 							System.out.println("ConnectRequest primero valido");
 							System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 							Random r=new Random();
-							int newConnectionId = r.nextInt(Integer.MAX_VALUE);
+							long newConnectionId = r.nextLong();
 	
 							p.setTransactionId(cr.getTransactionId());
 							p.setConnectionIdSecundario(p.getConnectionIdPrincipal());
@@ -98,16 +99,25 @@ public class ConnectionListener {
 							//###########################
 							String serverIP = this.getIP();
 							int serverPort = this.getPuerto().get(0);
-	
+							
+//							String serverIP = p.getIP();
+//							int serverPort = p.getPuerto();
+							
+							System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+							System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+							System.out.println("La ip a la que se devuelve=="+serverIP);
+							System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+							System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 							
 							try (DatagramSocket udpSocket = new DatagramSocket()) {
 								//if con si se nos ha asignado id o es la primera vez
-								udpSocket.setSoTimeout(15000);//FIXME ?
+//								udpSocket.setSoTimeout(15000);//FIXME ?
 								
 								InetAddress serverHost = InetAddress.getByName(serverIP);	
 					
 								ConnectResponse connectResponse = new ConnectResponse();
 								
+								connectResponse.setAction(Action.ANNOUNCE);
 								connectResponse.setTransactionId(p.getTransactionId());
 								connectResponse.setConnectionId(newConnectionId);
 	
@@ -141,9 +151,9 @@ public class ConnectionListener {
 							}
 						}
 					}else {
-						if(cr.getConnectionId()==p.getTransactionId()) {}
-						else if(cr.getTransactionId()==p.getConnectionIdPrincipal() || cr.getTransactionId()==p.getConnectionIdSecundario()) {}
-						else if(cr.getTransactionId()==p.getTransactionId()) {}
+						if(cr.getConnectionId()==p.getTransactionId()) {System.out.println("COnnection listener FIN 1");}
+						else if(cr.getTransactionId()==p.getConnectionIdPrincipal() || cr.getTransactionId()==p.getConnectionIdSecundario()) {System.out.println("COnnection listener FIN 2");}
+						else if(cr.getTransactionId()==p.getTransactionId()) {System.out.println("COnnection listener FIN 3");}
 						else {
 							//comprobar que el connectionId es bueno (anterior y posterior)
 							System.out.println("Connection id comprobando");
@@ -159,7 +169,7 @@ public class ConnectionListener {
 								p.setConnectionIdSecundario(p.getConnectionIdPrincipal());
 								
 								Random r=new Random();
-								int newConnectionId = r.nextInt(Integer.MAX_VALUE);
+								long newConnectionId = r.nextLong();
 		
 								p.setTransactionId(cr.getTransactionId());
 								p.setConnectionIdSecundario(p.getConnectionIdPrincipal());
@@ -181,12 +191,14 @@ public class ConnectionListener {
 						
 									ConnectResponse connectResponse = new ConnectResponse();
 									
+									connectResponse.setAction(Action.CONNECT);
 									connectResponse.setTransactionId(p.getTransactionId());
 									connectResponse.setConnectionId(newConnectionId);
 		
 									//#############################
 									byte[] requestBytes = connectResponse.getBytes();			
 									DatagramPacket packet = new DatagramPacket(requestBytes, requestBytes.length, serverHost, serverPort);
+									
 									udpSocket.send(packet);
 						
 									System.out.println(" - Sent from server response to '" + serverHost.getHostAddress() + ":" + packet.getPort() + "' -> " + new String(packet.getData()) + " [" + packet.getLength() + " byte(s)]");
@@ -206,11 +218,11 @@ public class ConnectionListener {
 			}
 		}
 		
-		for(Peer p:peersTransactionId) {
-			System.out.println("22222222222222222222222222222222");
-			System.out.println("Peer id principal=="+p.getConnectionIdPrincipal());
-			System.out.println("Peer id secundario=="+p.getConnectionIdSecundario());
-		}
+//		for(Peer p:peersTransactionId) {
+//			System.out.println("22222222222222222222222222222222");
+//			System.out.println("Peer id principal=="+p.getConnectionIdPrincipal());
+//			System.out.println("Peer id secundario=="+p.getConnectionIdSecundario());
+//		}
 	
 	
 	
