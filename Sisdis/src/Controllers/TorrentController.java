@@ -81,17 +81,15 @@ public class TorrentController extends Thread{
 					socket.joinGroup(group);	
 				
 //					try (DatagramSocket udpSocket = new DatagramSocket(serverPort, InetAddress.getByName(serverIP))) {
-					System.out.println("=======================================");
-					System.out.println("=======================================");
-					System.out.println(this.getBucle().get(0));
-					System.out.println("=======================================");
-					System.out.println("=======================================");
+//					System.out.println("=======================================");
+//					System.out.println("=======================================");
+//					System.out.println(this.getBucle().get(0));
+//					System.out.println("=======================================");
+//					System.out.println("=======================================");
 					while(this.getBucle().get(0)) {
 						//TODO Ajustar aqui al size de los mensajes recibidos
 						byte[] buffer = new byte[16];
-						System.out.println("¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿");
-						System.out.println("ESPERANDO AL PAQUETE");
-						System.out.println("¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿");
+
 						DatagramPacket reply = new DatagramPacket(buffer, buffer.length, group, serverPort);
 
 						socket.receive(reply);		
@@ -100,35 +98,39 @@ public class TorrentController extends Thread{
 						byteBuffer.order(ByteOrder.BIG_ENDIAN);
 						
 						//Con el primer int obtenemos la id del response para clasificarla
-					    int a= byteBuffer.getInt(8); //FIXME era 8 en los request(?)
-					    
+					    int a= byteBuffer.getInt(0); //FIXME era 8 en los request(?)
+					    int b= byteBuffer.getInt(4);
+					    int c= byteBuffer.getInt(8);
+					    int d= byteBuffer.getInt(12);
+
+					    System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 					    System.out.println("server a="+a);
+					    System.out.println("server b="+b);
+					    System.out.println("server c="+c);
+					    System.out.println("server d="+d);
 					    
-	//					    byte[] buffer = new byte[16];
-	//						DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-	//						udpSocket.receive(reply);		
-	//
-	//						ByteBuffer byteBuffer = ByteBuffer.wrap(reply.getData());
-	//						byteBuffer.order(ByteOrder.BIG_ENDIAN);
-	//						
-	//						//Con el primer int obtenemos la id del response para clasificarla
-	//					    int a= byteBuffer.getInt(8); //FIXME era 8 en los request(?)
-	//					    
-	//					    System.out.println("server a="+a);
-						
-					    if(a == 0) {
+					    long aa= byteBuffer.getLong(0); //FIXME era 8 en los request(?)
+					    long ab= byteBuffer.getLong(8);
+
+  
+					    System.out.println("server aa="+aa);
+					    System.out.println("server ab="+ab);
+					    System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+					    
+
+					    if(c == 0 || a == 0) {
 							//CONNECT_RESPONSE
 					    	System.out.println("Connect response");
-							getConnectionListener().receive(reply);
+							this.getConnectionListener().receive(reply);
 						}
 						else if (a == 1){
 							//ANOUNCE_RESPONSE
-							getAnnounceListener().receive(reply);
+							this.getAnnounceListener().receive(reply);
 						}
 						else if (a == 2){
 							//SCRAPE_RESPONSE
 	
-							getScrapeListener().receive(reply);
+							this.getScrapeListener().receive(reply);
 						}
 						else if (a == 3){
 							//ERROR
