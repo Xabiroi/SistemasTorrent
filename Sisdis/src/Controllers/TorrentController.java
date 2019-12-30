@@ -68,7 +68,7 @@ public class TorrentController extends Thread{
 //				String groupIP = DEFAULT_IP;
 //				int port = DEFAULT_PORT;
 				
-//				String message = DEFAULT_MESSAGE;
+//				String message = DEFAULT_MESSAGE;u
 				System.out.println("(((((((((((((((((((((((((((((((((");
 				System.out.println("(((((((((((((((((((((((((((((((((");
 				System.out.println("Conectando a multicast");
@@ -104,8 +104,8 @@ public class TorrentController extends Thread{
 					    int d= byteBuffer.getInt(12);
 
 					    System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-					    System.out.println("server a="+a);
-					    System.out.println("server b="+b);
+					    System.out.println("Action server a="+a);
+					    System.out.println("Transaction server b="+b);
 					    System.out.println("server c="+c);
 					    System.out.println("server d="+d);
 					    
@@ -114,25 +114,25 @@ public class TorrentController extends Thread{
 
   
 					    System.out.println("server aa="+aa);
-					    System.out.println("server ab="+ab);
+					    System.out.println("Conn server ab="+ab);
 					    System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-					    
 
-					    if(c == 0 || a == 0) {
+
+					    if(c == 0) {
 							//CONNECT_RESPONSE
 					    	System.out.println("Connect response");
 							this.getConnectionListener().receive(reply);
 						}
-						else if (a == 1){
+						else if (c == 1){
 							//ANOUNCE_RESPONSE
 							this.getAnnounceListener().receive(reply);
 						}
-						else if (a == 2){
+						else if (c == 2){
 							//SCRAPE_RESPONSE
 	
 							this.getScrapeListener().receive(reply);
 						}
-						else if (a == 3){
+						else if (c == 3){
 							//ERROR
 							//TODO gestionar mensaje error (simple)
 						}

@@ -51,20 +51,17 @@ public class ConnectionListener {
 	   
 
 		if(reply.getLength()==16) {
-			//for de buscar transaction id con el peer
 			for(Peer p:peersTransactionId) {
-				//FIXME si la transactionId es buena
 
 			    String address="/";
 			    address=address+p.getIP();
-//			    System.out.println(address);
 			    InetAddress add=reply.getAddress();
 			    String aadd=add.toString();
 
 			    
 				if(address.equals(aadd)){
 					//mirar si el connection id es el default u otro, sino adjuntarle otro
-					if(cr.getConnectionId()==Long.decode("0x41727101980")) {
+					if(cr.getConnectionId()==4497486125440L) {
 						System.out.println("Inicio connectID");
 						if(cr.getConnectionId()==p.getTransactionId()) {System.err.println("ConListener 0");}
 						else if(cr.getTransactionId()==p.getConnectionIdPrincipal() || cr.getTransactionId()==p.getConnectionIdSecundario()) {System.out.println("ConListener 1");}
@@ -80,8 +77,6 @@ public class ConnectionListener {
 							System.out.println("Connection="+cr.getConnectionId()); 
 							System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 							p.setTransactionId(cr.getTransactionId());
-							System.out.println("ConnectRequest primero valido");
-							System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 							Random r=new Random();
 							long newConnectionId = r.nextLong();
 	
@@ -96,7 +91,7 @@ public class ConnectionListener {
 //							int serverPort = this.getPuerto().get(0);
 							
 							String serverIP = "192.168.0.11";
-							int serverPort = this.getPuerto().get(0);
+							int serverPort = 8000;
 							
 							try (DatagramSocket udpSocket = new DatagramSocket()) {
 
@@ -105,36 +100,23 @@ public class ConnectionListener {
 					
 								ConnectResponse connectResponse = new ConnectResponse();
 								
-//								connectResponse.setAction(Action.CONNECT);
 								connectResponse.setTransactionId(p.getTransactionId());
-								connectResponse.setConnectionId(newConnectionId);
+								connectResponse.setConnectionId(p.getConnectionIdPrincipal()); //antes con newconnectionId
 	
-								System.out.println("CONNECTION_LISTENER");
+//								System.out.println("CONNECTION_LISTENER");
 //								System.out.println("¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬");
-								System.out.println("¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬");
-								System.out.println("ACTION connectionresponse=="+connectResponse.getAction());
-								System.out.println("TRANSACTION connectionresponse=="+connectResponse.getTransactionId());
-								System.out.println("ConnectionId connectionresponse=="+connectResponse.getConnectionId());
-								System.out.println("¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬");
+//								System.out.println("ACTION connectionresponse=="+connectResponse.getAction());
+//								System.out.println("TRANSACTION connectionresponse=="+connectResponse.getTransactionId());
+//								System.out.println("ConnectionId connectionresponse=="+connectResponse.getConnectionId());
 //								System.out.println("¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬");
-								
-								
+
 								//#############################
 								byte[] requestBytes = connectResponse.getBytes();			
 								DatagramPacket packet = new DatagramPacket(requestBytes, requestBytes.length, serverHost, serverPort);
 								udpSocket.send(packet);
-					
-								ByteBuffer byteBufferr = ByteBuffer.wrap(packet.getData());				
-								long a = byteBufferr.getLong(8);
-								int b = byteBufferr.getInt(0);
-								int c = byteBufferr.getInt(4);
-								System.out.println("A en el connection Listener="+a);
-								System.out.println("B en el connection Listener="+b);
-								System.out.println("C en el connection Listener="+c);
-								
-								System.out.println(" - Sent from server response to '" + serverHost.getHostAddress() + ":" + packet.getPort() + "' -> " + new String(packet.getData()) + " [" + packet.getLength() + " byte(s)]");
-								
-								
+								System.out.println("IP Address:- " + InetAddress.getLocalHost());
+								System.out.println(" - Sent from server response to '" + connectResponse.getConnectionId() + "::::::::::" + packet.getPort() + "' -> " + new String(packet.getData()) + " [" + packet.getLength() + " byte(s)]");
+
 								//###########################
 	
 							break;
@@ -167,16 +149,17 @@ public class ConnectionListener {
 								Random r=new Random();
 								long newConnectionId = r.nextLong();
 		
-								p.setTransactionId(cr.getTransactionId());
-								p.setConnectionIdSecundario(p.getConnectionIdPrincipal());
 								p.setConnectionIdPrincipal(newConnectionId);
 								System.out.println(p.getConnectionIdPrincipal());
 		
 								
 								//Mensaje de vuelta
 								//###########################
-								String serverIP = this.getIP();
-								int serverPort = this.getPuerto().get(0);
+//								String serverIP = this.getIP();
+//								int serverPort = this.getPuerto().get(0);
+								
+								String serverIP = "192.168.0.11";
+								int serverPort = 8000;
 		
 								
 								try (DatagramSocket udpSocket = new DatagramSocket()) {
