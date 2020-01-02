@@ -35,9 +35,22 @@ public class AnnounceResponse extends BitTorrentUDPMessage {
 	
 	@Override
 	public byte[] getBytes() {
-		//TODO: COMPLETE THIS METHOD
-			
-		return null;
+		ByteBuffer buffer = ByteBuffer.allocate(24);
+		buffer.order(ByteOrder.BIG_ENDIAN);
+		
+		buffer.putInt(0, super.getAction().value());
+		buffer.putInt(4, super.getTransactionId());
+		buffer.putInt(8, getInterval());
+		buffer.putInt(12, getLeechers());
+		buffer.putInt(16, getSeeders());
+		
+		for(int i  = 0; i < peers.size(); i += 6) {
+			buffer.putInt(20, peers.get(i).getIpAddress());
+			buffer.putShort(24, (short) peers.get(i).getPort());	
+		}
+		
+		buffer.flip();
+		return buffer.array();
 	}
 	
 	public static AnnounceResponse parse(byte[] byteArray) {
