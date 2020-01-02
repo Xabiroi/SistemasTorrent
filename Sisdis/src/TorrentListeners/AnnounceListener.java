@@ -21,7 +21,7 @@ public class AnnounceListener {
 	private ArrayList<Peer> listaPeers;
 	private String IP;
 	private ArrayList<Integer> puerto;
-	
+	private final static int interval=10000;
 	
 
 
@@ -68,86 +68,75 @@ public class AnnounceListener {
 					if(ar.getConnectionId()==p.getTransactionId()) {System.err.println("ANNListener 0");}
 					else if(ar.getTransactionId()==p.getConnectionIdPrincipal() || ar.getTransactionId()==p.getConnectionIdSecundario()) {System.out.println("ANNListener 1");}
 					else if(ar.getTransactionId()==p.getTransactionId()) {
+						if((p.getTiempo()+interval-1000)<System.currentTimeMillis() && (p.getTiempo()+interval+1000)>System.currentTimeMillis()) {
+						p.setTiempo(System.currentTimeMillis());
 
-						
-						//TODO comprobar el timestamp del mensaje (system.currentTimeMillis())
-
-						//Mensaje de vuelta FIXME
-						//###########################
-//							String serverIP = this.getIP();
-//							int serverPort = this.getPuerto().get(0);
-						
-						String serverIP = "192.168.0.11";
-						int serverPort = 8000;
-						
-						try (DatagramSocket udpSocket = new DatagramSocket()) {
-
-							
-							InetAddress serverHost = InetAddress.getByName(serverIP);	
-				
-							AnnounceResponse announceResponse = new AnnounceResponse();
-							
-							announceResponse.setTransactionId(ar.getTransactionId());
-
-							
-							//TODO selects a la base de datos y obtener los tiempos y numeros
-							
-							List<PeerInfo> peers = new ArrayList<PeerInfo>();
-							//obtener datos
-							ArrayList<Peer> peersRaw = SQLiteDBManager.loadPeers("123ABC");//FIXME seria el infohash aqui
-							
-							//for de peers para obtener los peerinfo y meterlos a la lista
-							for(Peer pe:peersRaw) {
-								if(pe.getIdentificadorSwarm().equals(ar.getHexInfoHash())) {
-									String dir = pe.getIP().replaceAll("[^0-9]","");
-									int ip = Integer.parseInt(dir);
-									PeerInfo pinf= new PeerInfo();
-									pinf.setIpAddress(ip);
-									pinf.setPort((short)pe.getPuerto());
-									peers.add(pinf);
-								}
-							}
-							
-
-							//TODO contar seeders y leechers
-							//hacer set de la lista y enviar
-							
-							announceResponse.setInterval(10000);//Cada 10 segundos que se envie el announceRequest
-							announceResponse.setLeechers(0);//los que sean leechers,seeders y la lista de peers de la base de datos
-							announceResponse.setSeeders(1);
-							announceResponse.setPeers(peers);
-
-
-							//#############################
-							byte[] requestBytes = announceResponse.getBytes();			
-							DatagramPacket packet = new DatagramPacket(requestBytes, requestBytes.length, serverHost, serverPort);
-							udpSocket.send(packet);
-							System.out.println("IP Address:- " + InetAddress.getLocalHost());
-							System.out.println(" - Sent from server response to "+ packet.getAddress() +":" + packet.getPort() + "' -> " + new String(packet.getData()) + " [" + packet.getLength() + " byte(s)]");
-
+							//Mensaje de vuelta FIXME
 							//###########################
-
-						break;
 						
+							String serverIP = "192.168.0.11"; //Elegir las ips bien
+							int serverPort = 8000;
 						
-						} catch (SocketException | UnknownHostException e) {
-							e.printStackTrace();
-						} catch (IOException e) {
-							e.printStackTrace();
+							try (DatagramSocket udpSocket = new DatagramSocket()) {
+	
+								
+								InetAddress serverHost = InetAddress.getByName(serverIP);	
+					
+								AnnounceResponse announceResponse = new AnnounceResponse();
+								
+								announceResponse.setTransactionId(ar.getTransactionId());
+	
+								
+								//TODO selects a la base de datos y obtener los tiempos y numeros
+								
+								List<PeerInfo> peers = new ArrayList<PeerInfo>();
+								//obtener datos
+								ArrayList<Peer> peersRaw = SQLiteDBManager.loadPeers("123ABC");//FIXME seria el infohash aqui
+								
+								//for de peers para obtener los peerinfo y meterlos a la lista
+								for(Peer pe:peersRaw) {
+									if(pe.getIdentificadorSwarm().equals(ar.getHexInfoHash())) {
+										String dir = pe.getIP().replaceAll("[^0-9]","");
+										int ip = Integer.parseInt(dir);
+										PeerInfo pinf= new PeerInfo();
+										pinf.setIpAddress(ip);
+										pinf.setPort((short)pe.getPuerto());
+										peers.add(pinf);
+									}
+								}
+							
+	
+								//TODO contar seeders y leechers
+								//hacer set de la lista y enviar
+								
+								announceResponse.setInterval(10000);//Cada 10 segundos que se envie el announceRequest
+								announceResponse.setLeechers(0);//los que sean leechers,seeders y la lista de peers de la base de datos
+								announceResponse.setSeeders(1);
+								announceResponse.setPeers(peers);
+	
+	
+								//#############################
+								byte[] requestBytes = announceResponse.getBytes();			
+								DatagramPacket packet = new DatagramPacket(requestBytes, requestBytes.length, serverHost, serverPort);
+								udpSocket.send(packet);
+	
+								System.out.println(" - Sent from server response to "+ packet.getAddress() +":" + packet.getPort() + "' -> " + new String(packet.getData()) + " [" + packet.getLength() + " byte(s)]");
+	
+								//###########################
+	
+							break;
+							
+							
+							} catch (SocketException | UnknownHostException e) {
+								e.printStackTrace();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
 			}
 		}
-
-		
-		for(Peer p:listaPeers) {
-			System.out.println("22222222222222222222222222222222");
-			System.out.println("Peer id principal=="+p.getConnectionIdPrincipal());
-			System.out.println("Peer id secundario=="+p.getConnectionIdSecundario());
-		}
-	
-	
 	
 	}
 
