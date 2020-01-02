@@ -35,7 +35,7 @@ public class AnnounceResponse extends BitTorrentUDPMessage {
 	
 	@Override
 	public byte[] getBytes() {
-		ByteBuffer buffer = ByteBuffer.allocate(24);
+		ByteBuffer buffer = ByteBuffer.allocate(24+6*peers.size());
 		buffer.order(ByteOrder.BIG_ENDIAN);
 		
 		buffer.putInt(0, super.getAction().value());
