@@ -91,7 +91,7 @@ public class AnnounceListener {
 								
 								List<PeerInfo> peers = new ArrayList<PeerInfo>();
 								//obtener datos
-								ArrayList<Peer> peersRaw = SQLiteDBManager.loadPeers("123ABC");//FIXME seria el infohash aqui
+								ArrayList<Peer> peersRaw = SQLiteDBManager.loadPeers("123ABC");//FIXME seria el infohash aqui pero para pruebas
 								
 								//for de peers para obtener los peerinfo y meterlos a la lista
 								for(Peer pe:peersRaw) {
@@ -109,7 +109,16 @@ public class AnnounceListener {
 								//TODO contar seeders y leechers
 								//hacer set de la lista y enviar
 								
-								announceResponse.setInterval(10000);//Cada 10 segundos que se envie el announceRequest
+								announceResponse.setInterval(10000);//Cada 10 segundos que se envie el announceRequest?
+								
+								//FIXME vaciar al principio la base de datos, y al ejecutar el connectRequest anyadir ahi el peer a memoria, y en el announce ahi a la bd
+								
+								/* Buscar en una lista los archivos disponibles que haya - base de datos Swarm = Infohash + tamanyo
+								 * Comprobar u obtener el tamanyo maximo
+								 * Hacer select de la tabla peer de cuanto tienen descargado
+								 * Separar los que tengan menos del maximo como leecher
+								 * Establecer numeros
+								 * */
 								announceResponse.setLeechers(0);//los que sean leechers,seeders y la lista de peers de la base de datos
 								announceResponse.setSeeders(1);
 								announceResponse.setPeers(peers);
