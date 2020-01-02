@@ -11,6 +11,7 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 import Objetos.Peer;
+import Sqlite.SQLiteDBManager;
 import bitTorrent.tracker.protocol.udp.PeerInfo;
 import bitTorrent.tracker.protocol.udp.AnnounceRequest;
 import bitTorrent.tracker.protocol.udp.AnnounceResponse;
@@ -51,9 +52,7 @@ public class AnnounceListener {
 		ByteBuffer byteBuffer = ByteBuffer.wrap(reply.getData());
 		byteBuffer.order(ByteOrder.BIG_ENDIAN);
 		
-	   
 
-//		if(reply.getLength()==16) {
 		for(Peer p:listaPeers) {
 
 		    String address="/";
@@ -89,19 +88,33 @@ public class AnnounceListener {
 							AnnounceResponse announceResponse = new AnnounceResponse();
 							
 							announceResponse.setTransactionId(ar.getTransactionId());
+
 							
 							//TODO selects a la base de datos y obtener los tiempos y numeros
 							
 							List<PeerInfo> peers = new ArrayList<PeerInfo>();
-							
 							//obtener datos
+							ArrayList<Peer> peersRaw = SQLiteDBManager.loadPeers("123ABC");//FIXME seria el infohash aqui
+							
 							//for de peers para obtener los peerinfo y meterlos a la lista
-							//contar seeders y leechers
+							for(Peer pe:peersRaw) {
+								if(pe.getIdentificadorSwarm().equals(ar.getHexInfoHash())) {
+									String dir = pe.getIP().replaceAll("[^0-9]","");
+									int ip = Integer.parseInt(dir);
+									PeerInfo pinf= new PeerInfo();
+									pinf.setIpAddress(ip);
+									pinf.setPort((short)pe.getPuerto());
+									peers.add(pinf);
+								}
+							}
+							
+
+							//TODO contar seeders y leechers
 							//hacer set de la lista y enviar
 							
 							announceResponse.setInterval(10000);//Cada 10 segundos que se envie el announceRequest
-							announceResponse.setLeechers(5);//los que sean leechers,seeders y la lista de peers de la base de datos
-							announceResponse.setSeeders(5);
+							announceResponse.setLeechers(0);//los que sean leechers,seeders y la lista de peers de la base de datos
+							announceResponse.setSeeders(1);
 							announceResponse.setPeers(peers);
 
 

@@ -11,7 +11,7 @@ import Objetos.Swarm;
 //FIXME meter los metodos en datacontroller
 public class SQLiteDBManager {
 
-	private Connection con;
+	private static Connection con;
 	
 	public SQLiteDBManager(String dbname) {
 		con = null;
@@ -92,6 +92,29 @@ public class SQLiteDBManager {
 		String sqlString = "SELECT * FROM PEER";
 		ArrayList<Peer> arPeer = new ArrayList<Peer>();
 		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {			
+			ResultSet rs = stmt.executeQuery();
+			
+			//System.out.println("\n - Loading peers from the db:");
+			
+			
+			while(rs.next()) {
+				//System.out.println("    " + rs.getString("IP") + ".- " +rs.getString("PUERTO")+ ".- " +rs.getString("IDPEER"));
+		         String ip = rs.getString("IP");
+		         String puerto = rs.getString("PUERTO");
+		         String idpeer = rs.getString("IDPEER");
+		         arPeer.add(new Peer(ip,Integer.parseInt(puerto),idpeer));
+			}				
+		} catch (Exception ex) {
+			//System.err.println("\n # Error loading data in the db: " + ex.getMessage());
+		}
+		return arPeer;
+	}
+	
+	public static ArrayList<Peer> loadPeers(String idSwarm) {	
+		String sqlString = "SELECT * FROM PEER WHERE IDSWARM = ?";
+		ArrayList<Peer> arPeer = new ArrayList<Peer>();
+		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {	
+			stmt.setString(1, idSwarm);
 			ResultSet rs = stmt.executeQuery();
 			
 			//System.out.println("\n - Loading peers from the db:");

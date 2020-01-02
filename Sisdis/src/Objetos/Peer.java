@@ -9,6 +9,7 @@ public class Peer extends Observable{
 	private int transactionId;
 	private long connectionIdPrincipal;
 	private long connectionIdSecundario;
+	private long tiempo;
 
 	public Peer() {
 		this.setIP("");
@@ -32,7 +33,9 @@ public class Peer extends Observable{
 		this.transactionId = transactionId;
 		this.connectionIdPrincipal = connectionIdPrincipal;
 		this.connectionIdSecundario = connectionIdSecundario;
+		this.tiempo = System.currentTimeMillis();
 	}
+	
 
 	public long getConnectionIdPrincipal() {
 		return connectionIdPrincipal;
@@ -81,6 +84,14 @@ public class Peer extends Observable{
 
 	public void setTransactionId(int transactionId) {
 		this.transactionId = transactionId;
+	}
+
+	public long getTiempo() {
+		return tiempo;
+	}
+
+	public void setTiempo(long tiempo) {
+		this.tiempo = tiempo;
 	}
 
 }
