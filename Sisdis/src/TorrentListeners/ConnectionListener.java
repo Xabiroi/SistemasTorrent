@@ -72,10 +72,6 @@ public class ConnectionListener {
 								System.out.println("Peer id principal=="+p1.getConnectionIdPrincipal());
 								System.out.println("Peer id secundario=="+p1.getConnectionIdSecundario());
 							}
-						    System.out.println("Action="+cr.getAction()); //CONNECT=0
-						    System.out.println("Transaction="+cr.getTransactionId()); 
-							System.out.println("Connection="+cr.getConnectionId()); 
-							System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 							p.setTransactionId(cr.getTransactionId());
 							Random r=new Random();
 							long newConnectionId = r.nextLong();

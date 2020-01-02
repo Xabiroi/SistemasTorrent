@@ -34,7 +34,7 @@ public class PanelConfiguracion extends JPanel {
 	private ArrayList<Boolean> bucle;
 	
 	//TODO los arrays de peers funcionales
-	private ArrayList<Peer> peersTransactionId;
+	private ArrayList<Peer> listaPeers;
 	
 	private ConnectionListener connectionListener;
 	private AnnounceListener announceListener;
@@ -53,17 +53,17 @@ public class PanelConfiguracion extends JPanel {
 		puerto=new ArrayList<Integer>(1);
 		puerto.add(7000); //FIXME hardcodeado
 		
-		peersTransactionId = new ArrayList<Peer>(10);//FIXME hardcodeado
-		peersTransactionId.add(new Peer(IP2, puerto.get(0),"ABCD", 1, Long.decode("0x41727101980"),456));
+		listaPeers = new ArrayList<Peer>(10);//FIXME hardcodeado
+		listaPeers.add(new Peer(IP2, puerto.get(0),"ABCD", 1, Long.decode("0x41727101980"),456));
 		
 		bucle= new ArrayList<Boolean>(1);
 		bucle.add(true);
 		
-		connectionListener = new ConnectionListener(peersTransactionId, IP, puerto);
-		announceListener = new AnnounceListener();
+		connectionListener = new ConnectionListener(listaPeers, IP, puerto);
+		announceListener = new AnnounceListener(listaPeers, IP, puerto);
 		scrapeListener = new ScrapeListener();
 		
-		torrentController = new TorrentController(IP, puerto, bucle, peersTransactionId, connectionListener, announceListener, scrapeListener);
+		torrentController = new TorrentController(IP, puerto, bucle, listaPeers, connectionListener, announceListener, scrapeListener);
 		torrentController.start();
 		
 		
@@ -193,11 +193,11 @@ public class PanelConfiguracion extends JPanel {
 	}
 
 	public ArrayList<Peer> getPeersTransactionId() {
-		return peersTransactionId;
+		return listaPeers;
 	}
 
 	public void setPeersTransactionId(ArrayList<Peer> peersTransactionId) {
-		this.peersTransactionId = peersTransactionId;
+		this.listaPeers = peersTransactionId;
 	}
 
 	public ConnectionListener getConnectionListener() {

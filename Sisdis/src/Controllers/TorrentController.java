@@ -64,28 +64,12 @@ public class TorrentController extends Thread{
 				String serverIP = this.getIP();
 				int serverPort = this.getPuerto().get(0);
 
-				
-//				String groupIP = DEFAULT_IP;
-//				int port = DEFAULT_PORT;
-				
-//				String message = DEFAULT_MESSAGE;u
-				System.out.println("(((((((((((((((((((((((((((((((((");
-				System.out.println("(((((((((((((((((((((((((((((((((");
-				System.out.println("Conectando a multicast");
-				System.out.println("(((((((((((((((((((((((((((((((((");
-				System.out.println("(((((((((((((((((((((((((((((((((");
 				try (MulticastSocket socket = new MulticastSocket(serverPort)) {
 					System.out.println("ServerIP="+serverIP);
 					InetAddress group = InetAddress.getByName(serverIP);
 					socket.setNetworkInterface(getActiveInterface());
 					socket.joinGroup(group);	
 				
-//					try (DatagramSocket udpSocket = new DatagramSocket(serverPort, InetAddress.getByName(serverIP))) {
-//					System.out.println("=======================================");
-//					System.out.println("=======================================");
-//					System.out.println(this.getBucle().get(0));
-//					System.out.println("=======================================");
-//					System.out.println("=======================================");
 					while(this.getBucle().get(0)) {
 						//TODO Ajustar aqui al size de los mensajes recibidos
 						byte[] buffer = new byte[16];
