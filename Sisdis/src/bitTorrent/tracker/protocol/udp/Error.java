@@ -2,6 +2,10 @@ package bitTorrent.tracker.protocol.udp;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.CharBuffer;
+import java.nio.charset.StandardCharsets;
+
+import bitTorrent.tracker.protocol.udp.BitTorrentUDPMessage.Action;
 
 /**
  * 
@@ -28,15 +32,35 @@ public class Error extends BitTorrentUDPMessage {
 		buffer.putInt(0, super.getAction().value());
 		buffer.putInt(4, super.getTransactionId());
 		
+		StringBuffer stringBuff = new StringBuffer(getMessage());
+		buffer.put(stringBuff.toString().getBytes());
 		
-				
 		buffer.flip();
-			
 		return buffer.array();
 	}
 	
 	public static Error parse(byte[] byteArray) {
-		//TODO: COMPLETE THIS METHOD
+		
+		try
+		{
+		ByteBuffer buffer = ByteBuffer.wrap(byteArray);
+	    buffer.order(ByteOrder.BIG_ENDIAN);
+	    
+	    Error msg = new Error();
+	    
+	    msg.setAction(Action.valueOf(buffer.getInt(0)));
+	    msg.setTransactionId(buffer.getInt(4));
+	    if(buffer.hasRemaining())
+	    msg.setMessage(StandardCharsets.UTF_8.decode(buffer).toString());
+	    
+		return msg;
+		
+		}
+		catch (Exception ex)
+		{
+			System.out.println("# Error parsing ScrapeResponse message: " + ex.getMessage());
+			ex.printStackTrace();
+		}
 		
 		return null;
 	}

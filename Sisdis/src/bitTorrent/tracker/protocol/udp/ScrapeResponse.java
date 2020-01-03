@@ -21,7 +21,7 @@ import bitTorrent.tracker.protocol.udp.BitTorrentUDPMessage.Action;
 
 public class ScrapeResponse extends BitTorrentUDPMessage {
 	
-	private List<ScrapeInfo> scrapeInfos;
+	private static List<ScrapeInfo> scrapeInfos;
 
 	public ScrapeResponse() {
 		super(Action.SCRAPE);		
@@ -60,19 +60,17 @@ public class ScrapeResponse extends BitTorrentUDPMessage {
 		    
 		    msg.setAction(Action.valueOf(buffer.getInt(0)));
 		    msg.setTransactionId(buffer.getInt(4));
-		    int index = 8;
+		    
 		    ScrapeInfo si = null;
 		    
-		    while ((index + 12) < byteArray.length ) {
+		    for(int i = 0; i < scrapeInfos.size(); i++) {
 			    si = new ScrapeInfo();
-			    si.setSeeders(buffer.getInt(index));
-			    si.setCompleted(buffer.getInt(index+4));
-			    si.setLeechers(buffer.getInt(index+8));
 			    
+			    si.setSeeders(buffer.getInt(8+12*i));
+			    si.setCompleted(buffer.getInt(12+12*i));
+			    si.setLeechers(buffer.getInt(16+12*i));
 			    
 			    msg.addScrapeInfo(si);
-			    
-			    index += 12;
 		    }		    
 			
 			return msg;
