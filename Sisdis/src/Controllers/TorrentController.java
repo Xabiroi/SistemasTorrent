@@ -2,7 +2,6 @@ package Controllers;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
@@ -87,19 +86,19 @@ public class TorrentController extends Thread{
 					    int c= byteBuffer.getInt(8);
 					    int d= byteBuffer.getInt(12);
 
-					    System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-					    System.out.println("Action server a="+a);
-					    System.out.println("Transaction server b="+b);
-					    System.out.println("server c="+c);
-					    System.out.println("server d="+d);
+//					    System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+//					    System.out.println("Action server a="+a);
+//					    System.out.println("Transaction server b="+b);
+//					    System.out.println("server c="+c);
+//					    System.out.println("server d="+d);
 					    
 					    long aa= byteBuffer.getLong(0); //FIXME era 8 en los request(?)
 					    long ab= byteBuffer.getLong(8);
 
   
-					    System.out.println("server aa="+aa);
-					    System.out.println("Conn server ab="+ab);
-					    System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+//					    System.out.println("server aa="+aa);
+//					    System.out.println("Conn server ab="+ab);
+//					    System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 
 
 					    if(c == 0) {

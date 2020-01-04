@@ -54,7 +54,7 @@ public class PanelConfiguracion extends JPanel {
 		puerto.add(7000); //FIXME hardcodeado
 		
 		listaPeers = new ArrayList<Peer>(10);//FIXME hardcodeado
-		listaPeers.add(new Peer(IP2, puerto.get(0),"ABCD", 1, Long.decode("0x41727101980"),456));
+//		listaPeers.add(new Peer(IP2, puerto.get(0),"ABCD", 1, Long.decode("0x41727101980"),456));
 		
 		bucle= new ArrayList<Boolean>(1);
 		bucle.add(true);

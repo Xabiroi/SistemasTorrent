@@ -43,6 +43,12 @@ public class ConnectionListener {
 	    System.out.println("Action="+cr.getAction()); //CONNECT=0
 	    System.out.println("Transaction="+cr.getTransactionId()); 
 		System.out.println("Connection="+cr.getConnectionId()); 
+		for(Peer p:listaPeers) {
+			System.out.println("%%%%%%%%%%%%%%%%%%%%%%");
+			System.out.println("p.getConIdPr=="+p.getConnectionIdPrincipal());
+			System.out.println("p.getConIdSc=="+p.getConnectionIdSecundario());
+			System.out.println("Addr=="+p.getIP());
+		}
 		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 		
 		ByteBuffer byteBuffer = ByteBuffer.wrap(reply.getData());
@@ -56,8 +62,22 @@ public class ConnectionListener {
 				long newConnectionId = r.nextLong();
 				int transactionid = cr.getTransactionId();
 				
-				listaPeers.add(new Peer(reply.getAddress().toString(),reply.getPort(),"",transactionid,newConnectionId,cr.getConnectionId()));
+				System.out.println("newConnectionId=="+newConnectionId);
+				
+				boolean encontrado = false;
+				for(Peer p:listaPeers) {
+					if(p.getIP().equals(reply.getAddress().toString())) {System.out.println("Misma ip intenta conectarse");encontrado=true;}	
+				}
+				
+				if(!encontrado) {listaPeers.add(new Peer(reply.getAddress().toString(),reply.getPort(),"",transactionid,newConnectionId,cr.getConnectionId()));System.out.println("NO ENCONTRADO");}
 
+				
+				for(Peer p:listaPeers) {
+					System.out.println("/////////////////////////");
+					System.out.println("p.getConIdPr=="+p.getConnectionIdPrincipal());
+					System.out.println("p.getConIdSc=="+p.getConnectionIdSecundario());
+					System.out.println("Addr=="+p.getIP());
+				}
 				//Mensaje de vuelta FIXME
 				//###########################
 //				String serverIP = this.getIP();
@@ -65,7 +85,8 @@ public class ConnectionListener {
 				
 				String serverIP = "192.168.0.11";
 				int serverPort = 8000;
-				
+				if(encontrado) {}
+				else {
 				try (DatagramSocket udpSocket = new DatagramSocket()) {
 					InetAddress serverHost = InetAddress.getByName(serverIP);	
 		
@@ -73,10 +94,11 @@ public class ConnectionListener {
 					
 					connectResponse.setTransactionId(transactionid);
 					connectResponse.setConnectionId(newConnectionId); //antes con newconnectionId
-
+					
 					//#############################
 					byte[] requestBytes = connectResponse.getBytes();			
 					DatagramPacket packet = new DatagramPacket(requestBytes, requestBytes.length, serverHost, serverPort);
+					
 					udpSocket.send(packet);
 					System.out.println("IP Address:- " + InetAddress.getLocalHost());
 					System.out.println(" - Sent from server response to '" + connectResponse.getConnectionId() + "::::::::::" + packet.getPort() + "' -> " + new String(packet.getData()) + " [" + packet.getLength() + " byte(s)]");
@@ -91,16 +113,17 @@ public class ConnectionListener {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
+				}
 				
 			}else {
-
+				System.out.println("Entra en el else");
 				for(Peer p:listaPeers) {
-					
-				    String address="/";
+				    String address="";
 				    address=address+p.getIP();
 				    InetAddress add=reply.getAddress();
 				    String aadd=add.toString();
-					
+					System.out.println("Adress=="+address);
+					System.out.println("Aadd=="+aadd);
 				    if(address.equals(aadd)){
 					if(cr.getConnectionId()==p.getTransactionId()) {System.out.println("Connection listener FIN 1");}
 					else if(cr.getTransactionId()==p.getConnectionIdPrincipal() || cr.getTransactionId()==p.getConnectionIdSecundario()) {System.out.println("Connection listener FIN 2");}
@@ -112,6 +135,7 @@ public class ConnectionListener {
 						System.out.println("cr.getConnectionId()=="+cr.getConnectionId());
 						System.out.println("p.getConnectionIdPrincipal()=="+p.getConnectionIdPrincipal());
 						System.out.println("p.getConnectionIdSecundario()=="+p.getConnectionIdSecundario());
+						
 						if(p.getConnectionIdPrincipal()==cr.getConnectionId() || p.getConnectionIdSecundario()==cr.getConnectionId()) {
 							
 							System.out.println("COMPROBADO");
@@ -157,15 +181,17 @@ public class ConnectionListener {
 								
 							
 	
-							break;
+							
 							
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
 							
+							//break;
 						}else {
 							//TODO enviar error
 						}
+						
 					}
 					
 				    }
