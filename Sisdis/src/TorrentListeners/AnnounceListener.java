@@ -11,6 +11,7 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 import Objetos.Peer;
+import Objetos.Swarm;
 import Sqlite.SQLiteDBManager;
 import bitTorrent.tracker.protocol.udp.PeerInfo;
 import bitTorrent.tracker.protocol.udp.AnnounceRequest;
@@ -69,8 +70,23 @@ public class AnnounceListener {
 					else if(ar.getTransactionId()==p.getConnectionIdPrincipal() || ar.getTransactionId()==p.getConnectionIdSecundario()) {System.out.println("ANNListener 1");}
 					else if(ar.getTransactionId()==p.getTransactionId()) {
 						if((p.getTiempo()+interval-1000)<System.currentTimeMillis() && (p.getTiempo()+interval+1000)>System.currentTimeMillis()) {
-						p.setTiempo(System.currentTimeMillis());
+							
+							p.setTiempo(System.currentTimeMillis());
 
+							//TODO Almacenar en la base de datos
+							//insertSwarmPeer(String idSwarm, String idPeer,float descargado)
+							//insertPeer(String ip, String port,String idPeer)
+							//insertSwarm(String idSwarm)
+							//
+							//
+							
+							
+							
+							
+							
+							
+							
+							
 							//Mensaje de vuelta FIXME
 							//###########################
 						
@@ -91,7 +107,9 @@ public class AnnounceListener {
 								
 								List<PeerInfo> peers = new ArrayList<PeerInfo>();
 								//obtener datos
-								ArrayList<Peer> peersRaw = SQLiteDBManager.loadPeers("123ABC");//FIXME seria el infohash aqui pero para pruebas
+								//ArrayList<Peer> peersRaw = SQLiteDBManager.loadPeers("123ABC");//FIXME seria el infohash aqui pero para pruebas
+								ArrayList<Swarm> swarmRaw = SQLiteDBManager.loadSwarmPeers("123ABC");
+								ArrayList<Peer> peersRaw = swarmRaw.get(0).getListaPeers();
 								
 								//for de peers para obtener los peerinfo y meterlos a la lista
 								for(Peer pe:peersRaw) {

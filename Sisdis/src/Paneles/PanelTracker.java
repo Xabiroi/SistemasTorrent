@@ -41,7 +41,9 @@ public class PanelTracker extends JPanel{
 	/**
 	 * Create the panel.
 	 */
-	public PanelTracker(ArrayList<Boolean> desconexion) {
+	public PanelTracker(ArrayList<Boolean> desconexion,ArrayList<Tracker> trackersRedundantes) {
+		
+		setTrackersRedundantes(trackersRedundantes);
 		
 		setDesconexion(desconexion);
 		
@@ -60,7 +62,7 @@ public class PanelTracker extends JPanel{
 
 		//Valores de prueba, crear JTable personalizada con diferentes metodos
 		model.addColumn("Ip");
-		model.addColumn("Puerto");
+		model.addColumn("Id");
 		model.addColumn("Master");
 		scrollPane_1.setViewportView(table);
 		//FIXME Elegir el tracker de cada uno con su ip y demas

@@ -10,6 +10,16 @@ public class Peer extends Observable{
 	private long connectionIdPrincipal;
 	private long connectionIdSecundario;
 	private long tiempo;
+	private long descargado;
+	
+
+
+	public Peer(String iP, int puerto, long descargado) {
+		super();
+		IP = iP;
+		Puerto = puerto;
+		this.descargado = descargado;
+	}
 
 	public Peer() {
 		this.setIP("");
@@ -17,6 +27,12 @@ public class Peer extends Observable{
 		
 	}
 
+	public Peer(String iP, int puerto) {
+		super();
+		IP = iP;
+		Puerto = puerto;
+	}
+	
 	public Peer(String iP, int puerto, String identificadorSwarm) {
 		super();
 		IP = iP;
@@ -94,4 +110,13 @@ public class Peer extends Observable{
 		this.tiempo = tiempo;
 	}
 
+	
+
+	public long getDescargado() {
+		return descargado;
+	}
+
+	public void setDescargado(long descargado) {
+		this.descargado = descargado;
+	}
 }

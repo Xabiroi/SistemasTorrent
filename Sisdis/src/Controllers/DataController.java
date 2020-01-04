@@ -58,6 +58,7 @@ public class DataController extends Thread{
 //		System.out.println("Enjambres=="+Enjambres);
 		if(!PeersEnCola.isEmpty()) {
 //			System.out.println("estadoActual="+estadoActual.get(0));
+			System.out.println("PEER DETECTADO");
 			cambio.set(0, true);
 
 			if(estadoActual.get(0)==EstadosBaseDeDatos.Actualizacion) {
@@ -67,9 +68,9 @@ public class DataController extends Thread{
 
 					if(aux.getIdentificadorSwarm().equals(swarm.getIdentificadorSwarm())) {
 						swarm.getListaPeers().add(aux);
-						manager.insertPeer(aux.getIP(), Integer.toString(aux.getPuerto()),aux.getIdentificadorSwarm());
+						manager.insertPeer(aux.getIP(), Integer.toString(aux.getPuerto()));
 						//TODO habria que meter los hashes de archivos aqui en vez de las ids
-						manager.insertSwarmPeer(swarm.getIdentificadorSwarm(),aux.getIdentificadorSwarm(),0);
+						manager.insertSwarmPeer(swarm.getIdentificadorSwarm(),aux.getIP(),0);//FIXME cambiar el 0 por el tamanyo del archivo del torrent
 						swarmDisponible=true;
 					}
 
@@ -81,10 +82,10 @@ public class DataController extends Thread{
 					ListaPeers.add(aux);
 					Enjambres.add(new Swarm(ListaPeers,aux.getIdentificadorSwarm()));	
 					
-					manager.insertPeer(aux.getIP(), Integer.toString(aux.getPuerto()),aux.getIdentificadorSwarm());
-					//TODO habria que meter los hashes de archivos aqui en vez de las ids
-					manager.insertSwarm(aux.getIdentificadorSwarm());
-					manager.insertSwarmPeer(aux.getIdentificadorSwarm(),aux.getIdentificadorSwarm(),0);
+					manager.insertPeer(aux.getIP(), Integer.toString(aux.getPuerto()));
+
+					manager.insertSwarm(aux.getIdentificadorSwarm(), 0);//FIXME cambiar el 0 por el tamanyo del archivo del torrent
+					manager.insertSwarmPeer(aux.getIdentificadorSwarm(),aux.getIP(),0);//FIXME cambiar el 0 por el tamanyo del archivo del torrent
 				}
 			}
 		}
@@ -94,8 +95,7 @@ public class DataController extends Thread{
 	}
 	
 	public void run() {
-		int loop=0;
-		while(loop<6000) {
+		while(desconexion.get(0)) {
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
@@ -104,7 +104,7 @@ public class DataController extends Thread{
 		}
 //		System.out.println("Comprobando...");
 		comprobar();
-		loop++;
+
 		}
 	}
 

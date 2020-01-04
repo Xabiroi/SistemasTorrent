@@ -3,6 +3,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.regex.Pattern;
 
 import javax.swing.JButton;
@@ -41,11 +42,12 @@ public class PanelConfiguracion extends JPanel {
 	private ScrapeListener scrapeListener;
 	
 	private TorrentController torrentController;
+	private static LinkedList<Peer> PeersEnCola = new LinkedList<Peer>();
 
 	/**
 	 * Create the panel.
 	 */
-	public PanelConfiguracion() {
+	public PanelConfiguracion(LinkedList<Peer> peersEnCola) {
 		//Creacion de los atributos
 		//############################
 		IP="228.5.6.7"; //FIXME hardcodeado
@@ -162,12 +164,7 @@ public class PanelConfiguracion extends JPanel {
 	private boolean isValid(String address) {
 		return IP_PATTERN.matcher(address).matches();
 	}
-	
-	public static void main(String[] args) {
-		PanelConfiguracion a= new PanelConfiguracion();
-		System.out.println(a.isValid("192.168.1.2"));
-	}
-	
+		
 	public String getIP() {
 		return IP;
 	}
@@ -230,6 +227,14 @@ public class PanelConfiguracion extends JPanel {
 
 	public void setTorrentController(TorrentController torrentController) {
 		this.torrentController = torrentController;
+	}
+
+	public static LinkedList<Peer> getPeersEnCola() {
+		return PeersEnCola;
+	}
+
+	public static void setPeersEnCola(LinkedList<Peer> peersEnCola) {
+		PeersEnCola = peersEnCola;
 	}
 	
 }

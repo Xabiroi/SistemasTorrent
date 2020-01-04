@@ -36,18 +36,16 @@ public class SQLiteDBManager {
 		}
 	}
 //	#######################################################
-	public void insertPeer(String ip, String port,String idPeer) {	
+	public void insertPeer(String ip, String port) {	
 		if (ip != null && !ip.isEmpty() &&
 				port != null && !port.isEmpty()) {
 		
-			String sqlString = "INSERT INTO PEER ('IP', 'PUERTO','IDPEER') VALUES (?,?,?)";
+			String sqlString = "INSERT INTO PEER ('IP', 'PUERTO') VALUES (?,?)";
 			
 			try (PreparedStatement stmt = con.prepareStatement(sqlString)) {
 				stmt.setString(1, ip);
 				stmt.setString(2, port);
-				stmt.setString(3, idPeer);
 
-				
 				if (stmt.executeUpdate() == 1) {
 					//System.out.println("\n - A new peer was inserted. :)");
 					con.commit();
@@ -88,7 +86,7 @@ public class SQLiteDBManager {
 		}
 	}
 	
-	public ArrayList<Peer> loadPeers() {	
+	public static ArrayList<Peer> loadPeers() {	
 		String sqlString = "SELECT * FROM PEER";
 		ArrayList<Peer> arPeer = new ArrayList<Peer>();
 		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {			
@@ -101,8 +99,7 @@ public class SQLiteDBManager {
 				//System.out.println("    " + rs.getString("IP") + ".- " +rs.getString("PUERTO")+ ".- " +rs.getString("IDPEER"));
 		         String ip = rs.getString("IP");
 		         String puerto = rs.getString("PUERTO");
-		         String idpeer = rs.getString("IDPEER");
-		         arPeer.add(new Peer(ip,Integer.parseInt(puerto),idpeer));
+		         arPeer.add(new Peer(ip,Integer.parseInt(puerto)));
 			}				
 		} catch (Exception ex) {
 			//System.err.println("\n # Error loading data in the db: " + ex.getMessage());
@@ -110,30 +107,7 @@ public class SQLiteDBManager {
 		return arPeer;
 	}
 	
-	public static ArrayList<Peer> loadPeers(String idSwarm) {	
-		String sqlString = "SELECT * FROM PEER WHERE IDSWARM = ?";
-		ArrayList<Peer> arPeer = new ArrayList<Peer>();
-		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {	
-			stmt.setString(1, idSwarm);
-			ResultSet rs = stmt.executeQuery();
-			
-			//System.out.println("\n - Loading peers from the db:");
-			
-			
-			while(rs.next()) {
-				//System.out.println("    " + rs.getString("IP") + ".- " +rs.getString("PUERTO")+ ".- " +rs.getString("IDPEER"));
-		         String ip = rs.getString("IP");
-		         String puerto = rs.getString("PUERTO");
-		         String idpeer = rs.getString("IDPEER");
-		         arPeer.add(new Peer(ip,Integer.parseInt(puerto),idpeer));
-			}				
-		} catch (Exception ex) {
-			//System.err.println("\n # Error loading data in the db: " + ex.getMessage());
-		}
-		return arPeer;
-	}
-	
-	public void deletePeers() {	
+	public static void deletePeers() {	
 		String sqlString = "DELETE FROM PEER";
 		
 		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {						
@@ -152,14 +126,14 @@ public class SQLiteDBManager {
 	}
 //##########################################################################
 	
-	public void insertSwarm(String idSwarm) {	
+	public void insertSwarm(String idSwarm, int tamanyo) {	
 		if (idSwarm != null && !idSwarm.isEmpty()) {
 		
-			String sqlString = "INSERT INTO SWARM ('IDSWARM') VALUES (?)";
+			String sqlString = "INSERT INTO SWARM ('IDSWARM','SIZE') VALUES (?,?)";
 			
 			try (PreparedStatement stmt = con.prepareStatement(sqlString)) {
 				stmt.setString(1, idSwarm);
-
+				stmt.setInt(2, tamanyo);
 
 				
 				if (stmt.executeUpdate() == 1) {
@@ -176,29 +150,29 @@ public class SQLiteDBManager {
 			//System.err.println("\n # Error inserting a new swarm: some parameters are 'null' or 'empty'.");
 		}
 	}
-	
-	public void updateSwarmId(String idSwarm) {	
-		if (idSwarm != null && !idSwarm.isEmpty()) {
-		
-			String sqlString = "UPDATE SWARM SET IDSWARM = ? WHERE IDSWARM = ?";
-			
-			try (PreparedStatement stmt = con.prepareStatement(sqlString)) {
-				stmt.setString(1, idSwarm);
-				
-				if (stmt.executeUpdate() != 0) {
-					//System.out.println("\n - Swarm's data was updated. :)");
-					con.commit();
-				} else {
-					//System.err.println("\n - Swarm's data wasn't updated. :(");
-					con.rollback();
-				}	
-			} catch (Exception ex) {
-				//System.err.println("\n # Error updating data in the db: " + ex.getMessage());
-			}
-		} else {
-			//System.err.println("\n # Error updating Swarm's data: some parameters are 'null' or 'empty'.");
-		}
-	}
+	//?
+//	public static void updateSwarmId(String idSwarm) {	
+//		if (idSwarm != null && !idSwarm.isEmpty()) {
+//		
+//			String sqlString = "UPDATE SWARM SET IDSWARM = ? WHERE IDSWARM = ?";
+//			
+//			try (PreparedStatement stmt = con.prepareStatement(sqlString)) {
+//				stmt.setString(1, idSwarm);
+//				
+//				if (stmt.executeUpdate() != 0) {
+//					//System.out.println("\n - Swarm's data was updated. :)");
+//					con.commit();
+//				} else {
+//					//System.err.println("\n - Swarm's data wasn't updated. :(");
+//					con.rollback();
+//				}	
+//			} catch (Exception ex) {
+//				//System.err.println("\n # Error updating data in the db: " + ex.getMessage());
+//			}
+//		} else {
+//			//System.err.println("\n # Error updating Swarm's data: some parameters are 'null' or 'empty'.");
+//		}
+//	}
 	
 	public ArrayList<Swarm> loadSwarms() {	
 		String sqlString = "SELECT * FROM SWARM";
@@ -212,7 +186,11 @@ public class SQLiteDBManager {
 				//System.out.println("    " + rs.getInt("IDSWARM"));
 				
 		         String idSwarm = rs.getString("IDSWARM");
-
+		         int size = rs.getInt("SIZE");
+		         //TODO load peers con las ip de swarm_peer   una join
+		         
+		         
+		         
 		         arSwarm.add(new Swarm(new ArrayList<Peer>(),idSwarm));
 			}				
 		} catch (Exception ex) {
@@ -221,7 +199,35 @@ public class SQLiteDBManager {
 		return arSwarm;
 	}
 	
-	public void deleteSwarms() {	
+	public ArrayList<Swarm> loadSwarms(String infohash) {	
+		String sqlString = "SELECT * FROM SWARM WHERE IDSWARM = ?";
+		ArrayList<Swarm> arSwarm = new ArrayList<Swarm>();
+		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {	
+			
+			stmt.setString(1, infohash);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			//System.out.println("\n - Loading swarms from the db:");
+			
+			while(rs.next()) {
+				//System.out.println("    " + rs.getInt("IDSWARM"));
+				
+		         String idSwarm = rs.getString("IDSWARM");
+		         int size = rs.getInt("SIZE");
+		         //TODO load peers con las ip de swarm_peer   una join
+		         
+		         
+		         
+		         arSwarm.add(new Swarm(new ArrayList<Peer>(),idSwarm,size));
+			}				
+		} catch (Exception ex) {
+			//System.err.println("\n # Error loading data in the db: " + ex.getMessage());
+		}
+		return arSwarm;
+	}
+	
+	public static void deleteSwarms() {	
 		String sqlString = "DELETE FROM SWARM";
 		
 		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {						
@@ -240,15 +246,15 @@ public class SQLiteDBManager {
 	}
 	
 	//##################################################################################
-	public void insertSwarmPeer(String idSwarm, String idPeer,float descargado) {	
+	public void insertSwarmPeer(String idSwarm, String ip,float descargado) {	
 		if (idSwarm != null && !idSwarm.isEmpty() &&
-				idPeer != null && !idPeer.isEmpty()) {
+				ip != null && !ip.isEmpty()) {
 		
-			String sqlString = "INSERT INTO SWARM_PEER ('IDSWARM', 'IDPEER','DESCARGADO') VALUES (?,?,?)";
+			String sqlString = "INSERT INTO SWARM_PEER ('IDSWARM', 'IP','DESCARGADO') VALUES (?,?,?)";
 			
 			try (PreparedStatement stmt = con.prepareStatement(sqlString)) {
 				stmt.setString(1, idSwarm);
-				stmt.setString(2, idPeer);
+				stmt.setString(2, ip);
 				stmt.setFloat(3, descargado);
 
 				
@@ -267,16 +273,16 @@ public class SQLiteDBManager {
 		}
 	}
 	
-	public void updateSwarmPeer(String idSwarm, String idPeer, float descargado) {	
+	public static void updateSwarmPeer(String idSwarm, String ip, float descargado) {	
 		if (idSwarm != null && !idSwarm.isEmpty() &&
-				idPeer != null && !idPeer.isEmpty()) {
+				ip != null && !ip.isEmpty()) {
 		
-			String sqlString = "UPDATE SWARM_PEER SET DESCARGADO = ? WHERE IDSWARM = ? AND IDPEER = ?";
+			String sqlString = "UPDATE SWARM_PEER SET DESCARGADO = ? WHERE IDSWARM = ? AND IP = ?";
 			
 			try (PreparedStatement stmt = con.prepareStatement(sqlString)) {
 				stmt.setFloat(1, descargado);
 				stmt.setString(2, idSwarm);
-				stmt.setString(3, idPeer);
+				stmt.setString(3, ip);
 				
 				if (stmt.executeUpdate() != 0) {
 					//System.out.println("\n - SwarmPeer's data was updated. :)");
@@ -293,11 +299,14 @@ public class SQLiteDBManager {
 		}
 	}
 	//FIXME arreglar que devuelva una lista
-	public void loadSwarmPeers() {	
+	public static void loadSwarmPeers() {	
 		String sqlString = "SELECT * FROM SWARM_PEER";
 		
-		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {			
+		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {		
 			ResultSet rs = stmt.executeQuery();
+					//System.out.println("\n - Loading peers from the db:");
+							
+			
 			
 			//System.out.println("\n - Loading peers from the db:");
 			
@@ -309,7 +318,45 @@ public class SQLiteDBManager {
 		}
 	}
 	
-	public void deleteSwarmPeers() {	
+	public static ArrayList<Swarm> loadSwarmPeers(String infohash) {	
+		
+		String sqlString = "SELECT * FROM SWARM_PEER WHERE IDSWARM = ?";
+		ArrayList<Swarm> arSwarm = new ArrayList<Swarm>();
+		ArrayList<Peer> arPeer = SQLiteDBManager.loadPeers();
+		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {
+			stmt.setString(1, infohash);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			
+			while(rs.next()) {
+				ArrayList<Peer> ap = new ArrayList<Peer>();
+				
+		        String idSwarm = rs.getString("IDSWARM");
+		        String ip = rs.getString("IP");
+		        long descarga = rs.getLong("DESCARGADO");
+		        //TODO load peers con las ip de swarm_peer   una join
+		         
+		        for(Peer p:arPeer) {
+		        	if(ip.equals(p.getIP())) {
+		        		ap.add(new Peer(p.getIP(),p.getPuerto(),descarga));
+		        	}
+		        }
+		         
+		        arSwarm.add(new Swarm(ap,idSwarm));
+		        //System.out.println("    " + rs.getString("IDSWARM") + ".- " + rs.getString("IDPEER")+ ".- "+rs.getFloat("DESCARGADO"));
+			}		
+			
+			
+		} catch (Exception ex) {
+			//System.err.println("\n # Error loading data in the db: " + ex.getMessage());
+		}
+		
+		return arSwarm;
+	}
+	
+	
+	public static void deleteSwarmPeers() {	
 		String sqlString = "DELETE FROM SWARM_PEER";
 		
 		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {						
@@ -328,14 +375,5 @@ public class SQLiteDBManager {
 	}
 	
 	//##################################################################################
-	public static void main(String[] args) {
-		SQLiteDBManager manager = new SQLiteDBManager("bd/test.db");
-	
-		manager.insertPeer("192.168.1.53", "23","6");
-		manager.loadPeers();
-		manager.updatePeerPort("192.168.1.53", "45");
-		manager.loadPeers();
-//		manager.deletePeers();
-		manager.closeConnection();
-	}
+
 }

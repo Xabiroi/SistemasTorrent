@@ -40,15 +40,16 @@ public class PanelPeer extends JPanel{
 	private static DataController DC;
 	private ArrayList<Boolean> desconexion=new ArrayList<Boolean>(1);
 	
+
 	
-	
-	
-	
+
+
 	/**
 	 * Create the panel.
 	 */
-	public PanelPeer(ArrayList<Boolean> desconexion) {
-		
+	public PanelPeer(ArrayList<Boolean> desconexion,ArrayList<Tracker> trackersRedundantes,LinkedList<Peer> peersEnCola) {
+
+		setTrackersRedundantes(trackersRedundantes);
 		setDesconexion(desconexion);
 		this.setLayout(new BorderLayout(0, 0));
 		
@@ -61,22 +62,27 @@ public class PanelPeer extends JPanel{
 		scrollPane.setViewportView(tree);
 		//####################################
 		
-		ArrayList<Peer> a =new ArrayList<Peer>();
+//		ArrayList<Peer> a =new ArrayList<Peer>();
 		ArrayList<Boolean> cambio = new ArrayList<Boolean>();
 		cambio.add(new Boolean(false));
-		a.add(new Peer("192.168.1.56",30,"1"));
-		a.add(new Peer("192.168.1.57",31,"1"));
-		a.add(new Peer("192.168.1.58",34,"2"));
-		Swarm s1=new Swarm(a,"2");
-		Enjambres.add(s1);
+//		a.add(new Peer("192.168.1.56",30,"1"));
+//		a.add(new Peer("192.168.1.57",31,"1"));
+//		a.add(new Peer("192.168.1.58",34,"2"));
+//		Swarm s1=new Swarm(a,"2");
+//		Enjambres.add(s1);
+		
+		SQLiteDBManager.deleteSwarmPeers();
+		SQLiteDBManager.deletePeers();
+		SQLiteDBManager.deleteSwarms();
+		
 		ContadorVersionBD.add(1);
 		
-		Tracker t1=new Tracker(1,"192.168.2.1","49",true,System.currentTimeMillis());
-		Tracker t2=new Tracker(2,"192.168.2.2","44",true,System.currentTimeMillis());
-		Tracker t3=new Tracker(3,"192.168.2.3","42",true,System.currentTimeMillis());
-		TrackersRedundantes.add(t1);
-		TrackersRedundantes.add(t2);
-		TrackersRedundantes.add(t3);
+//		Tracker t1=new Tracker(1,"192.168.2.1","49",true,System.currentTimeMillis());
+//		Tracker t2=new Tracker(2,"192.168.2.2","44",true,System.currentTimeMillis());
+//		Tracker t3=new Tracker(3,"192.168.2.3","42",true,System.currentTimeMillis());
+//		TrackersRedundantes.add(t1);
+//		TrackersRedundantes.add(t2);
+//		TrackersRedundantes.add(t3);
 		
 		QueueFileSender enviadorBD=new QueueFileSender();
 		QueueFileReceiver recibidorBD= new QueueFileReceiver();
@@ -86,6 +92,8 @@ public class PanelPeer extends JPanel{
 		
 		topicActualizarPublisher = new BDTopicPublisher(ContadorVersionBD,estadosBaseDeDatos,Enjambres,cambio,PeersEnCola,desconexion);
 		topicActualizarSubscriber = new BDTopicSubscriber(ContadorVersionBD, estadosBaseDeDatos,TrackersRedundantes,desconexion);
+
+		//Borrado de la base de datos al iniciar
 
 		
 		
@@ -193,6 +201,22 @@ public class PanelPeer extends JPanel{
 
 	public static void setEnviadorBD(QueueFileSender enviadorBD) {
 		PanelPeer.enviadorBD = enviadorBD;
+	}
+	
+	public static ArrayList<Tracker> getTrackersRedundantes() {
+		return TrackersRedundantes;
+	}
+
+	public static void setTrackersRedundantes(ArrayList<Tracker> trackersRedundantes) {
+		TrackersRedundantes = trackersRedundantes;
+	}
+	
+	public static LinkedList<Peer> getPeersEnCola() {
+		return PeersEnCola;
+	}
+
+	public static void setPeersEnCola(LinkedList<Peer> peersEnCola) {
+		PeersEnCola = peersEnCola;
 	}
 
 }
