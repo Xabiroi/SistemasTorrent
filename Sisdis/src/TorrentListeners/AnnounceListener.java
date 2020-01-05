@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import Objetos.Peer;
 import Objetos.Swarm;
@@ -22,22 +23,18 @@ public class AnnounceListener {
 	private ArrayList<Peer> listaPeers;
 	private String IP;
 	private ArrayList<Integer> puerto;
-	private final static int interval=10000;
+	private final static int interval=10000;	
+	private LinkedList<Peer> PeersEnCola = new LinkedList<Peer>();
 	
-
-
-
-
-	public AnnounceListener(ArrayList<Peer> peersTransactionId, String iP, ArrayList<Integer> puerto) {
+	
+	public AnnounceListener(ArrayList<Peer> listaPeers, String iP, ArrayList<Integer> puerto,
+			LinkedList<Peer> peersEnCola) {
 		super();
-		this.listaPeers = peersTransactionId;
+		this.listaPeers = listaPeers;
 		IP = iP;
 		this.puerto = puerto;
+		PeersEnCola = peersEnCola;
 	}
-
-
-
-
 
 
 	//TODO mandar error en caso de que n se cumpla ninguna de las condiciones de que el peer no tenga conexion id valida
@@ -73,19 +70,11 @@ public class AnnounceListener {
 							
 							p.setTiempo(System.currentTimeMillis());
 
-							//TODO Almacenar en la base de datos
-							//insertSwarmPeer(String idSwarm, String idPeer,float descargado)
-							//insertPeer(String ip, String port,String idPeer)
-							//insertSwarm(String idSwarm)
-							//
-							//
 							
 							
+//							Peer(String iP, int puerto, String identificadorSwarm, long descargado, long left, String infoHash)
 							
-							
-							
-							
-							
+							PeersEnCola.add(new Peer(ar.getPeerInfo().getStringIpAddress(),ar.getPeerInfo().getPort(),ar.getHexInfoHash(),ar.getDownloaded(),ar.getLeft()));
 							
 							//Mensaje de vuelta FIXME
 							//###########################
@@ -108,7 +97,7 @@ public class AnnounceListener {
 								List<PeerInfo> peers = new ArrayList<PeerInfo>();
 								//obtener datos
 								//ArrayList<Peer> peersRaw = SQLiteDBManager.loadPeers("123ABC");//FIXME seria el infohash aqui pero para pruebas
-								ArrayList<Swarm> swarmRaw = SQLiteDBManager.loadSwarmPeers("123ABC");
+								ArrayList<Swarm> swarmRaw = SQLiteDBManager.loadSwarmPeers(ar.getHexInfoHash());
 								ArrayList<Peer> peersRaw = swarmRaw.get(0).getListaPeers();
 								
 								//for de peers para obtener los peerinfo y meterlos a la lista
@@ -122,12 +111,21 @@ public class AnnounceListener {
 										peers.add(pinf);
 									}
 								}
-							
+								
+								int seeders=0;
+								int leechers=0;
+								for(Peer peer:peersRaw) {
+									if(peer.getDescargado()<swarmRaw.get(0).getSize()) {
+										leechers++;
+									}
+									seeders++;
+								}
+								
 	
 								//TODO contar seeders y leechers
 								//hacer set de la lista y enviar
 								
-								announceResponse.setInterval(10000);//Cada 10 segundos que se envie el announceRequest?
+								announceResponse.setInterval(11000);//Cada 11 segundos que se envie el announceRequest?
 								
 								//FIXME vaciar al principio la base de datos, y al ejecutar el connectRequest anyadir ahi el peer a memoria, y en el announce ahi a la bd
 								
@@ -137,10 +135,10 @@ public class AnnounceListener {
 								 * Separar los que tengan menos del maximo como leecher
 								 * Establecer numeros
 								 * */
-								announceResponse.setLeechers(0);//los que sean leechers,seeders y la lista de peers de la base de datos
-								announceResponse.setSeeders(1);
+								announceResponse.setLeechers(leechers);//los que sean leechers,seeders y la lista de peers de la base de datos
+								announceResponse.setSeeders(seeders);
 								announceResponse.setPeers(peers);
-	
+								
 	
 								//#############################
 								byte[] requestBytes = announceResponse.getBytes();			
@@ -171,34 +169,29 @@ public class AnnounceListener {
 	public ArrayList<Peer> getPeersTransactionId() {
 		return listaPeers;
 	}
-
-
-
 	public void setPeersTransactionId(ArrayList<Peer> peersTransactionId) {
 		this.listaPeers = peersTransactionId;
 	}
-
-
-
 	public String getIP() {
 		return IP;
 	}
-
-
-
 	public void setIP(String iP) {
 		IP = iP;
 	}
-
-
-
 	public ArrayList<Integer> getPuerto() {
 		return puerto;
 	}
-
-
-
 	public void setPuerto(ArrayList<Integer> puerto) {
 		this.puerto = puerto;
+	}
+
+
+	public LinkedList<Peer> getPeersEnCola() {
+		return PeersEnCola;
+	}
+
+
+	public void setPeersEnCola(LinkedList<Peer> peersEnCola) {
+		PeersEnCola = peersEnCola;
 	}
 }

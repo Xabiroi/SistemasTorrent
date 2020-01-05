@@ -12,6 +12,8 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.LinkedList;
+
 import Objetos.Peer;
 import TorrentListeners.AnnounceListener;
 import TorrentListeners.ConnectionListener;
@@ -36,12 +38,15 @@ public class TorrentController extends Thread{
 	private AnnounceListener announceListener;
 	private ScrapeListener scrapeListener;
 
-
+	private LinkedList<Peer> PeersEnCola = new LinkedList<Peer>();
 	
-	//Funcionalidad UDP del torrent
+	
+	
+
+
 	public TorrentController(String iP, ArrayList<Integer> puerto, ArrayList<Boolean> bucle,
 			ArrayList<Peer> peersTransactionId, ConnectionListener connectionListener,
-			AnnounceListener announceListener, ScrapeListener scrapeListener) {
+			AnnounceListener announceListener, ScrapeListener scrapeListener, LinkedList<Peer> peersEnCola) {
 		super();
 		IP = iP;
 		this.puerto = puerto;
@@ -50,12 +55,10 @@ public class TorrentController extends Thread{
 		this.connectionListener = connectionListener;
 		this.announceListener = announceListener;
 		this.scrapeListener = scrapeListener;
+		PeersEnCola = peersEnCola;
 	}
 
-	
-//	private static final String DEFAULT_IP = "228.5.6.7"; //La multicast a la que nos tenemos que conectar tiene esta pinta
-//	private static final int DEFAULT_PORT = 9000;
-//	private static final String DEFAULT_MESSAGE = "Hello World!";
+
 	
 	public void run() {
 		
@@ -81,10 +84,10 @@ public class TorrentController extends Thread{
 						byteBuffer.order(ByteOrder.BIG_ENDIAN);
 						
 						//Con el primer int obtenemos la id del response para clasificarla
-					    int a= byteBuffer.getInt(0); //FIXME era 8 en los request(?)
-					    int b= byteBuffer.getInt(4);
+//					    int a= byteBuffer.getInt(0); //FIXME era 8 en los request(?)
+//					    int b= byteBuffer.getInt(4);
 					    int c= byteBuffer.getInt(8);
-					    int d= byteBuffer.getInt(12);
+//					    int d= byteBuffer.getInt(12);
 
 //					    System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 //					    System.out.println("Action server a="+a);
@@ -92,8 +95,8 @@ public class TorrentController extends Thread{
 //					    System.out.println("server c="+c);
 //					    System.out.println("server d="+d);
 					    
-					    long aa= byteBuffer.getLong(0); //FIXME era 8 en los request(?)
-					    long ab= byteBuffer.getLong(8);
+//					    long aa= byteBuffer.getLong(0); //FIXME era 8 en los request(?)
+//					    long ab= byteBuffer.getLong(8);
 
   
 //					    System.out.println("server aa="+aa);
@@ -228,6 +231,17 @@ public class TorrentController extends Thread{
 	public void setScrapeListener(ScrapeListener scrapeListener) {
 		this.scrapeListener = scrapeListener;
 	}
+
+
+	public LinkedList<Peer> getPeersEnCola() {
+		return PeersEnCola;
+	}
+
+
+	public void setPeersEnCola(LinkedList<Peer> peersEnCola) {
+		PeersEnCola = peersEnCola;
+	}
+
 
 	
 }

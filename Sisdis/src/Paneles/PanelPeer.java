@@ -35,7 +35,7 @@ public class PanelPeer extends JPanel{
 	private static ArrayList<EstadosBaseDeDatos> estadoActual = new ArrayList<EstadosBaseDeDatos>(1);
 	private ArrayList<Boolean> cambio=new ArrayList<Boolean>(1);
 	private static ArrayList<Integer> ContadorVersionBD=new ArrayList<Integer>(1);
-	private static LinkedList<Peer> PeersEnCola = new LinkedList<Peer>();
+	private LinkedList<Peer> PeersEnCola = new LinkedList<Peer>();
 	private SQLiteDBManager manager = new SQLiteDBManager("bd/test.db");//FIXME cambio al nombre con timestamp o algo asi
 	private static DataController DC;
 	private ArrayList<Boolean> desconexion=new ArrayList<Boolean>(1);
@@ -210,13 +210,14 @@ public class PanelPeer extends JPanel{
 	public static void setTrackersRedundantes(ArrayList<Tracker> trackersRedundantes) {
 		TrackersRedundantes = trackersRedundantes;
 	}
-	
-	public static LinkedList<Peer> getPeersEnCola() {
+
+	public LinkedList<Peer> getPeersEnCola() {
 		return PeersEnCola;
 	}
 
-	public static void setPeersEnCola(LinkedList<Peer> peersEnCola) {
+	public void setPeersEnCola(LinkedList<Peer> peersEnCola) {
 		PeersEnCola = peersEnCola;
 	}
+	
 
 }

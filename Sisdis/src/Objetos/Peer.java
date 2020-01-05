@@ -12,7 +12,21 @@ public class Peer extends Observable{
 	private long tiempo;
 	private long descargado;
 	
+	///////////////////////
+	//Los atributos 
+	private long left;
+	
 
+
+	public Peer(String iP, int puerto, String identificadorSwarm, long descargado, long left) {
+		super();
+		IP = iP;
+		Puerto = puerto;
+		this.identificadorSwarm = identificadorSwarm;
+		this.descargado = descargado;
+		this.left = left;
+	}
+	
 
 	public Peer(String iP, int puerto, long descargado) {
 		super();
@@ -119,4 +133,14 @@ public class Peer extends Observable{
 	public void setDescargado(long descargado) {
 		this.descargado = descargado;
 	}
+
+	public long getLeft() {
+		return left;
+	}
+
+	public void setLeft(long left) {
+		this.left = left;
+	}
+
+
 }

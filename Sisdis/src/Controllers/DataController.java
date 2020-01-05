@@ -5,7 +5,6 @@ import BDFileQueueListener.QueueFileReceiver;
 import BDFileQueueListener.QueueFileSender;
 import BDUpdateTopicListener.BDTopicPublisher;
 import BDUpdateTopicListener.BDTopicSubscriber;
-import Mensajes.Desconexion;
 import Objetos.Peer;
 import Objetos.Swarm;
 import Objetos.Tracker;
@@ -34,7 +33,7 @@ public class DataController extends Thread{
 	private static ArrayList<EstadosBaseDeDatos> estadoActual = new ArrayList<EstadosBaseDeDatos>(1);
 	private ArrayList<Boolean> cambio=new ArrayList<Boolean>(1);
 	private static ArrayList<Integer> ContadorVersionBD=new ArrayList<Integer>(1);
-	private static LinkedList<Peer> PeersEnCola = new LinkedList<Peer>();
+	private LinkedList<Peer> PeersEnCola = new LinkedList<Peer>();
 	private ArrayList<Boolean> desconexion=new ArrayList<Boolean>(1);
 	private SQLiteDBManager manager = new SQLiteDBManager("bd/test.db");
 
@@ -53,40 +52,76 @@ public class DataController extends Thread{
 		this.setDesconexion(desconexion);
 	}
 
-	//Esperar un rato y comprobar si ha habido cambios en ese instante
+	//FIXME eliminar la figura de enjambre
 	public void comprobar() {
 //		System.out.println("Enjambres=="+Enjambres);
 		if(!PeersEnCola.isEmpty()) {
 //			System.out.println("estadoActual="+estadoActual.get(0));
 			System.out.println("PEER DETECTADO");
 			cambio.set(0, true);
+			
+			
+			
+//			//FIXME pasar a datacontroller
+//			manager.insertPeer(Integer.toString(ar.getPeerInfo().getIpAddress()), Integer.toString(ar.getPeerInfo().getPort()));
+//			//Cambiar la base de datos y poner todo a int
+////			sqlManager.insertPeer(Integer.toString(ar.getPeerInfo().getIpAddress()), Integer.toString(ar.getPeerInfo().getPort()));
+//			
+//			//TODO hacer alguna comporbacion de si existe en el metodo o no
+//			manager.insertSwarm(ar.getHexInfoHash(),(int) ((int) ar.getDownloaded()+ar.getLeft()));
+////			sqlManager.insertSwarm(ar.getHexInfoHash(), ar.getDownloaded());
+//			
+//			if(ar.getLeft()==0) {
+//				manager.insertSwarmPeer(ar.getHexInfoHash(), Integer.toString(ar.getPeerInfo().getIpAddress()), ar.getDownloaded());
+////				sqlManager.insertSwarmPeer(ar.getHexInfoHash(), ar.getPeerInfo().getIpAddress(), ar.getDownloaded());
+//			}
+//			else if (ar.getLeft()>0) {
+//				manager.insertSwarmPeer(ar.getHexInfoHash(), Integer.toString(ar.getPeerInfo().getIpAddress()), ar.getLeft());
+////				sqlManager.insertSwarmPeer(ar.getHexInfoHash(), ar.getPeerInfo().getIpAddress(), ar.getLeft());
+//			}
+//			
+
 
 			if(estadoActual.get(0)==EstadosBaseDeDatos.Actualizacion) {
 				Peer aux = PeersEnCola.poll();
 				boolean swarmDisponible=false;
-				for(Swarm swarm:Enjambres) {
-
-					if(aux.getIdentificadorSwarm().equals(swarm.getIdentificadorSwarm())) {
-						swarm.getListaPeers().add(aux);
-						manager.insertPeer(aux.getIP(), Integer.toString(aux.getPuerto()));
-						//TODO habria que meter los hashes de archivos aqui en vez de las ids
-						manager.insertSwarmPeer(swarm.getIdentificadorSwarm(),aux.getIP(),0);//FIXME cambiar el 0 por el tamanyo del archivo del torrent
-						swarmDisponible=true;
-					}
+				
+				manager.insertPeer(aux.getIP(),Integer.toString(aux.getPuerto()));
+				
+				manager.insertSwarm(aux.getIdentificadorSwarm(),(int) (aux.getLeft()+aux.getDescargado()));
+				
+				if(aux.getLeft()==0) {
+					manager.insertSwarmPeer(aux.getIdentificadorSwarm(), aux.getIP(), aux.getDescargado());
 
 				}
+				else if (aux.getLeft()>0) {
+					manager.insertSwarmPeer(aux.getIdentificadorSwarm(), aux.getIP(), aux.getLeft());
+
+				}
+				
+//				for(Swarm swarm:Enjambres) {
+//
+//					if(aux.getIdentificadorSwarm().equals(swarm.getIdentificadorSwarm())) {
+//						swarm.getListaPeers().add(aux);
+//						manager.insertPeer(aux.getIP(), Integer.toString(aux.getPuerto()));
+//						//TODO habria que meter los hashes de archivos aqui en vez de las ids
+//						manager.insertSwarmPeer(swarm.getIdentificadorSwarm(),aux.getIP(),0);//FIXME cambiar el 0 por el tamanyo del archivo del torrent
+//						swarmDisponible=true;
+//					}
+//
+//				}
 				//Enjambres.add(PeersEnCola.poll());
-				if(!swarmDisponible) {
-//					System.out.println("Entras en nuevo swarm");
-					ArrayList<Peer> ListaPeers= new ArrayList<Peer>();
-					ListaPeers.add(aux);
-					Enjambres.add(new Swarm(ListaPeers,aux.getIdentificadorSwarm()));	
-					
-					manager.insertPeer(aux.getIP(), Integer.toString(aux.getPuerto()));
-
-					manager.insertSwarm(aux.getIdentificadorSwarm(), 0);//FIXME cambiar el 0 por el tamanyo del archivo del torrent
-					manager.insertSwarmPeer(aux.getIdentificadorSwarm(),aux.getIP(),0);//FIXME cambiar el 0 por el tamanyo del archivo del torrent
-				}
+//				if(!swarmDisponible) {
+////					System.out.println("Entras en nuevo swarm");
+//					ArrayList<Peer> ListaPeers= new ArrayList<Peer>();
+//					ListaPeers.add(aux);
+//					Enjambres.add(new Swarm(ListaPeers,aux.getIdentificadorSwarm()));	
+//					
+//					manager.insertPeer(aux.getIP(), Integer.toString(aux.getPuerto()));
+//
+//					manager.insertSwarm(aux.getIdentificadorSwarm(), 0);//FIXME cambiar el 0 por el tamanyo del archivo del torrent
+//					manager.insertSwarmPeer(aux.getIdentificadorSwarm(),aux.getIP(),0);//FIXME cambiar el 0 por el tamanyo del archivo del torrent
+//				}
 			}
 		}
 		else {
@@ -193,14 +228,13 @@ public class DataController extends Thread{
 		ContadorVersionBD = contadorVersionBD;
 	}
 
-	public static LinkedList<Peer> getPeersEnCola() {
+	public LinkedList<Peer> getPeersEnCola() {
 		return PeersEnCola;
 	}
 
-	public static void setPeersEnCola(LinkedList<Peer> peersEnCola) {
+	public void setPeersEnCola(LinkedList<Peer> peersEnCola) {
 		PeersEnCola = peersEnCola;
 	}
-
 
 	public ArrayList<Boolean> getCambio() {
 		return cambio;

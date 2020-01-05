@@ -13,12 +13,9 @@ import Paneles.PanelPeer;
 import Paneles.PanelTracker;
 import javax.swing.JButton;
 import java.awt.BorderLayout;
-import javax.swing.SwingConstants;
-
 import Objetos.Peer;
 import Objetos.Tracker;
 
-import javax.swing.JSplitPane;
 import javax.swing.JPanel;
 
 public class VistaTracker {
@@ -30,7 +27,7 @@ public class VistaTracker {
 	private JPanel panel;
 	private ArrayList<Boolean> desconexion=new ArrayList<Boolean>(1);
 	private static ArrayList<Tracker> TrackersRedundantes=new ArrayList<Tracker>();
-	private static LinkedList<Peer> PeersEnCola = new LinkedList<Peer>();
+	private LinkedList<Peer> PeersEnCola = new LinkedList<Peer>();
 	/**
 	 * Launch the application.
 	 */
@@ -139,11 +136,13 @@ public class VistaTracker {
 		TrackersRedundantes = trackersRedundantes;
 	}
 
-	public static LinkedList<Peer> getPeersEnCola() {
+	public LinkedList<Peer> getPeersEnCola() {
 		return PeersEnCola;
 	}
 
-	public static void setPeersEnCola(LinkedList<Peer> peersEnCola) {
+	public void setPeersEnCola(LinkedList<Peer> peersEnCola) {
 		PeersEnCola = peersEnCola;
 	}
+
+
 }
