@@ -63,7 +63,7 @@ public class PanelConfiguracion extends JPanel {
 		
 		connectionListener = new ConnectionListener(listaPeers, IP, puerto);
 		announceListener = new AnnounceListener(listaPeers, IP, puerto,PeersEnCola);
-		scrapeListener = new ScrapeListener();
+		scrapeListener = new ScrapeListener(listaPeers, IP, puerto);
 		
 		torrentController = new TorrentController(IP, puerto, bucle, listaPeers, connectionListener, announceListener, scrapeListener,PeersEnCola);
 		torrentController.start();

@@ -199,7 +199,7 @@ public class SQLiteDBManager {
 		return arSwarm;
 	}
 	
-	public ArrayList<Swarm> loadSwarms(String infohash) {	
+	public static ArrayList<Swarm> loadSwarms(String infohash) {	
 		String sqlString = "SELECT * FROM SWARM WHERE IDSWARM = ?";
 		ArrayList<Swarm> arSwarm = new ArrayList<Swarm>();
 		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {	
@@ -348,6 +348,44 @@ public class SQLiteDBManager {
 			}		
 			
 			
+		} catch (Exception ex) {
+			//System.err.println("\n # Error loading data in the db: " + ex.getMessage());
+		}
+		
+		return arSwarm;
+	}
+	
+public static ArrayList<Swarm> loadSwarms(ArrayList<String> infoHashes) {	
+		
+		String sqlString = "SELECT * FROM SWARM_PEER WHERE IDSWARM = ?";
+		
+		ArrayList<Swarm> arSwarm = new ArrayList<Swarm>();
+		ArrayList<Peer> arPeer = SQLiteDBManager.loadPeers();
+		
+		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {
+			
+			for(int i = 0; i < infoHashes.size(); i++)
+			{
+				stmt.setString(1, infoHashes.get(i));
+				
+				ResultSet rs = stmt.executeQuery();
+				
+								
+				while(rs.next())
+				{
+					ArrayList<Peer> peersForHash = new ArrayList<Peer>();
+					
+					for(Peer p : arPeer)
+					{
+						if(rs.getString("IP").equalsIgnoreCase(p.getIP()))
+						{
+							peersForHash.add(p);
+						}
+					}
+					arSwarm.add(new Swarm(peersForHash, infoHashes.get(i)));	
+				}
+			}
+
 		} catch (Exception ex) {
 			//System.err.println("\n # Error loading data in the db: " + ex.getMessage());
 		}
