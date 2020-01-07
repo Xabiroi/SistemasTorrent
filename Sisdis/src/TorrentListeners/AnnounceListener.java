@@ -50,32 +50,56 @@ public class AnnounceListener {
 		ByteBuffer byteBuffer = ByteBuffer.wrap(reply.getData());
 		byteBuffer.order(ByteOrder.BIG_ENDIAN);
 		
-
+		SQLiteDBManager.updateTr(reply.getAddress().toString(),ar.getConnectionId(),ar.getTransactionId());
+		listaPeers=SQLiteDBManager.loadPeers2();
+		
+		System.out.println("ListaPeers="+listaPeers);
+		
+		
 		for(Peer p:listaPeers) {
 
-		    String address="/";
+		    String address="";
 		    address=address+p.getIP();
 		    InetAddress add=reply.getAddress();
 		    String aadd=add.toString();
 
+		    System.out.println("address="+address);
+		    System.out.println("aadd="+aadd);
+		    
+		    
+		    //FIXME comprobar que si la transaccion en la actual que no la pase (mensajes repetidos)
 		    
 			if(address.equals(aadd)){
+//				System.out.println("ADDRESS");
 				//mirar si el connection id es valido
+//				System.out.println("ar.getConnectionId()=="+ar.getConnectionId());
+//				System.out.println("p.getConnectionIdPrincipal()=="+p.getConnectionIdPrincipal());
+//				System.out.println("p.getConnectionIdSecundario()=="+p.getConnectionIdSecundario());
+				
 				if(ar.getConnectionId()==p.getConnectionIdPrincipal() || ar.getConnectionId()==p.getConnectionIdSecundario()) {
-					System.out.println("ConnectionId comprobado");
+//					System.out.println("ConnectionId comprobado");
+//					System.out.println("ar.getTransactionId()=="+ar.getTransactionId());
+//					System.out.println("p.getTransactionId()=="+p.getTransactionId());
+					
 					if(ar.getConnectionId()==p.getTransactionId()) {System.err.println("ANNListener 0");}
 					else if(ar.getTransactionId()==p.getConnectionIdPrincipal() || ar.getTransactionId()==p.getConnectionIdSecundario()) {System.out.println("ANNListener 1");}
 					else if(ar.getTransactionId()==p.getTransactionId()) {
-						if((p.getTiempo()+interval-1000)<System.currentTimeMillis() && (p.getTiempo()+interval+1000)>System.currentTimeMillis()) {
-							
-							p.setTiempo(System.currentTimeMillis());
-
+						
+						System.out.println("p.getTiempo()+interval-3000=="+(p.getTiempo()+interval-3000));
+						System.out.println("p.getTiempo()+interval+3000=="+(p.getTiempo()+interval+3000));
+						System.out.println("System.currentTimeMillis()=="+System.currentTimeMillis());
+						//TODO como comprobar o gestioanr en la bd
+						if((p.getTiempo()+interval-3000)<System.currentTimeMillis() && (p.getTiempo()+interval+3000)>System.currentTimeMillis()) {
+							System.out.println("ACTUALIZA EL TIEMPO");
+//							p.setTiempo(System.currentTimeMillis());
+							SQLiteDBManager.updateTiempo(reply.getAddress().toString(),ar.getConnectionId(),System.currentTimeMillis());
 							
 							
 //							Peer(String iP, int puerto, String identificadorSwarm, long descargado, long left, String infoHash)
 							
 							PeersEnCola.add(new Peer(ar.getPeerInfo().getStringIpAddress(),ar.getPeerInfo().getPort(),ar.getHexInfoHash(),ar.getDownloaded(),ar.getLeft()));
 							
+							System.out.println("ANYADE PEERSENCOLA");
 							//Mensaje de vuelta FIXME
 							//###########################
 						
@@ -99,6 +123,12 @@ public class AnnounceListener {
 								//ArrayList<Peer> peersRaw = SQLiteDBManager.loadPeers("123ABC");//FIXME seria el infohash aqui pero para pruebas
 								ArrayList<Swarm> swarmRaw = SQLiteDBManager.loadSwarmPeers(ar.getHexInfoHash());
 								ArrayList<Peer> peersRaw = swarmRaw.get(0).getListaPeers();
+								
+								System.out.println("EXplota porque no hay posicion 0 porque no se a anyadido el peer en todo el proceso");
+								/*FIXME comprobar si se ha anyadido con un wait en todo el proceso(?)
+								 * evitar usar el get(0) si isEmpty (?)
+								 * */
+								
 								
 								//for de peers para obtener los peerinfo y meterlos a la lista
 								for(Peer pe:peersRaw) {

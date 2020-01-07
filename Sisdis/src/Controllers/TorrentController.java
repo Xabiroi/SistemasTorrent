@@ -74,7 +74,7 @@ public class TorrentController extends Thread{
 				
 					while(this.getBucle().get(0)) {
 						//TODO Ajustar aqui al size de los mensajes recibidos
-						byte[] buffer = new byte[16];
+						byte[] buffer = new byte[1024];
 
 						DatagramPacket reply = new DatagramPacket(buffer, buffer.length, group, serverPort);
 

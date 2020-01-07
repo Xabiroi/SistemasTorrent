@@ -84,9 +84,9 @@ public class DataController extends Thread{
 
 			if(estadoActual.get(0)==EstadosBaseDeDatos.Actualizacion) {
 				Peer aux = PeersEnCola.poll();
-				boolean swarmDisponible=false;
+//				boolean swarmDisponible=false;
 				
-				manager.insertPeer(aux.getIP(),Integer.toString(aux.getPuerto()));
+//				manager.insertPeer(aux.getIP(),Integer.toString(aux.getPuerto())); //FIXME esto en connectionListener(?)
 				
 				manager.insertSwarm(aux.getIdentificadorSwarm(),(int) (aux.getLeft()+aux.getDescargado()));
 				

@@ -36,7 +36,7 @@ public class SQLiteDBManager {
 		}
 	}
 //	#######################################################
-	public void insertPeer(String ip, String port) {	
+	public static void insertPeer(String ip, String port) {	
 		if (ip != null && !ip.isEmpty() &&
 				port != null && !port.isEmpty()) {
 		
@@ -60,6 +60,36 @@ public class SQLiteDBManager {
 			//System.err.println("\n # Error inserting a new peer: some parameters are 'null' or 'empty'.");
 		}
 	}
+	
+	public static void insertPeer(String ip, String port, long connectionIdPrincipal, long connectionIdSecundario,long transaction,long tiempo) {	
+		if (ip != null && !ip.isEmpty() &&
+				port != null && !port.isEmpty()) {
+		
+			String sqlString = "INSERT INTO PEER ('IP', 'PUERTO','IDPRINCIPAL','IDSECUNDARIO','TRANSACTIONID','TIEMPO') VALUES (?,?,?,?,?,?)";
+			
+			try (PreparedStatement stmt = con.prepareStatement(sqlString)) {
+				stmt.setString(1, ip);
+				stmt.setString(2, port);
+				stmt.setLong(3, connectionIdPrincipal);
+				stmt.setLong(4, connectionIdSecundario);
+				stmt.setLong(5, transaction);
+				stmt.setLong(6, tiempo);
+
+				if (stmt.executeUpdate() == 1) {
+					//System.out.println("\n - A new peer was inserted. :)");
+					con.commit();
+				} else {
+					//System.err.println("\n - A new peer wasn't inserted. :(");
+					con.rollback();
+				}	
+			} catch (Exception ex) {
+				//System.err.println("\n # Error storing data in the db: " + ex.getMessage());
+			}
+		} else {
+			//System.err.println("\n # Error inserting a new peer: some parameters are 'null' or 'empty'.");
+		}
+	}
+	
 	
 	public void updatePeerPort(String ip, String port) {	
 		if (ip != null && !ip.isEmpty() &&
@@ -86,6 +116,84 @@ public class SQLiteDBManager {
 		}
 	}
 	
+	public static void updateIdAndTr(String ip, long connectionIdPrincipal, long connectionIdSecundario,long transaction, long tiempo) {	
+		if (ip != null && !ip.isEmpty()) {
+		//'IDPRINCIPAL','IDSECUNDARIO','TRANSACTIONID'
+			String sqlString = "UPDATE PEER SET IDPRINCIPAL = ?, IDSECUNDARIO = ?, TRANSACTIONID = ?, TIEMPO = ? WHERE IP = ?";
+			
+			try (PreparedStatement stmt = con.prepareStatement(sqlString)) {
+				stmt.setLong(1, connectionIdPrincipal);
+				stmt.setLong(2, connectionIdSecundario);
+				stmt.setLong(3, transaction);
+				stmt.setLong(4, tiempo);
+				stmt.setString(5, ip);
+				
+				if (stmt.executeUpdate() != 0) {
+					//System.out.println("\n - Peer's data was updated. :)");
+					con.commit();
+				} else {
+					//System.err.println("\n - Peer's data wasn't updated. :(");
+					con.rollback();
+				}	
+			} catch (Exception ex) {
+				//System.err.println("\n # Error updating data in the db: " + ex.getMessage());
+			}
+		} else {
+			//System.err.println("\n # Error updating Peer's data: some parameters are 'null' or 'empty'.");
+		}
+	}
+	
+	public static void updateTr(String ip, long connectionIdPrincipal,long transaction) {	
+		if (ip != null && !ip.isEmpty()) {
+		//'IDPRINCIPAL','IDSECUNDARIO','TRANSACTIONID'
+			String sqlString = "UPDATE PEER SET TRANSACTIONID = ? WHERE IP = ? AND IDPRINCIPAL = ?";
+			
+			try (PreparedStatement stmt = con.prepareStatement(sqlString)) {
+				stmt.setLong(1, transaction);
+				stmt.setString(2, ip);
+				stmt.setLong(3, connectionIdPrincipal);
+				if (stmt.executeUpdate() != 0) {
+					//System.out.println("\n - Peer's data was updated. :)");
+					con.commit();
+				} else {
+					//System.err.println("\n - Peer's data wasn't updated. :(");
+					con.rollback();
+				}	
+			} catch (Exception ex) {
+				//System.err.println("\n # Error updating data in the db: " + ex.getMessage());
+			}
+		} else {
+			//System.err.println("\n # Error updating Peer's data: some parameters are 'null' or 'empty'.");
+		}
+	}
+	
+	
+	public static void updateTiempo(String ip, long connectionIdPrincipal,long tiempo) {	
+		if (ip != null && !ip.isEmpty()) {
+		//'IDPRINCIPAL','IDSECUNDARIO','TRANSACTIONID'
+			String sqlString = "UPDATE PEER SET TIEMPO = ? WHERE IP = ? AND IDPRINCIPAL = ?";
+			
+			try (PreparedStatement stmt = con.prepareStatement(sqlString)) {
+				stmt.setLong(1, tiempo);
+				stmt.setString(2, ip);
+				stmt.setLong(3, connectionIdPrincipal);
+				
+				if (stmt.executeUpdate() != 0) {
+					//System.out.println("\n - Peer's data was updated. :)");
+					con.commit();
+				} else {
+					//System.err.println("\n - Peer's data wasn't updated. :(");
+					con.rollback();
+				}	
+			} catch (Exception ex) {
+				//System.err.println("\n # Error updating data in the db: " + ex.getMessage());
+			}
+		} else {
+			//System.err.println("\n # Error updating Peer's data: some parameters are 'null' or 'empty'.");
+		}
+	}
+	
+	
 	public static ArrayList<Peer> loadPeers() {	
 		String sqlString = "SELECT * FROM PEER";
 		ArrayList<Peer> arPeer = new ArrayList<Peer>();
@@ -100,6 +208,31 @@ public class SQLiteDBManager {
 		         String ip = rs.getString("IP");
 		         String puerto = rs.getString("PUERTO");
 		         arPeer.add(new Peer(ip,Integer.parseInt(puerto)));
+			}				
+		} catch (Exception ex) {
+			//System.err.println("\n # Error loading data in the db: " + ex.getMessage());
+		}
+		return arPeer;
+	}
+	
+	public static ArrayList<Peer> loadPeers2() {	
+		String sqlString = "SELECT * FROM PEER";
+		ArrayList<Peer> arPeer = new ArrayList<Peer>();
+		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {			
+			ResultSet rs = stmt.executeQuery();
+			
+			//System.out.println("\n - Loading peers from the db:");
+			
+			
+			while(rs.next()) {
+				//System.out.println("    " + rs.getString("IP") + ".- " +rs.getString("PUERTO")+ ".- " +rs.getString("IDPEER"));
+		         String ip = rs.getString("IP");
+		         String puerto = rs.getString("PUERTO");
+		         long idPrincipal = rs.getLong("IDPRINCIPAL");
+		         long idSecundario = rs.getLong("IDSECUNDARIO");
+		         int idTransaccion = rs.getInt("TRANSACTIONID");
+		         long tiempo = rs.getLong("TIEMPO");
+		         arPeer.add(new Peer(ip,Integer.parseInt(puerto),null,idTransaccion,idPrincipal,idSecundario,tiempo));
 			}				
 		} catch (Exception ex) {
 			//System.err.println("\n # Error loading data in the db: " + ex.getMessage());

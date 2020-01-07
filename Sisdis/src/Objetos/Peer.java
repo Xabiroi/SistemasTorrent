@@ -66,6 +66,18 @@ public class Peer extends Observable{
 		this.tiempo = System.currentTimeMillis();
 	}
 	
+	public Peer(String iP, int puerto, String identificadorSwarm, int transactionId, long connectionIdPrincipal,
+			long connectionIdSecundario, long tiempo) {
+		super();
+		IP = iP;
+		Puerto = puerto;
+		this.identificadorSwarm = identificadorSwarm;
+		this.transactionId = transactionId;
+		this.connectionIdPrincipal = connectionIdPrincipal;
+		this.connectionIdSecundario = connectionIdSecundario;
+		this.tiempo = tiempo;
+	}
+	
 
 	public long getConnectionIdPrincipal() {
 		return connectionIdPrincipal;

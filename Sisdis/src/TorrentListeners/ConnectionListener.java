@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import Objetos.Peer;
+import Sqlite.SQLiteDBManager;
 import bitTorrent.tracker.protocol.udp.ConnectRequest;
 import bitTorrent.tracker.protocol.udp.ConnectResponse;
 import bitTorrent.tracker.protocol.udp.BitTorrentUDPMessage.Action;
@@ -43,6 +44,11 @@ public class ConnectionListener {
 	    System.out.println("Action="+cr.getAction()); //CONNECT=0
 	    System.out.println("Transaction="+cr.getTransactionId()); 
 		System.out.println("Connection="+cr.getConnectionId()); 
+		
+		
+		listaPeers=SQLiteDBManager.loadPeers2();
+		
+		
 		for(Peer p:listaPeers) {
 			System.out.println("%%%%%%%%%%%%%%%%%%%%%%");
 			System.out.println("p.getConIdPr=="+p.getConnectionIdPrincipal());
@@ -69,7 +75,11 @@ public class ConnectionListener {
 					if(p.getIP().equals(reply.getAddress().toString())) {System.out.println("Misma ip intenta conectarse");encontrado=true;}	
 				}
 				
-				if(!encontrado) {listaPeers.add(new Peer(reply.getAddress().toString(),reply.getPort(),"",transactionid,newConnectionId,cr.getConnectionId()));System.out.println("NO ENCONTRADO");}
+				if(!encontrado) {
+					SQLiteDBManager.insertPeer(reply.getAddress().toString(),Integer.toString(reply.getPort()),newConnectionId,cr.getConnectionId(),transactionid,System.currentTimeMillis());
+//					listaPeers.add(new Peer(reply.getAddress().toString(),reply.getPort(),"",transactionid,newConnectionId,cr.getConnectionId()));
+					System.out.println("NO ENCONTRADO");
+					}
 
 				
 				for(Peer p:listaPeers) {
@@ -116,6 +126,8 @@ public class ConnectionListener {
 				}
 				
 			}else {
+				
+				
 				System.out.println("Entra en el else");
 				for(Peer p:listaPeers) {
 				    String address="";
@@ -148,6 +160,9 @@ public class ConnectionListener {
 	
 							p.setConnectionIdPrincipal(newConnectionId);
 							System.out.println(p.getConnectionIdPrincipal());
+							
+							System.out.println("UPDATEANDO");
+							SQLiteDBManager.updateIdAndTr(reply.getAddress().toString(),p.getConnectionIdPrincipal(),p.getConnectionIdSecundario(),p.getTransactionId(),System.currentTimeMillis());
 	
 							
 							//Mensaje de vuelta

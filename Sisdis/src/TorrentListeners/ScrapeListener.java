@@ -9,14 +9,11 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.List;
-
 import Objetos.Peer;
 import Objetos.Swarm;
 import Sqlite.SQLiteDBManager;
 import bitTorrent.tracker.protocol.udp.ScrapeRequest;
 import bitTorrent.tracker.protocol.udp.ScrapeResponse;
-import bitTorrent.tracker.protocol.udp.PeerInfo;
 import bitTorrent.tracker.protocol.udp.ScrapeInfo;
 
 public class ScrapeListener {
@@ -46,6 +43,9 @@ public class ScrapeListener {
 			ByteBuffer byteBuffer = ByteBuffer.wrap(reply.getData());
 			byteBuffer.order(ByteOrder.BIG_ENDIAN);
 						
+			
+			
+			
 			for(Peer p:listaPeers) {
 
 			    String address="/";
