@@ -27,7 +27,7 @@ public class VistaTracker {
 	private JPanel panel;
 	private ArrayList<Boolean> desconexion=new ArrayList<Boolean>(1);
 	private static ArrayList<Tracker> TrackersRedundantes=new ArrayList<Tracker>();
-	private LinkedList<Peer> PeersEnCola = new LinkedList<Peer>();
+	private LinkedList<Peer> PeersEnCola;
 	/**
 	 * Launch the application.
 	 */
@@ -68,6 +68,9 @@ public class VistaTracker {
 
 		frame.getContentPane().add(panelDePestanas);
 
+		PeersEnCola = new LinkedList<Peer>();
+		
+		
 		PanelTracker = new PanelTracker(desconexion,TrackersRedundantes);
 		panelDePestanas.addTab("Trackers", null, PanelTracker, null);
 

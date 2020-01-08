@@ -488,6 +488,42 @@ public class SQLiteDBManager {
 		return arSwarm;
 	}
 	
+	public static ArrayList<Swarm> loadSwarmPeersAnnounce(String infohash) {	
+		
+		String sqlString = "SELECT * FROM SWARM_PEER WHERE IDSWARM = ?";
+		ArrayList<Swarm> arSwarm = new ArrayList<Swarm>();
+		ArrayList<Peer> arPeer = SQLiteDBManager.loadPeers();
+		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {
+			stmt.setString(1, infohash);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			
+			while(rs.next()) {
+				ArrayList<Peer> ap = new ArrayList<Peer>();
+				
+		        String idSwarm = rs.getString("IDSWARM");
+		        String ip = rs.getString("IP");
+		        //TODO load peers con las ip de swarm_peer   una join
+		         
+		        for(Peer p:arPeer) {
+		        	if(ip.equals(p.getIP())) {
+		        		ap.add(new Peer(p.getIP(),p.getPuerto(),idSwarm));
+		        	}
+		        }
+		         
+		        arSwarm.add(new Swarm(ap,idSwarm));
+		        //System.out.println("    " + rs.getString("IDSWARM") + ".- " + rs.getString("IDPEER")+ ".- "+rs.getFloat("DESCARGADO"));
+			}		
+			
+			
+		} catch (Exception ex) {
+			//System.err.println("\n # Error loading data in the db: " + ex.getMessage());
+		}
+		
+		return arSwarm;
+	}
+	
 public static ArrayList<Swarm> loadSwarms(ArrayList<String> infoHashes) {	
 		
 		String sqlString = "SELECT * FROM SWARM_PEER WHERE IDSWARM = ?";

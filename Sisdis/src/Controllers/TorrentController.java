@@ -38,7 +38,7 @@ public class TorrentController extends Thread{
 	private AnnounceListener announceListener;
 	private ScrapeListener scrapeListener;
 
-	private LinkedList<Peer> PeersEnCola = new LinkedList<Peer>();
+	private LinkedList<Peer> PeersEnCola;
 	
 	
 	
@@ -48,14 +48,14 @@ public class TorrentController extends Thread{
 			ArrayList<Peer> peersTransactionId, ConnectionListener connectionListener,
 			AnnounceListener announceListener, ScrapeListener scrapeListener, LinkedList<Peer> peersEnCola) {
 		super();
-		IP = iP;
+		this.IP = iP;
 		this.puerto = puerto;
 		this.bucle = bucle;
 		this.peersTransactionId = peersTransactionId;
 		this.connectionListener = connectionListener;
 		this.announceListener = announceListener;
 		this.scrapeListener = scrapeListener;
-		PeersEnCola = peersEnCola;
+		this.PeersEnCola = peersEnCola;
 	}
 
 

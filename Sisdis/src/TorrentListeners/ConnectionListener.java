@@ -72,22 +72,22 @@ public class ConnectionListener {
 				
 				boolean encontrado = false;
 				for(Peer p:listaPeers) {
-					if(p.getIP().equals(reply.getAddress().toString())) {System.out.println("Misma ip intenta conectarse");encontrado=true;}	
+					if(p.getIP().equals(reply.getAddress().toString().substring(1))) {System.out.println("Misma ip intenta conectarse");encontrado=true;}	
 				}
 				
 				if(!encontrado) {
-					SQLiteDBManager.insertPeer(reply.getAddress().toString(),Integer.toString(reply.getPort()),newConnectionId,cr.getConnectionId(),transactionid,System.currentTimeMillis());
+					SQLiteDBManager.insertPeer(reply.getAddress().toString().substring(1),Integer.toString(reply.getPort()),newConnectionId,cr.getConnectionId(),transactionid,System.currentTimeMillis());
 //					listaPeers.add(new Peer(reply.getAddress().toString(),reply.getPort(),"",transactionid,newConnectionId,cr.getConnectionId()));
 					System.out.println("NO ENCONTRADO");
 					}
 
-				
-				for(Peer p:listaPeers) {
-					System.out.println("/////////////////////////");
-					System.out.println("p.getConIdPr=="+p.getConnectionIdPrincipal());
-					System.out.println("p.getConIdSc=="+p.getConnectionIdSecundario());
-					System.out.println("Addr=="+p.getIP());
-				}
+//				
+//				for(Peer p:listaPeers) {
+//					System.out.println("/////////////////////////");
+//					System.out.println("p.getConIdPr=="+p.getConnectionIdPrincipal());
+//					System.out.println("p.getConIdSc=="+p.getConnectionIdSecundario());
+//					System.out.println("Addr=="+p.getIP());
+//				}
 				//Mensaje de vuelta FIXME
 				//###########################
 //				String serverIP = this.getIP();
@@ -130,7 +130,7 @@ public class ConnectionListener {
 				
 				System.out.println("Entra en el else");
 				for(Peer p:listaPeers) {
-				    String address="";
+				    String address="/";
 				    address=address+p.getIP();
 				    InetAddress add=reply.getAddress();
 				    String aadd=add.toString();
@@ -162,7 +162,7 @@ public class ConnectionListener {
 							System.out.println(p.getConnectionIdPrincipal());
 							
 							System.out.println("UPDATEANDO");
-							SQLiteDBManager.updateIdAndTr(reply.getAddress().toString(),p.getConnectionIdPrincipal(),p.getConnectionIdSecundario(),p.getTransactionId(),System.currentTimeMillis());
+							SQLiteDBManager.updateIdAndTr(reply.getAddress().toString().substring(1),p.getConnectionIdPrincipal(),p.getConnectionIdSecundario(),p.getTransactionId(),System.currentTimeMillis());
 	
 							
 							//Mensaje de vuelta

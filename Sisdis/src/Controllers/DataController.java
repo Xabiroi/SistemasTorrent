@@ -33,13 +33,13 @@ public class DataController extends Thread{
 	private static ArrayList<EstadosBaseDeDatos> estadoActual = new ArrayList<EstadosBaseDeDatos>(1);
 	private ArrayList<Boolean> cambio=new ArrayList<Boolean>(1);
 	private static ArrayList<Integer> ContadorVersionBD=new ArrayList<Integer>(1);
-	private LinkedList<Peer> PeersEnCola = new LinkedList<Peer>();
+	private LinkedList<Peer> PeersEnCola;
 	private ArrayList<Boolean> desconexion=new ArrayList<Boolean>(1);
 	private SQLiteDBManager manager = new SQLiteDBManager("bd/test.db");
 
 	public DataController(ArrayList<Tracker> trackersRedundantes, ArrayList<Swarm> enjambres,
 			QueueFileSender enviadorBD, QueueFileReceiver recibidorBD, BDTopicPublisher topicActualizarPublisher,
-			BDTopicSubscriber topicActualizarSubscriber, ArrayList<EstadosBaseDeDatos> estadoActual, ArrayList<Boolean> cambio,ArrayList<Boolean> desconexion) {
+			BDTopicSubscriber topicActualizarSubscriber, ArrayList<EstadosBaseDeDatos> estadoActual, ArrayList<Boolean> cambio,ArrayList<Boolean> desconexion, LinkedList<Peer> peersEnCola) {
 		super();
 		TrackersRedundantes = trackersRedundantes;
 		Enjambres = enjambres;
@@ -49,45 +49,26 @@ public class DataController extends Thread{
 		DataController.topicActualizarSubscriber = topicActualizarSubscriber;
 		DataController.estadoActual = estadoActual;
 		this.cambio = cambio;
+		this.PeersEnCola = peersEnCola;
 		this.setDesconexion(desconexion);
 	}
 
 	//FIXME eliminar la figura de enjambre
 	public void comprobar() {
-//		System.out.println("Enjambres=="+Enjambres);
+		synchronized(PeersEnCola) {
+		System.out.println("PEERSENCOLA EN DATACONTROLLER==="+PeersEnCola);
 		if(!PeersEnCola.isEmpty()) {
 //			System.out.println("estadoActual="+estadoActual.get(0));
 			System.out.println("PEER DETECTADO");
 			cambio.set(0, true);
 			
-			
-			
-//			//FIXME pasar a datacontroller
-//			manager.insertPeer(Integer.toString(ar.getPeerInfo().getIpAddress()), Integer.toString(ar.getPeerInfo().getPort()));
-//			//Cambiar la base de datos y poner todo a int
-////			sqlManager.insertPeer(Integer.toString(ar.getPeerInfo().getIpAddress()), Integer.toString(ar.getPeerInfo().getPort()));
-//			
-//			//TODO hacer alguna comporbacion de si existe en el metodo o no
-//			manager.insertSwarm(ar.getHexInfoHash(),(int) ((int) ar.getDownloaded()+ar.getLeft()));
-////			sqlManager.insertSwarm(ar.getHexInfoHash(), ar.getDownloaded());
-//			
-//			if(ar.getLeft()==0) {
-//				manager.insertSwarmPeer(ar.getHexInfoHash(), Integer.toString(ar.getPeerInfo().getIpAddress()), ar.getDownloaded());
-////				sqlManager.insertSwarmPeer(ar.getHexInfoHash(), ar.getPeerInfo().getIpAddress(), ar.getDownloaded());
-//			}
-//			else if (ar.getLeft()>0) {
-//				manager.insertSwarmPeer(ar.getHexInfoHash(), Integer.toString(ar.getPeerInfo().getIpAddress()), ar.getLeft());
-////				sqlManager.insertSwarmPeer(ar.getHexInfoHash(), ar.getPeerInfo().getIpAddress(), ar.getLeft());
-//			}
-//			
-
-
+			System.out.println("Estado actual="+estadoActual.get(0));
 			if(estadoActual.get(0)==EstadosBaseDeDatos.Actualizacion) {
 				Peer aux = PeersEnCola.poll();
 //				boolean swarmDisponible=false;
 				
 //				manager.insertPeer(aux.getIP(),Integer.toString(aux.getPuerto())); //FIXME esto en connectionListener(?)
-				
+				System.out.println("INSERTANDO");
 				manager.insertSwarm(aux.getIdentificadorSwarm(),(int) (aux.getLeft()+aux.getDescargado()));
 				
 				if(aux.getLeft()==0) {
@@ -125,8 +106,9 @@ public class DataController extends Thread{
 			}
 		}
 		else {
-//			System.out.println("HA LLEGADO AQUI Y HA CAMBIADO A FALSO");
+			System.out.println("HA LLEGADO AQUI Y HA CAMBIADO A FALSO");
 			cambio.set(0, false);}
+		}
 	}
 	
 	public void run() {

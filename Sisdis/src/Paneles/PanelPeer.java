@@ -35,7 +35,7 @@ public class PanelPeer extends JPanel{
 	private static ArrayList<EstadosBaseDeDatos> estadoActual = new ArrayList<EstadosBaseDeDatos>(1);
 	private ArrayList<Boolean> cambio=new ArrayList<Boolean>(1);
 	private static ArrayList<Integer> ContadorVersionBD=new ArrayList<Integer>(1);
-	private LinkedList<Peer> PeersEnCola = new LinkedList<Peer>();
+	private LinkedList<Peer> PeersEnCola;
 	private SQLiteDBManager manager = new SQLiteDBManager("bd/test.db");//FIXME cambio al nombre con timestamp o algo asi
 	private static DataController DC;
 	private ArrayList<Boolean> desconexion=new ArrayList<Boolean>(1);
@@ -90,14 +90,14 @@ public class PanelPeer extends JPanel{
 		ArrayList<EstadosBaseDeDatos> estadosBaseDeDatos= new ArrayList<EstadosBaseDeDatos>();
 		estadosBaseDeDatos.add(0, EstadosBaseDeDatos.Esperando);
 		
-		topicActualizarPublisher = new BDTopicPublisher(ContadorVersionBD,estadosBaseDeDatos,Enjambres,cambio,PeersEnCola,desconexion);
+		topicActualizarPublisher = new BDTopicPublisher(ContadorVersionBD,estadosBaseDeDatos,Enjambres,cambio,peersEnCola,desconexion);
 		topicActualizarSubscriber = new BDTopicSubscriber(ContadorVersionBD, estadosBaseDeDatos,TrackersRedundantes,desconexion);
 
 		//Borrado de la base de datos al iniciar
 
 		
 		
-		DC = new DataController(TrackersRedundantes, Enjambres, enviadorBD, recibidorBD, topicActualizarPublisher, topicActualizarSubscriber, estadosBaseDeDatos,cambio,desconexion);
+		DC = new DataController(TrackersRedundantes, Enjambres, enviadorBD, recibidorBD, topicActualizarPublisher, topicActualizarSubscriber, estadosBaseDeDatos,cambio,desconexion,peersEnCola);
 
 		topicActualizarSubscriber.start();
 		topicActualizarPublisher.start();

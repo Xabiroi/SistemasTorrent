@@ -42,7 +42,7 @@ public class PanelConfiguracion extends JPanel {
 	private ScrapeListener scrapeListener;
 	
 	private TorrentController torrentController;
-	private LinkedList<Peer> PeersEnCola = new LinkedList<Peer>();
+	private LinkedList<Peer> PeersEnCola;
 
 	/**
 	 * Create the panel.
@@ -62,10 +62,10 @@ public class PanelConfiguracion extends JPanel {
 		bucle.add(true);
 		
 		connectionListener = new ConnectionListener(listaPeers, IP, puerto);
-		announceListener = new AnnounceListener(listaPeers, IP, puerto,PeersEnCola);
+		announceListener = new AnnounceListener(listaPeers, IP, puerto,peersEnCola);
 		scrapeListener = new ScrapeListener(listaPeers, IP, puerto);
 		
-		torrentController = new TorrentController(IP, puerto, bucle, listaPeers, connectionListener, announceListener, scrapeListener,PeersEnCola);
+		torrentController = new TorrentController(IP, puerto, bucle, listaPeers, connectionListener, announceListener, scrapeListener,peersEnCola);
 		torrentController.start();
 		
 		

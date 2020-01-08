@@ -88,7 +88,9 @@ public class BDTopicPublisher extends Thread{
 				  estadoActual.set(0,EstadosBaseDeDatos.Sugerencia);
 				break;
 			  case Sugerencia:
-//				  	System.out.println("Bucle cambio Sugerencia=="+cambio.get(0).booleanValue());
+				  	System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
+				  	System.out.println("Bucle cambio Sugerencia=="+cambio.get(0).booleanValue());
+				  	System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
 					ObjectMessage objectMessage = topicSession.createObjectMessage();
 					
 					Peer peer = PeersEnCola.getFirst();
@@ -110,7 +112,9 @@ public class BDTopicPublisher extends Thread{
 
 			    break;
 			  case Preparacion:
-
+				  	System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
+				  	System.out.println("Caso Preparacion");
+				  	System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
 					ObjectMessage objectMessage2 = topicSession.createObjectMessage();
 					objectMessage2.setObject(new PreparacionActualizacion());
 					
@@ -129,6 +133,9 @@ public class BDTopicPublisher extends Thread{
 				  
 			    break;
 			  case Actualizacion:
+					  System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
+					  System.out.println("ACTUALIZACION");
+					  System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
 					ObjectMessage objectMessage3 = topicSession.createObjectMessage();
 					
 					//obtener id de la version de bd
