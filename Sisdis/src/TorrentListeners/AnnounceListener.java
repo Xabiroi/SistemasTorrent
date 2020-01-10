@@ -15,6 +15,7 @@ import Objetos.Peer;
 import Objetos.Swarm;
 import Sqlite.SQLiteDBManager;
 import bitTorrent.tracker.protocol.udp.PeerInfo;
+import bitTorrent.util.ByteUtils;
 import bitTorrent.tracker.protocol.udp.AnnounceRequest;
 import bitTorrent.tracker.protocol.udp.AnnounceResponse;
 
@@ -185,11 +186,16 @@ public class AnnounceListener {
 									System.out.println("ar.getHexInfoHash()=="+ar.getHexInfoHash());
 									if(pe.getIdentificadorSwarm().equals(ar.getHexInfoHash())) {
 										System.out.println("Dentro del if");
-										String dir = pe.getIP().replaceAll("[^0-9]","");
-										int ip = Integer.parseInt(dir);
+										
+										
+//										String dir = pe.getIP().replaceAll("[^0-9]","");
+//										int ip = Integer.parseInt(dir);
+										int ip=ByteUtils.ipAddressToInt(pe.getIP());
 										PeerInfo pinf= new PeerInfo();
 										pinf.setIpAddress(ip);
-										pinf.setPort((short)pe.getPuerto());
+										System.out.println("EL PUERTO=="+pe.getPuerto());
+										System.out.println("EL PUERTO (short)=="+(short)pe.getPuerto());
+										pinf.setPort(pe.getPuerto());
 										peers.add(pinf);
 									}
 								}
