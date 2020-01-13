@@ -55,8 +55,29 @@ public class DataController extends Thread{
 
 	//FIXME eliminar la figura de enjambre
 	public void comprobar() {
+		long time= System.currentTimeMillis();
+		ArrayList<Peer> arrayQuitar = SQLiteDBManager.loadPeers2();
+		if(!arrayQuitar.isEmpty()) {
+		System.out.println("ArrayQuitar=="+arrayQuitar);
+		System.out.println("Tiempo peer=="+arrayQuitar.get(0).getTiempo());
+		System.out.println("Tiempo ahora=="+time);
+		System.out.println("Tiempo resta=="+(time-arrayQuitar.get(0).getTiempo()));
+		}
+		for(Peer p:arrayQuitar) {
+			if(time-p.getTiempo()>120000) {
+				System.out.println("BORRANDO EL PEER Y SWARM PEER");
+				SQLiteDBManager.deleteSwarmPeer(p.getIP());
+				SQLiteDBManager.deletePeer(p.getIP());
+				System.out.println("BD VACIADA="+SQLiteDBManager.loadPeers2());
+			}
+		}
+		
+		
+		
+		
+		
 		synchronized(PeersEnCola) {
-		System.out.println("PEERSENCOLA EN DATACONTROLLER==="+PeersEnCola);
+//		System.out.println("PEERSENCOLA EN DATACONTROLLER==="+PeersEnCola);
 		if(!PeersEnCola.isEmpty()) {
 //			System.out.println("estadoActual="+estadoActual.get(0));
 			System.out.println("PEER DETECTADO");
@@ -79,34 +100,11 @@ public class DataController extends Thread{
 					manager.insertSwarmPeer(aux.getIdentificadorSwarm(), aux.getIP(), aux.getLeft());
 
 				}
-				
-//				for(Swarm swarm:Enjambres) {
-//
-//					if(aux.getIdentificadorSwarm().equals(swarm.getIdentificadorSwarm())) {
-//						swarm.getListaPeers().add(aux);
-//						manager.insertPeer(aux.getIP(), Integer.toString(aux.getPuerto()));
-//						//TODO habria que meter los hashes de archivos aqui en vez de las ids
-//						manager.insertSwarmPeer(swarm.getIdentificadorSwarm(),aux.getIP(),0);//FIXME cambiar el 0 por el tamanyo del archivo del torrent
-//						swarmDisponible=true;
-//					}
-//
-//				}
-				//Enjambres.add(PeersEnCola.poll());
-//				if(!swarmDisponible) {
-////					System.out.println("Entras en nuevo swarm");
-//					ArrayList<Peer> ListaPeers= new ArrayList<Peer>();
-//					ListaPeers.add(aux);
-//					Enjambres.add(new Swarm(ListaPeers,aux.getIdentificadorSwarm()));	
-//					
-//					manager.insertPeer(aux.getIP(), Integer.toString(aux.getPuerto()));
-//
-//					manager.insertSwarm(aux.getIdentificadorSwarm(), 0);//FIXME cambiar el 0 por el tamanyo del archivo del torrent
-//					manager.insertSwarmPeer(aux.getIdentificadorSwarm(),aux.getIP(),0);//FIXME cambiar el 0 por el tamanyo del archivo del torrent
-//				}
+
 			}
 		}
 		else {
-			System.out.println("HA LLEGADO AQUI Y HA CAMBIADO A FALSO");
+//			System.out.println("HA LLEGADO AQUI Y HA CAMBIADO A FALSO");
 			cambio.set(0, false);}
 		}
 	}

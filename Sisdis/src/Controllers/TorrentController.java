@@ -79,6 +79,10 @@ public class TorrentController extends Thread{
 						DatagramPacket reply = new DatagramPacket(buffer, buffer.length, group, serverPort);
 
 						socket.receive(reply);		
+						//FIXME????? Se puede obtener el puerto por el que se ha enviado y hacer a la inversa con variables
+//						System.out.println("reply.getPort()=="+reply.getPort());
+//						System.out.println("reply.getSocketAddress()=="+reply.getSocketAddress());
+//						System.out.println("reply.getAddress().getHostAddress()=="+reply.getAddress().getHostAddress());
 
 						ByteBuffer byteBuffer = ByteBuffer.wrap(reply.getData());
 						byteBuffer.order(ByteOrder.BIG_ENDIAN);

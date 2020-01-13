@@ -257,6 +257,25 @@ public class SQLiteDBManager {
 			//System.err.println("\n # Error cleaning the db: " + ex.getMessage());
 		}
 	}
+	
+	public static void deletePeer(String ip) {	
+		String sqlString = "DELETE FROM PEER WHERE IP = ?";
+		
+		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {	
+			stmt.setString(1, ip);
+			int deleted = stmt.executeUpdate();
+			
+			if (deleted > 0) {
+				//System.out.println("\n - '" + deleted + "' peers were deleted.");
+				con.commit();
+			} else {
+				//System.out.println("\n - None peer was deleted.");
+				con.rollback();
+			}				
+		} catch (Exception ex) {
+			//System.err.println("\n # Error cleaning the db: " + ex.getMessage());
+		}
+	}
 //##########################################################################
 	
 	public void insertSwarm(String idSwarm, int tamanyo) {	
@@ -377,6 +396,8 @@ public class SQLiteDBManager {
 			//System.err.println("\n # Error cleaning the db: " + ex.getMessage());
 		}
 	}
+	
+	
 	
 	//##################################################################################
 	public void insertSwarmPeer(String idSwarm, String ip,float descargado) {	
@@ -581,6 +602,24 @@ public static ArrayList<Swarm> loadSwarms(ArrayList<String> infoHashes) {
 		}
 	}
 	
+	public static void deleteSwarmPeer(String ip) {	
+		String sqlString = "DELETE FROM SWARM_PEER WHERE IP = ?";
+		
+		try (PreparedStatement stmt = con.prepareStatement(sqlString)) {	
+			stmt.setString(1, ip);
+			int deleted = stmt.executeUpdate();
+			
+			if (deleted > 0) {
+				//System.out.println("\n - '" + deleted + "' peers were deleted.");
+				con.commit();
+			} else {
+				//System.out.println("\n - None peer was deleted.");
+				con.rollback();
+			}				
+		} catch (Exception ex) {
+			//System.err.println("\n # Error cleaning the db: " + ex.getMessage());
+		}
+	}
 	//##################################################################################
 
 }
