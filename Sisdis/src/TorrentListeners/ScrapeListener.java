@@ -73,8 +73,8 @@ public class ScrapeListener {
 								//Mensaje de vuelta FIXME
 								//###########################
 							
-								String serverIP = "192.168.0.11"; //Elegir las ips bien
-								int serverPort = 8000;
+							String serverIP = reply.getAddress().toString().substring(1); 
+							int serverPort = 7001;
 							
 								try (DatagramSocket udpSocket = new DatagramSocket()) {
 		
