@@ -84,8 +84,8 @@ public class AnnounceListener {
 					else if(ar.getTransactionId()==p.getConnectionIdPrincipal() || ar.getTransactionId()==p.getConnectionIdSecundario()) {System.out.println("ANNListener 1");}
 					else if(ar.getTransactionId()==p.getTransactionId()) {
 						
-//						System.out.println("p.getTiempo()+interval-3000=="+(p.getTiempo()+interval-3000));
-//						System.out.println("p.getTiempo()+interval+3000=="+(p.getTiempo()+interval+3000));
+						System.out.println("p.getTiempo()+interval-5000=="+(p.getTiempo()+interval-5000));
+						System.out.println("p.getTiempo()+interval+5000=="+(p.getTiempo()+interval+5000));
 						System.out.println("System.currentTimeMillis()=="+System.currentTimeMillis());
 						//TODO como comprobar o gestioanr en la bd
 						if((p.getTiempo()+interval-5000)<System.currentTimeMillis() && (p.getTiempo()+interval+5000)>System.currentTimeMillis()) {
