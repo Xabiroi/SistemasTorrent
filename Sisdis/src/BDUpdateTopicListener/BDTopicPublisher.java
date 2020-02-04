@@ -162,24 +162,28 @@ public class BDTopicPublisher extends Thread{
 			  default:
 			    // code block
 			}
-
+			} catch (Exception e) {
+				System.err.println("# BD Publisher TopicTest Error: " + e.getMessage());
+				}
+		}
 			
 			
 
-		} catch (Exception e) {
-			System.err.println("# BD Publisher TopicTest Error: " + e.getMessage());
-		} finally {
-			try {
-				//Close resources
-				topicPublisher.close();
-				topicSession.close();
-				topicConnection.close();
-				System.out.println("- BD Publisher Topic resources closed!");				
-			} catch (Exception ex) {
-				System.err.println("# BD Publisher TopicTest Error: " + ex.getMessage());
-			}			
-		}
-		}
+//		} catch (Exception e) {
+//			System.err.println("# BD Publisher TopicTest Error: " + e.getMessage());
+//		}
+//		finally {
+//			try {
+//				//Close resources
+//				topicPublisher.close();
+//				topicSession.close();
+//				topicConnection.close();
+//				System.out.println("- BD Publisher Topic resources closed!");				
+//			} catch (Exception ex) {
+//				System.err.println("# BD Publisher TopicTest Error: " + ex.getMessage());
+//			}			
+//		}
+		
 		
 	}
 	
