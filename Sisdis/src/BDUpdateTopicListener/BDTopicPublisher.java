@@ -76,14 +76,14 @@ public class BDTopicPublisher extends Thread{
 			//cambio a un numero limitado para comprobar que desconecta al usuario
 			
 			while(desconexion.get(0)) {
-				if(cambio.get(0).booleanValue()==false) {}
-				else {
+
+
 				switch(estadoActual.get(0)) {
 				  case Esperando:
 	//				  System.out.println("Bucle cambio esperando=="+cambio.get(0).booleanValue());
 					  while(!cambio.get(0).booleanValue()) {					  
 							try {
-								Thread.sleep(100);
+								Thread.sleep(500);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}	
@@ -151,6 +151,7 @@ public class BDTopicPublisher extends Thread{
 						objectMessage3.setJMSPriority(1);		
 						
 						topicPublisher.publish(objectMessage3);
+						cambio.set(0, false);
 						//Publish the Message
 	//					System.out.println("- Actualizacion published in the Topic!");
 						try {
@@ -163,8 +164,8 @@ public class BDTopicPublisher extends Thread{
 					  break;
 				  default:
 				    // code block
-			}}
-			} Thread.sleep(1000);
+			}
+			}
 		}catch (Exception e) {
 			System.err.println("# BD Publisher TopicTest Error: " + e.getMessage());
 			}
