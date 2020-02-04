@@ -58,10 +58,10 @@ public class DataController extends Thread{
 		long time= System.currentTimeMillis();
 		ArrayList<Peer> arrayQuitar = SQLiteDBManager.loadPeers2();
 		if(!arrayQuitar.isEmpty()) {
-		System.out.println("ArrayQuitar=="+arrayQuitar);
-		System.out.println("Tiempo peer=="+arrayQuitar.get(0).getTiempo());
-		System.out.println("Tiempo ahora=="+time);
-		System.out.println("Tiempo resta=="+(time-arrayQuitar.get(0).getTiempo()));
+//		System.out.println("ArrayQuitar=="+arrayQuitar);
+//		System.out.println("Tiempo peer=="+arrayQuitar.get(0).getTiempo());
+//		System.out.println("Tiempo ahora=="+time);
+//		System.out.println("Tiempo resta=="+(time-arrayQuitar.get(0).getTiempo()));
 		}
 		for(Peer p:arrayQuitar) {
 			if(time-p.getTiempo()>120000) {
@@ -84,6 +84,7 @@ public class DataController extends Thread{
 			cambio.set(0, true);
 			
 			System.out.println("Estado actual="+estadoActual.get(0));
+			System.out.println("Cambio="+getCambio());
 			if(estadoActual.get(0)==EstadosBaseDeDatos.Actualizacion) {
 				Peer aux = PeersEnCola.poll();
 //				boolean swarmDisponible=false;

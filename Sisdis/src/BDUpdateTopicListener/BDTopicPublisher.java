@@ -48,8 +48,9 @@ public class BDTopicPublisher extends Thread{
 	}
 	
 	public void run() {
+		while(desconexion.get(0)) {
 		try {
-
+			
 			//JNDI Initial Context
 			Context ctx = new InitialContext();
 		
@@ -73,7 +74,7 @@ public class BDTopicPublisher extends Thread{
 			
 
 			//cambio a un numero limitado para comprobar que desconecta al usuario
-			while(desconexion.get(0)) {
+			
 		
 			switch(estadoActual.get(0)) {
 			  case Esperando:
@@ -160,7 +161,7 @@ public class BDTopicPublisher extends Thread{
 			    // code block
 			}
 
-			}
+			
 			
 
 		} catch (Exception e) {
@@ -176,7 +177,7 @@ public class BDTopicPublisher extends Thread{
 				System.err.println("# BD Publisher TopicTest Error: " + ex.getMessage());
 			}			
 		}
-		
+		}
 		
 	}
 	

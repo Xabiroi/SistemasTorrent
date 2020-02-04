@@ -178,7 +178,7 @@ public class AnnounceListener {
 								ArrayList<Swarm> swarmRaw2 = SQLiteDBManager.loadSwarmPeersAnnounce(ar.getHexInfoHash());
 								ArrayList<Peer> peersRaw2 = swarmRaw2.get(0).getListaPeers();
 								System.out.println("swarmRaw2=="+swarmRaw2);
-								System.out.println("Peersraw2=="+peersRaw2.get(0));
+								System.out.println("Peersraw2=="+peersRaw2.get(0).getIP());
 								
 //								System.err.println("LLEGA HASTA AQUI");
 								//for de peers para obtener los peerinfo y meterlos a la lista
@@ -187,7 +187,7 @@ public class AnnounceListener {
 									System.out.println("pe.getIdentificadorSwarm()=="+pe.getIdentificadorSwarm());
 									System.out.println("ar.getHexInfoHash()=="+ar.getHexInfoHash());
 									if(pe.getIdentificadorSwarm().equals(ar.getHexInfoHash())) {
-										System.out.println("Dentro del if");
+//										System.out.println("Dentro del if");
 										
 										
 //										String dir = pe.getIP().replaceAll("[^0-9]","");
@@ -195,8 +195,8 @@ public class AnnounceListener {
 										int ip=ByteUtils.ipAddressToInt(pe.getIP());
 										PeerInfo pinf= new PeerInfo();
 										pinf.setIpAddress(ip);
-										System.out.println("EL PUERTO=="+pe.getPuerto());
-										System.out.println("EL PUERTO (short)=="+(short)pe.getPuerto());
+//										System.out.println("EL PUERTO=="+pe.getPuerto());
+//										System.out.println("EL PUERTO (short)=="+(short)pe.getPuerto());
 										pinf.setPort(pe.getPuerto());
 										peers.add(pinf);
 									}
