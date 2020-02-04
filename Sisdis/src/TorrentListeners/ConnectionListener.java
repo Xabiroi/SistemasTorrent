@@ -76,6 +76,14 @@ public class ConnectionListener {
 				}
 				
 				if(!encontrado) {
+					System.out.println("¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬");
+					System.out.println("¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬");
+					System.out.println("reply.getAddress().toString().substring(1)=="+reply.getAddress().toString().substring(1));
+					System.out.println("Integer.toString(reply.getPort())=="+Integer.toString(reply.getPort()));
+					System.out.println("newConnectionId=="+newConnectionId);
+					System.out.println("¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬");
+					System.out.println("¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬");
+					
 					SQLiteDBManager.insertPeer(reply.getAddress().toString().substring(1),Integer.toString(reply.getPort()),newConnectionId,cr.getConnectionId(),transactionid,System.currentTimeMillis());
 //					listaPeers.add(new Peer(reply.getAddress().toString(),reply.getPort(),"",transactionid,newConnectionId,cr.getConnectionId()));
 					System.out.println("NO ENCONTRADO");
