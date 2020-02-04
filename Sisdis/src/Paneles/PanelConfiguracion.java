@@ -51,7 +51,6 @@ public class PanelConfiguracion extends JPanel {
 		//Creacion de los atributos
 		//############################
 		IP="228.5.6.7"; //FIXME hardcodeado
-		String IP2="192.168.0.11";
 		puerto=new ArrayList<Integer>(1);
 		puerto.add(7000); //FIXME hardcodeado
 		

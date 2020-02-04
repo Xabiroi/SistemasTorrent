@@ -93,8 +93,9 @@ public class ConnectionListener {
 //				String serverIP = this.getIP();
 //				int serverPort = this.getPuerto().get(0);
 				
-				String serverIP = "192.168.0.11";
-				int serverPort = 8000;
+//				String serverIP = "192.168.0.11";
+				String serverIP = reply.getAddress().toString().substring(1); 
+				int serverPort = 7001;
 				if(encontrado) {}
 				else {
 				try (DatagramSocket udpSocket = new DatagramSocket()) {
@@ -170,8 +171,8 @@ public class ConnectionListener {
 //								String serverIP = this.getIP();
 //								int serverPort = this.getPuerto().get(0);
 							
-							String serverIP = "192.168.0.11";
-							int serverPort = 8000;
+							String serverIP = reply.getAddress().toString().substring(1); 
+							int serverPort = 7001;
 	
 							
 							try (DatagramSocket udpSocket = new DatagramSocket()) {

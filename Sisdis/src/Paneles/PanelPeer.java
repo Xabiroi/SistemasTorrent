@@ -109,9 +109,8 @@ public class PanelPeer extends JPanel{
 		//####################################
 		Thread thread = new Thread(){
 		    public void run(){
-		    	int loop=0;
-		    	while(loop<60) {
-		    		ArrayList<Peer> auxPeer=manager.loadPeers();
+		    	while(desconexion.get(0)) {
+		    		ArrayList<Peer> auxPeer=SQLiteDBManager.loadPeers();
 		    		ArrayList<Swarm> auxSwarm=manager.loadSwarms();
 		    		
 		    		for(Swarm swarm:auxSwarm) {
@@ -139,8 +138,6 @@ public class PanelPeer extends JPanel{
 		    		
 		    		tree.repaint();
 		    		
-		    		//
-		    		loop++;
 		    		
 		    		try {
 						Thread.sleep(1000);
