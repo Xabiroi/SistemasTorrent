@@ -74,19 +74,19 @@ public class AnnounceListener {
 
 		    
 			if(address.equals(aadd)){
-				System.out.println("Address equal");
+//				System.out.println("Address equal");
 				if(ar.getConnectionId()==p.getConnectionIdPrincipal() || ar.getConnectionId()==p.getConnectionIdSecundario()) {
-					System.out.println("ConnectionId comprobado");
-					System.out.println("ar.getTransactionId()=="+ar.getTransactionId());
-					System.out.println("p.getTransactionId()=="+p.getTransactionId());
+//					System.out.println("ConnectionId comprobado");
+//					System.out.println("ar.getTransactionId()=="+ar.getTransactionId());
+//					System.out.println("p.getTransactionId()=="+p.getTransactionId());
 					
 					if(ar.getConnectionId()==p.getTransactionId()) {System.err.println("ANNListener 0");}
 					else if(ar.getTransactionId()==p.getConnectionIdPrincipal() || ar.getTransactionId()==p.getConnectionIdSecundario()) {System.out.println("ANNListener 1");}
 					else if(ar.getTransactionId()==p.getTransactionId()) {
 						
-						System.out.println("p.getTiempo()+interval-3000=="+(p.getTiempo()+interval-3000));
-						System.out.println("p.getTiempo()+interval+3000=="+(p.getTiempo()+interval+3000));
-						System.out.println("System.currentTimeMillis()=="+System.currentTimeMillis());
+//						System.out.println("p.getTiempo()+interval-3000=="+(p.getTiempo()+interval-3000));
+//						System.out.println("p.getTiempo()+interval+3000=="+(p.getTiempo()+interval+3000));
+//						System.out.println("System.currentTimeMillis()=="+System.currentTimeMillis());
 						//TODO como comprobar o gestioanr en la bd
 						if((p.getTiempo()+interval-5000)<System.currentTimeMillis() && (p.getTiempo()+interval+5000)>System.currentTimeMillis()) {
 
@@ -95,7 +95,7 @@ public class AnnounceListener {
 							System.out.println("LA IP AR=="+ar.getPeerInfo().getStringIpAddress());
 							SQLiteDBManager.updateTiempo(reply.getAddress().toString(),ar.getConnectionId(),System.currentTimeMillis());
 							
-							System.out.println("ACTUALIZA EL TIEMPO");
+//							System.out.println("ACTUALIZA EL TIEMPO");
 
 							
 							System.out.println("INFOHASH=="+ar.getHexInfoHash());
@@ -103,11 +103,11 @@ public class AnnounceListener {
 							ArrayList<Peer> peersRaw = new ArrayList<Peer>();
 							if(!swarmRaw.isEmpty()) {						
 							
-								System.out.println("ANTES DEL GET");
+//								System.out.println("ANTES DEL GET");
 							
 								peersRaw = swarmRaw.get(0).getListaPeers();
 								
-								System.out.println("EXplota porque no hay posicion 0 porque no se a anyadido el peer en todo el proceso");
+//								System.out.println("EXplota porque no hay posicion 0 porque no se a anyadido el peer en todo el proceso");
 								
 								boolean encontrado=false;
 								for(Peer peer:swarmRaw.get(0).getListaPeers()) {
@@ -145,7 +145,7 @@ public class AnnounceListener {
 							}
 							}
 							
-							System.out.println("HA SALIDO DEL BUCLE (ACTUALIZACION)");
+//							System.out.println("HA SALIDO DEL BUCLE (ACTUALIZACION)");
 							//Mensaje de vuelta FIXME
 							//###########################
 						
@@ -178,9 +178,9 @@ public class AnnounceListener {
 								ArrayList<Swarm> swarmRaw2 = SQLiteDBManager.loadSwarmPeersAnnounce(ar.getHexInfoHash());
 								ArrayList<Peer> peersRaw2 = swarmRaw2.get(0).getListaPeers();
 								System.out.println("swarmRaw2=="+swarmRaw2);
-								System.out.println("Peersraw2=="+peersRaw2);
+								System.out.println("Peersraw2=="+peersRaw2.get(0));
 								
-								System.err.println("LLEGA HASTA AQUI");
+//								System.err.println("LLEGA HASTA AQUI");
 								//for de peers para obtener los peerinfo y meterlos a la lista
 								for(Peer pe:peersRaw2) {
 									System.out.println("Dentro del bucle");
@@ -202,7 +202,7 @@ public class AnnounceListener {
 									}
 								}
 								
-								System.out.println("POST FOR");
+//								System.out.println("POST FOR");
 								
 								int seeders=0;
 								int leechers=0;
@@ -213,7 +213,7 @@ public class AnnounceListener {
 									seeders++;
 								}
 								
-								System.out.println("POST SEGUNDO FOR");
+//								System.out.println("POST SEGUNDO FOR");
 	
 								//TODO contar seeders y leechers
 								//hacer set de la lista y enviar
@@ -232,7 +232,7 @@ public class AnnounceListener {
 								announceResponse.setSeeders(seeders);
 								announceResponse.setPeers(peers);
 								
-								System.out.println("CREACION DEL RESPONSE");
+//								System.out.println("CREACION DEL RESPONSE");
 								//#############################
 								byte[] requestBytes = announceResponse.getBytes();			
 								DatagramPacket packet = new DatagramPacket(requestBytes, requestBytes.length, serverHost, serverPort);

@@ -69,7 +69,7 @@ public class TorrentController extends Thread{
 				try (MulticastSocket socket = new MulticastSocket(serverPort)) {
 					System.out.println("ServerIP="+serverIP);
 					InetAddress group = InetAddress.getByName(serverIP);
-					socket.setNetworkInterface(getActiveInterface());
+//					socket.setNetworkInterface(getActiveInterface());
 					socket.joinGroup(group);	
 				
 					while(this.getBucle().get(0)) {
