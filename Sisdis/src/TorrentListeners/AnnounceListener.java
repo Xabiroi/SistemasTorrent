@@ -74,9 +74,9 @@ public class AnnounceListener {
 
 		    
 			if(address.equals(aadd)){
-//				System.out.println("Address equal");
+				System.out.println("Address equal");
 				if(ar.getConnectionId()==p.getConnectionIdPrincipal() || ar.getConnectionId()==p.getConnectionIdSecundario()) {
-//					System.out.println("ConnectionId comprobado");
+					System.out.println("ConnectionId comprobado");
 //					System.out.println("ar.getTransactionId()=="+ar.getTransactionId());
 //					System.out.println("p.getTransactionId()=="+p.getTransactionId());
 					
@@ -86,7 +86,7 @@ public class AnnounceListener {
 						
 //						System.out.println("p.getTiempo()+interval-3000=="+(p.getTiempo()+interval-3000));
 //						System.out.println("p.getTiempo()+interval+3000=="+(p.getTiempo()+interval+3000));
-//						System.out.println("System.currentTimeMillis()=="+System.currentTimeMillis());
+						System.out.println("System.currentTimeMillis()=="+System.currentTimeMillis());
 						//TODO como comprobar o gestioanr en la bd
 						if((p.getTiempo()+interval-5000)<System.currentTimeMillis() && (p.getTiempo()+interval+5000)>System.currentTimeMillis()) {
 
