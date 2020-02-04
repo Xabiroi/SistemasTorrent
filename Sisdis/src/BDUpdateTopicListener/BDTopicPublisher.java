@@ -92,25 +92,27 @@ public class BDTopicPublisher extends Thread{
 				  	System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
 				  	System.out.println("Bucle cambio Sugerencia=="+cambio.get(0).booleanValue());
 				  	System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
-					ObjectMessage objectMessage = topicSession.createObjectMessage();
-					
-					Peer peer = PeersEnCola.getFirst();
-					objectMessage.setObject(new SugerenciaActualizacion(peer.getIP()));
-					
-					objectMessage.setJMSType("ObjectMessage");
-					objectMessage.setJMSMessageID("ID-1");
-					objectMessage.setJMSPriority(1);		
-					
-					topicPublisher.publish(objectMessage);
-					//Publish the Message
-//					System.out.println("- Sugerencia published in the Topic!");
-					
-					try {
-						Thread.sleep(1000);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}	
-
+				  	if(cambio.get(0).booleanValue()==false) {}
+				  	else {
+						ObjectMessage objectMessage = topicSession.createObjectMessage();
+						
+						Peer peer = PeersEnCola.getFirst();
+						objectMessage.setObject(new SugerenciaActualizacion(peer.getIP()));
+						
+						objectMessage.setJMSType("ObjectMessage");
+						objectMessage.setJMSMessageID("ID-1");
+						objectMessage.setJMSPriority(1);		
+						
+						topicPublisher.publish(objectMessage);
+						//Publish the Message
+	//					System.out.println("- Sugerencia published in the Topic!");
+						
+						try {
+							Thread.sleep(1000);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}	
+				  	}
 			    break;
 			  case Preparacion:
 				  	System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
