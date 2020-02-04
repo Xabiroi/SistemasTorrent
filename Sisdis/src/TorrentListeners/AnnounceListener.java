@@ -106,6 +106,10 @@ public class AnnounceListener {
 //								System.out.println("ANTES DEL GET");
 							
 								peersRaw = swarmRaw.get(0).getListaPeers();
+								for(Peer pi:peersRaw) {
+									System.out.println("PEERSRAW=="+pi.getIP());
+								}
+								System.out.println();
 								
 //								System.out.println("EXplota porque no hay posicion 0 porque no se a anyadido el peer en todo el proceso");
 								

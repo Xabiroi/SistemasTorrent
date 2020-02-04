@@ -482,9 +482,9 @@ public class SQLiteDBManager {
 			
 			ResultSet rs = stmt.executeQuery();
 			
-			
+			ArrayList<Peer> ap = new ArrayList<Peer>();
 			while(rs.next()) {
-				ArrayList<Peer> ap = new ArrayList<Peer>();
+				
 				
 		        String idSwarm = rs.getString("IDSWARM");
 		        String ip = rs.getString("IP");
@@ -493,11 +493,10 @@ public class SQLiteDBManager {
 		         
 		        for(Peer p:arPeer) {
 		        	System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-		        	System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 		        	System.out.println("EN LA BASE DE DATOS");
 		        	System.out.println("Peer ="+p.getIP());
 		        	System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-		        	System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+
 		        	if(ip.equals(p.getIP())) {
 		        		ap.add(new Peer(p.getIP(),p.getPuerto(),descarga));
 		        	}
