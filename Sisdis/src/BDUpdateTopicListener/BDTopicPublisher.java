@@ -48,7 +48,7 @@ public class BDTopicPublisher extends Thread{
 	}
 	
 	public void run() {
-		while(desconexion.get(0)) {
+		
 		try {
 			
 			//JNDI Initial Context
@@ -75,97 +75,99 @@ public class BDTopicPublisher extends Thread{
 
 			//cambio a un numero limitado para comprobar que desconecta al usuario
 			
-		
-			switch(estadoActual.get(0)) {
-			  case Esperando:
-//				  System.out.println("Bucle cambio esperando=="+cambio.get(0).booleanValue());
-				  while(!cambio.get(0).booleanValue()) {					  
-						try {
-							Thread.sleep(100);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}	
-				  }
-				  estadoActual.set(0,EstadosBaseDeDatos.Sugerencia);
-				break;
-			  case Sugerencia:
-				  	System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
-				  	System.out.println("Bucle cambio Sugerencia=="+cambio.get(0).booleanValue());
-				  	System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
-				  	if(cambio.get(0).booleanValue()==false) {}
-				  	else {
-						ObjectMessage objectMessage = topicSession.createObjectMessage();
+			while(desconexion.get(0)) {
+				if(cambio.get(0).booleanValue()==false) {}
+				else {
+				switch(estadoActual.get(0)) {
+				  case Esperando:
+	//				  System.out.println("Bucle cambio esperando=="+cambio.get(0).booleanValue());
+					  while(!cambio.get(0).booleanValue()) {					  
+							try {
+								Thread.sleep(100);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}	
+					  }
+					  estadoActual.set(0,EstadosBaseDeDatos.Sugerencia);
+					break;
+				  case Sugerencia:
+					  	System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
+					  	System.out.println("Bucle cambio Sugerencia=="+cambio.get(0).booleanValue());
+					  	System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
+					  	if(cambio.get(0).booleanValue()==false) {}
+					  	else {
+							ObjectMessage objectMessage = topicSession.createObjectMessage();
+							
+							Peer peer = PeersEnCola.getFirst();
+							objectMessage.setObject(new SugerenciaActualizacion(peer.getIP()));
+							
+							objectMessage.setJMSType("ObjectMessage");
+							objectMessage.setJMSMessageID("ID-1");
+							objectMessage.setJMSPriority(1);		
+							
+							topicPublisher.publish(objectMessage);
+							//Publish the Message
+		//					System.out.println("- Sugerencia published in the Topic!");
+							
+							try {
+								Thread.sleep(1000);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}	
+					  	}
+				    break;
+				  case Preparacion:
+					  	System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
+					  	System.out.println("Caso Preparacion");
+					  	System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
+						ObjectMessage objectMessage2 = topicSession.createObjectMessage();
+						objectMessage2.setObject(new PreparacionActualizacion());
 						
-						Peer peer = PeersEnCola.getFirst();
-						objectMessage.setObject(new SugerenciaActualizacion(peer.getIP()));
+						objectMessage2.setJMSType("ObjectMessage");
+						objectMessage2.setJMSMessageID("ID-1");
+						objectMessage2.setJMSPriority(1);		
 						
-						objectMessage.setJMSType("ObjectMessage");
-						objectMessage.setJMSMessageID("ID-1");
-						objectMessage.setJMSPriority(1);		
-						
-						topicPublisher.publish(objectMessage);
-						//Publish the Message
-	//					System.out.println("- Sugerencia published in the Topic!");
-						
+						topicPublisher.publish(objectMessage2);
+	
+	//					System.out.println("- Preparacion published in the Topic!");
 						try {
 							Thread.sleep(1000);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}	
-				  	}
-			    break;
-			  case Preparacion:
-				  	System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
-				  	System.out.println("Caso Preparacion");
-				  	System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
-					ObjectMessage objectMessage2 = topicSession.createObjectMessage();
-					objectMessage2.setObject(new PreparacionActualizacion());
-					
-					objectMessage2.setJMSType("ObjectMessage");
-					objectMessage2.setJMSMessageID("ID-1");
-					objectMessage2.setJMSPriority(1);		
-					
-					topicPublisher.publish(objectMessage2);
-
-//					System.out.println("- Preparacion published in the Topic!");
-					try {
-						Thread.sleep(1000);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}	
-				  
-			    break;
-			  case Actualizacion:
-					  System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
-					  System.out.println("ACTUALIZACION");
-					  System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
-					ObjectMessage objectMessage3 = topicSession.createObjectMessage();
-					
-					//obtener id de la version de bd
-					objectMessage3.setObject(new ActualizacionBD(ContadorVersionBD.get(0)));
-					
-					objectMessage3.setJMSType("ObjectMessage");
-					objectMessage3.setJMSMessageID("ID-1");
-					objectMessage3.setJMSPriority(1);		
-					
-					topicPublisher.publish(objectMessage3);
-					//Publish the Message
-//					System.out.println("- Actualizacion published in the Topic!");
-					try {
-						Thread.sleep(1000);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}	
-				  
-
-				  break;
-			  default:
-			    // code block
+					  
+				    break;
+				  case Actualizacion:
+						  System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
+						  System.out.println("ACTUALIZACION");
+						  System.out.println("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡");
+						ObjectMessage objectMessage3 = topicSession.createObjectMessage();
+						
+						//obtener id de la version de bd
+						objectMessage3.setObject(new ActualizacionBD(ContadorVersionBD.get(0)));
+						
+						objectMessage3.setJMSType("ObjectMessage");
+						objectMessage3.setJMSMessageID("ID-1");
+						objectMessage3.setJMSPriority(1);		
+						
+						topicPublisher.publish(objectMessage3);
+						//Publish the Message
+	//					System.out.println("- Actualizacion published in the Topic!");
+						try {
+							Thread.sleep(1000);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}	
+					  
+	
+					  break;
+				  default:
+				    // code block
+			}}
+			} Thread.sleep(1000);
+		}catch (Exception e) {
+			System.err.println("# BD Publisher TopicTest Error: " + e.getMessage());
 			}
-			} catch (Exception e) {
-				System.err.println("# BD Publisher TopicTest Error: " + e.getMessage());
-				}
-		}
 			
 			
 
