@@ -492,6 +492,12 @@ public class SQLiteDBManager {
 		        //TODO load peers con las ip de swarm_peer   una join
 		         
 		        for(Peer p:arPeer) {
+		        	System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+		        	System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+		        	System.out.println("EN LA BASE DE DATOS");
+		        	System.out.println("Peer ="+p.getIP());
+		        	System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+		        	System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 		        	if(ip.equals(p.getIP())) {
 		        		ap.add(new Peer(p.getIP(),p.getPuerto(),descarga));
 		        	}
